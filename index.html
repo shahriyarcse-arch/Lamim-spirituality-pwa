@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="description" content="Lamim — Track your salah, dhikr, goals and spiritual progress">
+  <meta name="theme-color" content="#8b5cf6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Lamim — Islamic Lifestyle Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="app">
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-logo centered-logo">
+    <div class="glossy-icon-wrap" style="margin-bottom:0; width:80px; height:80px;">
+      <div class="glossy-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" style="width:40px; height:40px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </div>
+      <div class="glossy-sweep"></div>
+    </div>
+    <div class="auth-logo-name" style="margin-top:16px;">Lamim</div>
+  </div>
+  <div class="splash-tagline">Your Islamic Lifestyle Companion</div>
+  <div class="splash-loader"><div class="splash-loader-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ======== AUTH: LOGIN ======== -->
+<div class="page" id="page-login">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo centered-logo">
+        <div class="glossy-icon-wrap">
+          <div class="glossy-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </div>
+          <div class="glossy-sweep"></div>
+        </div>
+        <div class="auth-logo-name">Lamim</div>
+      </div>
+      <h1 class="auth-title" style="text-align:center">Welcome Back</h1>
+      <p class="auth-subtitle" style="text-align:center">Sign in to continue your journey</p>
+      <form class="auth-form" id="login-form">
+        <div class="input-group">
+          <label class="input-label" for="login-email">Email</label>
+          <div class="input-wrapper">
+            <input class="input input-with-icon" type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
+            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
+          </div>
+          <div class="field-error" id="login-email-err"></div>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-pass">Password</label>
+          <div class="input-wrapper">
+            <input class="input input-with-icon" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+            <button type="button" class="input-action" id="show-password-login"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+          </div>
+          <div class="field-error" id="login-pass-err"></div>
+        </div>
+        <div class="remember-row">
+          <label class="checkbox-wrap"><input type="checkbox" checked> Remember me</label>
+          <a href="#" onclick="App.showPage('forgot');return false" style="font-size:var(--text-sm)">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-xoss purple-btn-xoss">Sign In</button>
+      </form>
+      <div class="auth-footer">Don't have an account? <a href="#" onclick="App.showPage('signup');return false">Sign Up</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== AUTH: SIGNUP ======== -->
+<div class="page" id="page-signup">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo centered-logo">
+        <div class="glossy-icon-wrap">
+          <div class="glossy-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </div>
+          <div class="glossy-sweep"></div>
+        </div>
+        <div class="auth-logo-name">Lamim</div>
+      </div>
+      
+      <h1 class="auth-title" style="text-align:center">Create Account</h1>
+      <p class="auth-subtitle" style="text-align:center">Start your spiritual journey today</p>
+      <form class="auth-form" id="signup-form">
+        <div class="input-group">
+          <label class="input-label" for="signup-name">Full Name</label>
+          <div class="input-wrapper">
+            <input class="input input-with-icon" id="signup-name" placeholder="Your name" autocomplete="name">
+            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+          </div>
+          <div class="field-error" id="signup-name-err"></div>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="signup-email">Email</label>
+          <div class="input-wrapper">
+            <input class="input input-with-icon" type="email" id="signup-email" placeholder="your@email.com" autocomplete="email">
+            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
+          </div>
+          <div class="field-error" id="signup-email-err"></div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label class="input-label" for="signup-pass">Password</label>
+            <div class="input-wrapper">
+              <input class="input input-with-icon" type="password" id="signup-pass" placeholder="Min 6 chars">
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+            </div>
+            <div class="field-error" id="signup-pass-err"></div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-confirm-pass">Confirm Password</label>
+            <div class="input-wrapper">
+              <input class="input input-with-icon" type="password" id="signup-confirm-pass" placeholder="Confirm">
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+            </div>
+            <div class="field-error" id="signup-confirm-pass-err"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label class="input-label" for="signup-gender">Gender</label>
+            <div class="input-wrapper">
+              <select class="input input-with-icon custom-select" id="signup-gender">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-age">Age</label>
+            <div class="input-wrapper">
+              <input class="input input-with-icon" type="number" id="signup-age" placeholder="Your age" min="13">
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="remember-row mb-4">
+          <label class="checkbox-wrap text-sm" style="color:#a1a1aa;"><input type="checkbox" id="signup-terms" style="border-radius:4px;width:16px;height:16px;border:1px solid rgba(255,255,255,0.2);"> I agree to the Terms & Conditions</label>
+        </div>
+        <button type="submit" class="btn-xoss purple-btn-xoss">Sign Up</button>
+        
+        <div style="display:flex;align-items:center;margin:12px 0;color:#52525b;font-size:12px;font-weight:500;">
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div>
+          <span style="padding:0 12px">OR</span>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div>
+        </div>
+        
+        <button type="button" class="btn-xoss google-btn-xoss" style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" style="position:relative;z-index:2;"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+          <span style="position:relative;z-index:2;">Continue with Google</span>
+        </button>
+      </form>
+      <div class="auth-footer mt-4">Already have an account? <a href="#" onclick="App.showPage('login');return false">Sign In</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== AUTH: FORGOT ======== -->
+<div class="page" id="page-forgot">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo centered-logo">
+        <div class="glossy-icon-wrap">
+          <div class="glossy-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </div>
+          <div class="glossy-sweep"></div>
+        </div>
+        <div class="auth-logo-name" style="font-size:24px;">Reset Password</div>
+      </div>
+      <div id="forgot-step1">
+        <p class="auth-subtitle">Enter your email to receive a reset code</p>
+        <form class="auth-form" id="forgot-form">
+          <div class="input-group">
+            <label class="input-label" for="forgot-email">Email</label>
+            <div class="input-wrapper">
+              <input class="input input-with-icon" type="email" id="forgot-email" placeholder="your@email.com">
+              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
+            </div>
+          </div>
+          <button type="submit" class="btn-xoss blue-btn-xoss mt-4">Send OTP</button>
+        </form>
+      </div>
+      <div id="forgot-step2" class="hidden">
+        <p class="auth-subtitle">Enter the 4-digit OTP (hint: 1234)</p>
+        <div class="input-group mb-4"><input class="input text-center" id="forgot-otp" placeholder="1234" maxlength="4" style="font-size:24px;letter-spacing:0.5em;text-align:center"></div>
+        <button class="btn-xoss blue-btn-xoss" id="forgot-verify-btn">Verify OTP</button>
+      </div>
+      <div id="forgot-step3" class="hidden">
+        <p class="auth-subtitle">Set your new password</p>
+        <div class="input-group mb-4">
+          <div class="input-wrapper">
+            <input class="input input-with-icon" type="password" id="new-pass" placeholder="New password (min 6 chars)">
+            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+          </div>
+        </div>
+        <button class="btn-xoss blue-btn-xoss mt-4" id="forgot-reset-btn">Update Password</button>
+      </div>
+      <div class="auth-footer mt-4"><a href="#" onclick="App.showPage('login');return false">← Back to Sign In</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== DASHBOARD SHELL ======== -->
+<div class="page" id="page-dashboard">
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-logo"><div class="sidebar-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div><div class="sidebar-logo-text">Lamim</div></div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" data-section="home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
+      <div class="nav-item" data-section="salah"><span class="nav-icon">🕋</span><span class="nav-label">Salah Tracker</span></div>
+      <div class="nav-item" data-section="dhikr"><span class="nav-icon">📿</span><span class="nav-label">Dhikr Counter</span></div>
+      <div class="nav-item" data-section="goals"><span class="nav-icon">🎯</span><span class="nav-label">Goals</span></div>
+      <div class="nav-item" data-section="akhlaq"><span class="nav-icon">🤲</span><span class="nav-label">Akhlaq (Habits)</span></div>
+      <div class="nav-item" data-section="finance"><span class="nav-icon">💰</span><span class="nav-label">Islamic Finance</span></div>
+      <div class="nav-item" data-section="tazkiyah"><span class="nav-icon">🧠</span><span class="nav-label">Tazkiyah</span></div>
+      <div class="nav-item" data-section="ilm"><span class="nav-icon">📚</span><span class="nav-label">Knowledge (Ilm)</span></div>
+      <div class="nav-item" data-section="analysis"><span class="nav-icon">📊</span><span class="nav-label">Analysis</span></div>
+      <div class="nav-item" data-section="profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></div>
+    </div>
+    <div class="sidebar-footer"><div class="nav-item" onclick="Auth.logout()"><span class="nav-icon">🚪</span><span class="nav-label">Logout</span></div></div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- TEMP: Dev Data Cleaner — DELETE LATER -->
+    <div id="temp-dev-bar" style="background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);border-radius:12px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span style="font-size:12px;color:#f87171;font-weight:600;">🛠️ Dev Tools (Temporary)</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="if(confirm('Clear ALL Salah data?')){Object.keys(localStorage).filter(k=>k.startsWith('lamim_salah_')).forEach(k=>localStorage.removeItem(k));location.reload();}" style="background:#f87171;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">🗑️ Clear Salah</button>
+        <button onclick="if(confirm('Clear ALL app data? This will log you out!')){localStorage.clear();location.reload();}" style="background:#dc2626;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">💣 Clear Everything</button>
+      </div>
+    </div>
+    <!-- /TEMP -->
+    <!-- Topbar (mobile — dashboard only) -->
+    <div class="topbar" id="topbar">
+      <button class="btn btn-ghost btn-icon" id="sidebar-toggle" aria-label="Menu">☰</button>
+      <div class="topbar-brand">
+        <div class="topbar-logo-orb">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </div>
+        <span class="topbar-brand-name">Lamim</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-ghost btn-icon" onclick="Profile.toggleTheme()" title="Toggle Theme">🌓</button>
+        <div class="avatar avatar-sm" id="topbar-avatar" style="cursor:pointer" onclick="App.navigateTo('profile')">?</div>
+      </div>
+    </div>
+
+    <!-- Section Topbar (non-home sections on mobile) -->
+    <div class="topbar topbar-section" id="topbar-section" style="display:none">
+      <button class="btn btn-ghost btn-icon" id="sidebar-toggle-section" aria-label="Menu">☰</button>
+      <div class="topbar-section-title" id="topbar-section-title"></div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-ghost btn-icon" onclick="Profile.toggleTheme()" title="Toggle Theme">🌓</button>
+        <div class="avatar avatar-sm" id="topbar-avatar-section" style="cursor:pointer" onclick="App.navigateTo('profile')">?</div>
+      </div>
+    </div>
+
+    <!-- Install Banner -->
+    <div class="card card-sm hidden" id="install-banner" style="margin-bottom:var(--space-4);display:flex;align-items:center;justify-content:space-between;background:rgba(139,92,246,0.08);border-color:rgba(167,139,250,0.3)">
+      <div><strong>📱 Install Lamim</strong><p style="font-size:var(--text-sm)">Add to home screen for the best experience</p></div>
+      <div class="flex gap-2"><button class="btn btn-primary btn-sm" id="install-btn">Install</button><button class="btn btn-ghost btn-sm" id="install-dismiss">✕</button></div>
+    </div>
+
+    <!-- ===== HOME ===== -->
+    <section class="section-panel active" id="section-home">
+      <div class="home-header-row">
+        <div id="home-greeting" class="home-greeting"></div>
+        <div class="card card-glass home-live-datetime" id="home-live-datetime"></div>
+      </div>
+      <div id="home-date-bar" class="home-date-bar"></div>
+      <div id="home-next-prayer" class="next-prayer-banner"></div>
+      <div class="grid-2" style="margin-bottom:var(--space-6)">
+        <div class="card" style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap;justify-content:center" id="home-salah-ring"></div>
+        <div class="card quote-card" id="home-quote"></div>
+      </div>
+      <div class="card" style="margin-bottom:var(--space-6)">
+        <div class="card-header"><div class="card-title">🗓️ 3-Week Salah Heatmap</div></div>
+        <div class="home-mini-heatmap" id="home-mini-heatmap"></div>
+        <div style="display:flex;gap:var(--space-4);margin-top:var(--space-3)">
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#34d399"></div>All 5</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#38bdf8"></div>3-4</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#fbbf24"></div>1-2</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#f87171"></div>None</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
+        <div class="quick-actions-grid">
+          <div class="quick-action-btn" onclick="App.navigateTo('salah')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-gold)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg></div><div class="qa-label">Log Salah</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('dhikr')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-teal)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/><circle cx="12" cy="4" r="2"><animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite"/></circle><circle cx="18" cy="8" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.2s" repeatCount="indefinite"/></circle><circle cx="20" cy="15" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="15" cy="20" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.6s" repeatCount="indefinite"/></circle><circle cx="8" cy="20" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.8s" repeatCount="indefinite"/></circle><circle cx="4" cy="15" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="1s" repeatCount="indefinite"/></circle><circle cx="6" cy="8" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="1.2s" repeatCount="indefinite"/></circle></g></svg></div><div class="qa-label">Start Dhikr</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('goals')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red)"><circle cx="12" cy="12" r="10"><animate attributeName="r" values="10;9;10" dur="2s" repeatCount="indefinite"/></circle><circle cx="12" cy="12" r="6"><animate attributeName="r" values="6;5;6" dur="2s" repeatCount="indefinite"/></circle><circle cx="12" cy="12" r="2"><animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite"/></circle></svg></div><div class="qa-label">Set Goal</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('akhlaq')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-purple)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="2s" repeatCount="indefinite"/><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></g></svg></div><div class="qa-label">Akhlaq</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('finance')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="4s" repeatCount="indefinite"/><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M9 12h6"/></g></svg></div><div class="qa-label">Finance</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('tazkiyah')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-gold)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 180; 360" dur="10s" repeatCount="indefinite"/><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></g><circle cx="12" cy="12" r="2"><animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/></circle></svg></div><div class="qa-label">Tazkiyah</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('ilm')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-orange)"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><g><animateTransform attributeName="transform" type="translate" values="0,0; -2,0; 0,0" dur="2s" repeatCount="indefinite"/><path d="M8 7h6"/><path d="M8 11h8"/></g></svg></div><div class="qa-label">Ilm (Knowledge)</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('analysis')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-blue)"><line x1="18" y1="20" x2="18" y2="10"><animate attributeName="y2" values="10; 4; 14; 10" dur="2s" repeatCount="indefinite"/></line><line x1="12" y1="20" x2="12" y2="4"><animate attributeName="y2" values="4; 12; 4" dur="2.5s" repeatCount="indefinite"/></line><line x1="6" y1="20" x2="6" y2="14"><animate attributeName="y2" values="14; 8; 16; 14" dur="3s" repeatCount="indefinite"/></line></svg></div><div class="qa-label">Analytics</div></div>
+          <div class="quick-action-btn" onclick="App.navigateTo('profile')"><div class="qa-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-text-secondary)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></g></svg></div><div class="qa-label">Settings</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SALAH (Redesigned) ===== -->
+    <section class="section-panel" id="section-salah">
+      <div class="section-header">
+        <h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-gold)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg></span>Salah Tracker</h2>
+        <div class="flex gap-2" style="align-items:center">
+          <button class="btn btn-ghost btn-sm" id="salah-prev-day">← Prev</button>
+          <span class="badge badge-blue" id="salah-date-label">Today</span>
+          <button class="btn btn-ghost btn-sm" id="salah-next-day">Next →</button>
+        </div>
+      </div>
+
+      <!-- Prayer Times Row -->
+      <div id="salah-times-row" class="prayer-times-row"></div>
+
+      <!-- Stats -->
+      <div id="salah-stats"></div>
+
+      <!-- Prayer Cards -->
+      <div id="salah-cards"></div>
+
+      <!-- Calendar -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <div class="card-title">📅 Monthly Calendar</div>
+          <button class="btn btn-sm btn-secondary" onclick="Salah.exportCSV()">📤 Export</button>
+        </div>
+        <div id="salah-calendar" class="salah-calendar"></div>
+        <div style="display:flex;gap:var(--space-4);margin-top:var(--space-3);flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#34d399"></div>All 5</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#38bdf8"></div>3-4</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#fbbf24"></div>1-2</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:var(--text-xs);color:var(--color-text-muted)"><div style="width:10px;height:10px;border-radius:3px;background:#f87171"></div>None</div>
+        </div>
+        
+        <!-- Premium Calendar Tooltip (Hidden by default) -->
+        <div id="salah-cal-tooltip" class="salah-cal-tooltip hidden"></div>
+      </div>
+    </section>
+
+    <!-- ===== DHIKR ===== -->
+    <section class="section-panel" id="section-dhikr">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-teal)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/><circle cx="12" cy="4" r="2"><animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite"/></circle><circle cx="18" cy="8" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.2s" repeatCount="indefinite"/></circle><circle cx="20" cy="15" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="15" cy="20" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.6s" repeatCount="indefinite"/></circle><circle cx="8" cy="20" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="0.8s" repeatCount="indefinite"/></circle><circle cx="4" cy="15" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="1s" repeatCount="indefinite"/></circle><circle cx="6" cy="8" r="2"><animate attributeName="r" values="2;3;2" dur="1s" begin="1.2s" repeatCount="indefinite"/></circle></g></svg></span>Dhikr Counter</h2>
+        <div class="flex gap-2"><button class="btn btn-sm btn-secondary" onclick="Dhikr.reset()">🔄 Reset</button></div>
+      </div>
+      <div class="tabs mb-4" id="dhikr-cat-tabs"></div>
+      <div id="dhikr-grid" class="dhikr-grid mb-6"></div>
+      <div class="card card-gold" style="text-align:center;margin-bottom:var(--space-6)">
+        <div id="dhikr-counter-wrap" class="dhikr-counter-wrap"></div>
+        <button class="dhikr-tap-btn" id="dhikr-tap-btn" onclick="Dhikr.tap()"><span class="dhikr-tap-icon">☝️</span><span>Tap</span></button>
+        <div style="margin-top:var(--space-2);font-size:var(--text-xs);color:var(--color-text-muted)">or press Space bar</div>
+        <div class="tasbeeh-beads mt-4" id="dhikr-beads"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📋 Today's Sessions</div></div>
+        <div id="dhikr-session-history"></div>
+      </div>
+    </section>
+
+    <!-- ===== GOALS ===== -->
+    <section class="section-panel" id="section-goals">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red)"><circle cx="12" cy="12" r="10"><animate attributeName="r" values="10;9;10" dur="2s" repeatCount="indefinite"/></circle><circle cx="12" cy="12" r="6"><animate attributeName="r" values="6;5;6" dur="2s" repeatCount="indefinite"/></circle><circle cx="12" cy="12" r="2"><animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite"/></circle></svg></span>Goals</h2><button class="btn btn-gold btn-sm" onclick="Goals.showAddModal()">➕ New Goal</button></div>
+      <div class="stat-row mb-6" id="goals-stats"></div>
+      <div class="tabs mb-4" id="goals-filter-tabs">
+        <button class="tab-btn active" onclick="Goals.filterGoals('active',this)">Active</button>
+        <button class="tab-btn" onclick="Goals.filterGoals('completed',this)">Completed</button>
+        <button class="tab-btn" onclick="Goals.filterGoals('archived',this)">Archived</button>
+      </div>
+      <div id="goals-list"></div>
+    </section>
+
+    <!-- ===== ANALYSIS ===== -->
+    <section class="section-panel" id="section-analysis">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-blue)"><line x1="18" y1="20" x2="18" y2="10"><animate attributeName="y2" values="10; 4; 14; 10" dur="2s" repeatCount="indefinite"/></line><line x1="12" y1="20" x2="12" y2="4"><animate attributeName="y2" values="4; 12; 4" dur="2.5s" repeatCount="indefinite"/></line><line x1="6" y1="20" x2="6" y2="14"><animate attributeName="y2" values="14; 8; 16; 14" dur="3s" repeatCount="indefinite"/></line></svg></span>Analysis</h2></div>
+      <div class="stat-row mb-6" id="analysis-summary"></div>
+      <div class="tabs mb-6">
+        <button class="tab-btn active" onclick="Analysis.renderTab('daily');this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Daily</button>
+        <button class="tab-btn" onclick="Analysis.renderTab('weekly');this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Weekly</button>
+        <button class="tab-btn" onclick="Analysis.renderTab('monthly');this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Monthly</button>
+        <button class="tab-btn" onclick="Analysis.renderTab('dhikr');this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Dhikr</button>
+      </div>
+      <div class="grid-2 mb-6">
+        <div class="card analysis-tab-content active" id="analysis-daily"><div class="card-title mb-4">📈 Daily Salah (Last 7 Days)</div><canvas id="chart-daily" class="chart-canvas"></canvas></div>
+        <div class="card analysis-tab-content" id="analysis-weekly"><div class="card-title mb-4">📊 Weekly Overview</div><canvas id="chart-weekly" class="chart-canvas"></canvas></div>
+        <div class="card analysis-tab-content" id="analysis-monthly"><div class="card-title mb-4">📉 Monthly Trend</div><canvas id="chart-monthly" class="chart-canvas"></canvas></div>
+        <div class="card analysis-tab-content" id="analysis-dhikr"><div class="card-title mb-4">📿 Dhikr (Last 7 Days)</div><canvas id="chart-dhikr" class="chart-canvas"></canvas></div>
+        <div class="card">
+          <div class="card-title mb-4">🥧 Prayer Status Breakdown</div>
+          <div style="display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap">
+            <canvas id="chart-donut" style="max-width:160px;max-height:160px"></canvas>
+            <div id="donut-legend" style="flex:1;display:flex;flex-direction:column;gap:var(--space-2)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-title mb-4">🏆 Achievements</div><div id="achievements-grid" class="achievement-grid"></div></div>
+    </section>
+
+    <!-- ===== AKHLAQ ===== -->
+    <section class="section-panel" id="section-akhlaq">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-purple)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="2s" repeatCount="indefinite"/><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></g></svg></span>Habits & Sunnah</h2></div>
+      <div id="akhlaq-content"></div>
+    </section>
+
+    <!-- ===== FINANCE ===== -->
+    <section class="section-panel" id="section-finance">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="4s" repeatCount="indefinite"/><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M9 12h6"/></g></svg></span>Islamic Finance</h2></div>
+      <div id="finance-zakat"></div>
+      <div id="finance-debts"></div>
+    </section>
+
+    <!-- ===== TAZKIYAH ===== -->
+    <section class="section-panel" id="section-tazkiyah">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-gold)"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 180; 360" dur="10s" repeatCount="indefinite"/><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></g><circle cx="12" cy="12" r="2"><animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/></circle></svg></span>Tazkiyah</h2></div>
+      <div id="tazkiyah-content"></div>
+    </section>
+
+    <!-- ===== ILM ===== -->
+    <section class="section-panel" id="section-ilm">
+      <div class="section-header"><h2 class="section-title"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-orange)"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><g><animateTransform attributeName="transform" type="translate" values="0,0; -2,0; 0,0" dur="2s" repeatCount="indefinite"/><path d="M8 7h6"/><path d="M8 11h8"/></g></svg></span>Knowledge Hub</h2></div>
+      <div id="ilm-library"></div>
+      <div id="ilm-notes"></div>
+    </section>
+
+    <!-- ===== PROFILE ===== -->
+    <section class="section-panel" id="section-profile">
+      <div id="profile-hero" class="profile-hero"></div>
+      <div class="settings-group"><div class="settings-group-title">Personal Information</div><div id="profile-personal-info"></div></div>
+      <div class="settings-group"><div class="settings-group-title">Prayer Settings</div><div id="profile-prayer-settings"></div></div>
+      <div class="settings-group"><div class="settings-group-title">App Settings</div><div id="profile-app-settings"></div></div>
+      <div class="settings-group"><div class="settings-group-title">About</div><div id="profile-about"></div></div>
+      <div class="settings-group" style="border-color:rgba(248,81,73,0.3)"><div class="settings-group-title" style="color:var(--color-accent-red)">Danger Zone</div><div id="profile-danger"></div></div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Nav (mobile) -->
+  <nav class="bottom-nav" aria-label="Bottom navigation" style="overflow-x:auto; justify-content:flex-start; gap:16px; padding:0 16px;">
+    <div class="bottom-nav-item active" data-section="home"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</div>
+    <div class="bottom-nav-item" data-section="salah"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg></span>Salah</div>
+    <div class="bottom-nav-item" data-section="dhikr"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="15" r="2"/><circle cx="15" cy="20" r="2"/><circle cx="8" cy="20" r="2"/><circle cx="4" cy="15" r="2"/><circle cx="6" cy="8" r="2"/></svg></span>Dhikr</div>
+    <div class="bottom-nav-item" data-section="goals"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Goals</div>
+    <div class="bottom-nav-item" data-section="akhlaq"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>Akhlaq</div>
+    <div class="bottom-nav-item" data-section="finance"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M9 12h6"/></svg></span>Finance</div>
+    <div class="bottom-nav-item" data-section="tazkiyah"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></span>Tazkiyah</div>
+    <div class="bottom-nav-item" data-section="ilm"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg></span>Ilm</div>
+    <div class="bottom-nav-item" data-section="analysis"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Analysis</div>
+    <div class="bottom-nav-item" data-section="profile"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Profile</div>
+  </nav>
+</div>
+</div>
+
+<!-- GOAL MODAL -->
+<div class="modal-overlay hidden" id="goal-modal">
+  <div class="modal">
+    <div class="modal-header"><h3 class="modal-title" id="goal-modal-title">New Goal</h3><button class="modal-close" onclick="Goals.hideModal()">✕</button></div>
+    <input type="hidden" id="goal-id-field">
+    <div class="auth-form">
+      <div class="input-group"><label class="input-label">Title</label><input class="input" id="goal-title-field" placeholder="e.g. Pray all 5 salah daily"></div>
+      <div class="input-group"><label class="input-label">Description</label><input class="input" id="goal-desc-field" placeholder="Optional details"></div>
+      <div class="grid-2">
+        <div class="input-group"><label class="input-label">Target</label><input class="input" type="number" id="goal-target-field" value="1" min="1"></div>
+        <div class="input-group"><label class="input-label">Unit</label><input class="input" id="goal-unit-field" placeholder="days, pages, etc."></div>
+      </div>
+      <div class="grid-2">
+        <div class="input-group"><label class="input-label">Category</label><select class="input" id="goal-category-field"><option value="salah">🕋 Salah</option><option value="dhikr">📿 Dhikr</option><option value="quran">📖 Quran</option><option value="charity">💝 Charity</option><option value="learning">📚 Learning</option><option value="other">🎯 Other</option></select></div>
+        <div class="input-group"><label class="input-label">Priority</label><select class="input" id="goal-priority-field"><option value="high">🔴 High</option><option value="medium" selected>🟡 Medium</option><option value="low">🟢 Low</option></select></div>
+      </div>
+      <div class="grid-2">
+        <div class="input-group"><label class="input-label">Deadline</label><input class="input" type="date" id="goal-deadline-field"></div>
+        <div class="input-group"><label class="input-label">Recurring</label><select class="input" id="goal-recurring-field"><option value="">None</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+      </div>
+      <div class="input-group"><label class="input-label">Milestones (one per line)</label><textarea class="input" id="goal-milestone-field" rows="3" placeholder="Milestone 1&#10;Milestone 2"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Goals.hideModal()">Cancel</button><button class="btn btn-gold" onclick="Goals.saveGoal()">Save Goal</button></div>
+  </div>
+</div>
+
+<!-- DHIKR ADD MODAL -->
+<div class="modal-overlay hidden" id="dhikr-add-modal">
+  <div class="modal">
+    <div class="modal-header"><h3 class="modal-title">Custom Dhikr</h3><button class="modal-close" onclick="Dhikr.hideAddModal()">✕</button></div>
+    <div class="auth-form">
+      <div class="input-group"><label class="input-label">Arabic Text (optional)</label><input class="input font-arabic" id="custom-arabic" placeholder="Arabic text" dir="rtl"></div>
+      <div class="input-group"><label class="input-label">Name / Transliteration</label><input class="input" id="custom-latin" placeholder="e.g. SubhanAllah"></div>
+      <div class="input-group"><label class="input-label">Target Count</label><input class="input" type="number" id="custom-target" value="33" min="1"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="Dhikr.hideAddModal()">Cancel</button><button class="btn btn-gold" onclick="Dhikr.saveCustom()">Add Dhikr</button></div>
+  </div>
+</div>
+
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/home.js"></script>
+<script src="js/salah.js"></script>
+<script src="js/dhikr.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/akhlaq.js"></script>
+<script src="js/finance.js"></script>
+<script src="js/tazkiyah.js"></script>
+<script src="js/ilm.js"></script>
+<script src="js/analysis.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
