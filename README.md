@@ -9,7 +9,8 @@ Lamim is a premium, fully responsive, and comprehensive Islamic lifestyle dashbo
 *   **Salah (Prayer) Tracker**: 
     *   Live countdown to the next prayer.
     *   Daily completion ring-chart (SVGs dynamically generated via JS).
-    *   A 3-week interactive GitHub-style heatmap to track prayer consistency.
+    *   A 3-week interactive GitHub-style heatmap with tiered, glassmorphic visual feedback to track prayer consistency.
+    *   Custom glassmorphic tooltips providing detailed daily status breakdowns (Jama'at, Alone, Qaza, Missed).
 *   **Dhikr (Tasbeeh) Counter**: 
     *   Premium glowing tap button with ripple animations.
     *   Dhikr presets (Subhanallah, Alhamdulillah, Allahu Akbar).
@@ -42,7 +43,7 @@ The project guarantees flawless rendering across all devices (Desktop, Tablet, M
 ## 🛠 Tech Stack
 
 *   **Structure**: Semantic HTML5.
-*   **Styling**: Pure, modular Vanilla CSS3 (Custom Properties/Variables, Flexbox, Grid, Keyframes).
+*   **Styling**: Pure, modular Vanilla CSS3 (Custom Properties/Variables, Flexbox, Grid, Keyframes). Codebase strictly follows modern standards with automated Prettier formatting and Stylelint linting.
 *   **Logic**: ES6+ Vanilla JavaScript.
 *   **Storage**: LocalStorage (`DB` module) for persistent offline state.
 

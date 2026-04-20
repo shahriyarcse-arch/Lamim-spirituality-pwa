@@ -178,9 +178,9 @@ const Home = {
       let glowCls = '';
       if (score.done === 5) {
         cls = 'full';
-        if (score.pct >= 90) glowCls = 'glow-high';
-        else if (score.pct >= 70) glowCls = 'glow-med';
-        else glowCls = 'glow-low';
+        if (score.pct >= 90) glowCls = 'tier-max';
+        else if (score.pct >= 70) glowCls = 'tier-high';
+        else glowCls = 'tier-base';
       }
       else if (score.done >= 3) cls = 'partial';
       else if (score.done > 0) cls = 'low';

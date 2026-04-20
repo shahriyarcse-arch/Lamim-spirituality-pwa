@@ -348,7 +348,7 @@ const Salah = {
     `;
 
     for (let i = 0; i < startDayOfWeek; i++) {
-      html += `<div class="salah-cal-cell empty" style="background: transparent; box-shadow: none; cursor: default;"></div>`;
+      html += `<div class="salah-cal-cell empty" style="background: var(--color-glass); box-shadow: none; cursor: default;"></div>`;
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
@@ -362,34 +362,63 @@ const Salah = {
       const isToday = dateStr === Utils.todayStr();
       const isFuture = dateStr > Utils.todayStr();
 
-      let color = 'rgba(255,255,255,0.04)';
+      let color = 'var(--color-glass)';
       let opacity = 1;
       let glow = '';
+      let extraClass = '';
 
       if (!isFuture) {
         if (score.done === 5) {
-          color = '#34d399';
-          // Quality glow: pct 90-100 = bright, 70-89 = medium, <70 = flat
-          if (score.pct >= 90) glow = 'box-shadow:0 0 12px rgba(52,211,153,0.7),inset 0 0 6px rgba(255,255,255,0.15);filter:brightness(1.25);';
-          else if (score.pct >= 70) glow = 'box-shadow:0 0 7px rgba(52,211,153,0.4);filter:brightness(1.12);';
-          else if (score.pct >= 50) glow = 'box-shadow:0 0 3px rgba(52,211,153,0.2);';
+          color = '#10b981'; 
+          
+          // 0 or 1 Qaza (90-100 pts) -> Maximum (Live glossy animation)
+          if (score.pct >= 90) {
+            extraClass = ' tier-max';
+          } 
+          // 2 or 3 Qaza (70-89 pts) -> High (Just shine, no animation)
+          else if (score.pct >= 70) {
+            extraClass = ' tier-high';
+          }
+          // 4 or 5 Qaza (<70 pts) -> Base (Solid green)
+          else {
+            extraClass = ' tier-base';
+          }
+          glow = ''; 
         }
-        else if (score.done >= 3) color = '#38bdf8';
-        else if (score.done > 0) color = '#fbbf24';
+        else if (score.done >= 3) {
+          const avg = score.pct / score.done;
+          if (avg >= 15) {
+            color = '#38bdf8'; // Solid Blue (Mostly on-time)
+            glow = 'box-shadow:0 0 4px rgba(56,189,248,0.3);';
+          } else {
+            color = 'rgba(56,189,248,0.15)'; // Hollow Blue (Mostly Qaza)
+            glow = 'box-shadow: inset 0 0 0 2px #38bdf8;';
+          }
+        }
+        else if (score.done > 0) {
+          const avg = score.pct / score.done;
+          if (avg >= 15) {
+            color = '#fbbf24'; // Solid Amber (Mostly on-time)
+            glow = 'box-shadow:0 0 4px rgba(251,191,36,0.3);';
+          } else {
+            color = 'rgba(251,191,36,0.15)'; // Hollow Amber (Mostly Qaza)
+            glow = 'box-shadow: inset 0 0 0 2px #fbbf24;';
+          }
+        }
         else {
           const hasLoggedAny = ['fajr','dhuhr','asr','maghrib','isha'].some(p => data[p]);
           if (isToday && !hasLoggedAny) {
-            color = 'rgba(255,255,255,0.04)';
+            color = 'var(--color-glass)';
           } else {
-            color = '#f87171';
-            opacity = 0.55;
+            color = 'var(--color-accent-red)';
+            opacity = 0.85;
           }
         }
       } else {
-         opacity = 0.15;
+         opacity = 0.5; // Future days should be visible in light mode too
       }
 
-      html += `<div class="salah-cal-cell ${isToday ? 'today' : ''}" 
+      html += `<div class="salah-cal-cell ${isToday ? 'today' : ''}${extraClass}" 
                    data-date="${dateStr}" 
                    style="background:${color};opacity:${opacity};${glow}">
                 <span class="salah-cal-day">${i}</span>
@@ -409,11 +438,11 @@ const Salah = {
   /* ---- Export ---- */
   exportCSV() {
     const hist = DB.getSalahHistory(30);
-    const rows = [['Date','Fajr','Dhuhr','Asr','Maghrib','Isha','Score','Points']];
+    const rows = [['Date','Fajr','Dhuhr','Asr','Maghrib','Isha','Prayed','Score%','Points']];
     hist.forEach(({ date, data }) => {
       const score = Utils.salahScore(data);
       const pts = this.calcDayPoints(data);
-      rows.push([date, data.fajr||'', data.dhuhr||'', data.asr||'', data.maghrib||'', data.isha||'', score.done+'/5', pts]);
+      rows.push([date, data.fajr||'', data.dhuhr||'', data.asr||'', data.maghrib||'', data.isha||'', score.done, score.pct, pts]);
     });
     const csv = rows.map(r => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -475,9 +504,9 @@ const Salah = {
             sLabel = this.statusMeta[statusKey].label;
             sColor = this.statusMeta[statusKey].color;
           }
-        } else if (dateStr < Utils.todayStr() || (isToday && data[p] === 'missed')) {
-           sLabel = 'Missed';
-           sColor = this.statusMeta.missed.color;
+        } else {
+          sLabel = 'Pending';
+          sColor = 'rgba(255,255,255,0.3)';
         }
 
         const emojis = { fajr:'🌅', dhuhr:'☀️', asr:'🌤️', maghrib:'🌇', isha:'🌌' };
