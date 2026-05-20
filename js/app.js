@@ -220,8 +220,15 @@ const App = {
 
       // If user exists locally, we allow entry (even if offline or cloud session fails)
       if (user) {
-        // If we have an online Supabase session, enforce email verification on existing accounts.
-        if (isOnline && window.supabaseClient && cloudUser) {
+        // If online, require a valid verified Supabase session for stored local users.
+        if (isOnline && window.supabaseClient) {
+          if (!cloudUser) {
+            DB.clearUser();
+            Utils.toast('Session expired. Please login again with your verified account.', 'warning');
+            this.showPage('login');
+            return;
+          }
+
           const emailConfirmed = Boolean(cloudUser.email_confirmed_at || cloudUser.confirmed_at);
           if (!emailConfirmed) {
             await window.supabaseClient.auth.signOut().catch(() => {});
@@ -230,6 +237,7 @@ const App = {
             this.showPage('login');
             return;
           }
+        }
         }
 
         // Refresh role if online
