@@ -1510,11 +1510,20 @@ const Finance = {
           pointBackgroundColor: isDark ? '#0c0d12' : '#ffffff', // Matches card background
           pointBorderColor: accentColor,
           pointBorderWidth: 3,
+          clip: false, // Prevents points at the top/sides from being cut off
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 12, // Extra top breathing room for point markers
+            bottom: 4,
+            left: 8,
+            right: 8
+          }
+        },
         animation: {
           y: { type: 'number', easing: 'easeOutQuart', duration: 800, from: (c) => c.chart.scales.y.getPixelForValue(0) }
         },
@@ -1549,6 +1558,7 @@ const Finance = {
           y: { 
             position: 'right', 
             beginAtZero: true, 
+            grace: '15%', // Adds 15% buffer at the top of the scale so peaks don't touch the edge
             grid: { 
               color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(15, 23, 42, 0.08)', // More visible grid lines
               drawBorder: false 
