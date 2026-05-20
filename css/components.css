@@ -227,7 +227,8 @@ select.input option:disabled { color: var(--color-text-muted); }
 .modal-overlay {
   position: fixed; inset: 0; background: var(--color-overlay);
   z-index: var(--z-modal); display: flex; align-items: center; justify-content: center;
-  padding: var(--space-4); animation: fadeIn 0.2s ease;
+  padding: max(var(--space-4), env(safe-area-inset-top, 16px)) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom, 16px)) var(--space-4);
+  animation: fadeIn 0.2s ease;
   backdrop-filter: blur(4px);
 }
 .modal-overlay.hidden { display: none; }

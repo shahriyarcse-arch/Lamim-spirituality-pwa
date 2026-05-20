@@ -310,8 +310,12 @@ const Auth = {
       'Logout',
       'Are you sure you want to logout of your account?',
       async () => {
-        // Sign out of Supabase
-        await window.supabaseClient.auth.signOut();
+        // Sign out of Supabase (no await, so it doesn't hang if offline)
+        if (navigator.onLine) {
+          window.supabaseClient.auth.signOut().catch(e => console.warn('Supabase signout failed', e));
+        } else {
+          try { window.supabaseClient.auth.signOut(); } catch(e){}
+        }
         
         // Clean up presence channel & subscription state
         if (window.Sync) {
