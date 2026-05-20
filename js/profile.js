@@ -83,7 +83,8 @@ const Profile = {
       trash: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>',
       info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
       shield: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
-      refresh: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>'
+      refresh: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>',
+      lock: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
     };
 
     // Personal Info
@@ -93,9 +94,9 @@ const Profile = {
         <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.user}</div><div><div class="settings-item-label" data-i18n="Name">Name</div><div class="settings-item-value">${user?.name || '—'}</div></div></div>
         <div class="settings-item-right"><span>›</span></div>
       </div>
-      <div class="settings-item" onclick="Utils.toast('Email cannot be changed for security reasons.', 'info')">
+      <div class="settings-item" style="cursor:default">
         <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.mail}</div><div><div class="settings-item-label" data-i18n="Email">Email</div><div class="settings-item-value">${user?.email || '—'}</div></div></div>
-        <div class="settings-item-right"><span style="opacity:0.5;font-size:14px">🔒</span></div>
+        <div class="settings-item-right" style="color:var(--color-text-muted); opacity:0.6; display:flex; align-items:center; justify-content:center; width:20px; height:20px;">${icons.lock}</div>
       </div>
       <div class="settings-item" style="cursor:default">
         <div class="settings-item-left"><div class="settings-item-icon ic-violet">${icons.users}</div><div><div class="settings-item-label" data-i18n="Gender">Gender</div></div></div>
