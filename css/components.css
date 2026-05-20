@@ -322,7 +322,7 @@ select.input option:disabled { color: var(--color-text-muted); }
   padding: var(--space-2); border-radius: var(--radius-lg); cursor: pointer;
   color: var(--color-text-muted); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 52px; font-size: 10px; font-weight: var(--fw-bold);
-  position: relative;
+  position: relative; touch-action: manipulation; flex-shrink: 0;
 }
 .bottom-nav-item::after {
   content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%) scaleX(0);

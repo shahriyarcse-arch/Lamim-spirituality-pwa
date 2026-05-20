@@ -257,6 +257,30 @@ const App = {
     this.bindNav();
     this.bindSidebarToggle();
     this.bindInstallPrompt();
+
+    // Android hardware back button support
+    window.addEventListener('popstate', (e) => {
+      // Close any open modal first
+      const openModal = document.querySelector('.modal-overlay:not(.hidden)');
+      if (openModal) {
+        openModal.classList.add('hidden');
+        history.pushState({ section: this.currentSection }, '', '');
+        return;
+      }
+      // Close sidebar if open
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar && sidebar.classList.contains('open')) {
+        this.closeSidebar();
+        history.pushState({ section: this.currentSection }, '', '');
+        return;
+      }
+      // Navigate back to previous section or home
+      if (e.state && e.state.section) {
+        this.navigateTo(e.state.section, true);
+      } else if (this.currentSection !== 'home') {
+        this.navigateTo('home', true);
+      }
+    });
   },
 
   showPage(page) {
@@ -326,7 +350,7 @@ const App = {
     });
   },
 
-  navigateTo(sectionId) {
+  navigateTo(sectionId, isBackNav = false) {
     if (this.currentSection === sectionId) {
       if (sectionId === 'home') this.showBroadcasts();
       return;
@@ -336,6 +360,11 @@ const App = {
     if (this.currentSection === 'home' && typeof Home !== 'undefined') Home.cleanup();
 
     this.currentSection = sectionId;
+
+    // Push history state for Android back button (skip if this IS a back navigation)
+    if (!isBackNav) {
+      history.pushState({ section: sectionId }, '', '');
+    }
 
     // Active nav items
     document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el => {
