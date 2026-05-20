@@ -275,6 +275,20 @@ const App = {
       }
     }, 1800);
 
+    // Safety fallback: if splash is still visible after a longer timeout,
+    // force-hide it and show the login page to avoid infinite loading state.
+    setTimeout(() => {
+      try {
+        const sp = document.getElementById('splash');
+        if (sp && !sp.classList.contains('hidden')) {
+          console.warn('[App] Splash still visible after fallback timeout — forcing hide and showing login.');
+          sp.classList.add('hidden');
+          try { if (window.Sync) window.Sync.isSubscribed = false; } catch (e) {}
+          App.showPage('login');
+        }
+      } catch (e) { console.warn('Splash fallback error', e); }
+    }, 8000);
+
     // Nav bindings
     this.bindNav();
     this.bindSidebarToggle();
