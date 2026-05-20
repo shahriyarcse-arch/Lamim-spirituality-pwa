@@ -8,7 +8,9 @@ Lamim is a premium, fully responsive, offline-first Islamic lifestyle dashboard.
 
 * **Offline-First Architecture**: Log prayers or habits offline. The custom sync engine queues all actions and syncs to the cloud the second you regain connection.
 * **Global Vanguard Leaderboard**: Compete with Muslims globally based on a dynamically calculated "Spirit Score".
-* **Sanctum Admin Panel**: A beautifully designed, RLS-protected admin console to view active users, monitor system health, export CSVs, and send real-time broadcast announcements.
+* **Sanctum Admin Panel**: A beautifully designed, RLS-protected admin console to view active users, monitor system health metrics, manage access roles, export CSVs, and send real-time broadcast announcements.
+* **Smart Finance Ledger**: Track income and expenses across 220+ master categories. Includes dynamic monthly summaries, visual transaction timelines, and auto-generated PDF Statement exports.
+* **Savings Vaults**: Create goal-based savings vaults with high-contrast, percentage-based visual progression bars and dynamic milestones.
 * **Salah (Prayer) Tracker**: 
     * Live countdown to the next prayer using sun-angle math.
     * A 3-week interactive heatmap with tiered, glassmorphic visual feedback.

@@ -79,10 +79,11 @@ Tracking night prayers (Tahajjud/Witr) presents a unique timezone problem. If a 
 * **True Rank Algorithm (Ties):** If two users have 150 points, they both receive Rank #1. The next user with 140 points receives Rank #3. The logic handles this array sorting dynamically before rendering.
 * **XSS Fallback:** User avatars are rendered via `<img src="..." onerror="...">`. If an avatar is missing or malicious, it falls back to an inline `<svg>` generating an initial-based avatar dynamically using the user's name string (which is sanitized via `escapeHTML`).
 
-### 3.7 Islamic Finance (`finance.js`)
-* **Zakat Calculator:** Users input their Gold, Silver, Cash, and Business assets. The logic dynamically checks if the total exceeds the current Nisaab threshold and calculates exactly 2.5%.
-* **Debt Array:** Stores debts as an array of objects `{ id, name, amount }`. Users can dynamically add or remove rows.
-* **Savings Vaults:** Users can create custom vaults (e.g. "Hajj Fund"). When a deposit is made into a vault, the system dynamically logs it as a "transfer" expense, ensuring the global Available Balance strictly deducts the vaulted funds, maintaining perfect financial equilibrium.
+### 3.7 Smart Finance Engine (`finance.js`)
+* **Smart Ledger:** A highly optimized engine tracking income and expenses across a 220+ master category database, with distinct visual icons and categorized sections (Bazar, Household, Transport, etc.).
+* **Dynamic Analytics:** Calculates rolling monthly summaries and total net balances, dynamically adapting between local currencies (BDT/USD) using a live conversion rate logic.
+* **Savings Vaults:** Goal-based savings system using high-contrast, multi-stop CSS gradient progress bars. When users reach 100%, the UI dynamically shifts to a radiant gold "completed" state.
+* **Automated Statements (PDF):** The module features a built-in PDF generator that instantly outputs beautifully styled, chronological HTML-to-print financial statements for the selected month, complete with cyber-seals and metadata.
 
 ### 3.8 Goals & Sunnah (`goals.js`)
 * **Boolean Checklist:** Renders a list of daily Sunnahs (e.g., "Read Surah Mulk").
