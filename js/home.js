@@ -92,11 +92,11 @@ const Home = {
                 <path d="M12 22c5.523 0 10-4.477 10-10 0-1.657-.403-3.219-1.11-4.593L12 22z" opacity="0.2"/>
               </svg>
             </div>
-            <span style="font-size: 12px; font-weight: 800; color: var(--color-accent-gold);">${DB.getSalahStreak().perfect}d ${window.t ? window.t('Perfect') : 'Perfect'}</span>
+            <span style="font-size: 12px; font-weight: 800; color: var(--color-accent-gold);">${window.n ? window.n(DB.getSalahStreak().perfect) : DB.getSalahStreak().perfect}d ${window.t ? window.t('Perfect') : 'Perfect'}</span>
           </div>
           <div class="shs-mini-aura-container" style="display: flex; align-items: center; justify-content: center;">
             <div class="shs-aura mini" style="--aura-color: ${shs.rating.color}; box-shadow: 0 0 40px ${shs.rating.color}60;">
-              <div class="shs-val" style="font-size: 28px; font-weight: 900;">${Math.round(shs.total)}</div>
+              <div class="shs-val" style="font-size: 28px; font-weight: 900;">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</div>
             </div>
           </div>
         </div>
@@ -227,7 +227,7 @@ const Home = {
         </div>
         <div style="text-align:right; display:flex; flex-direction:column">
           <span style="font-size:9px; font-weight:800; color:var(--color-text-muted); text-transform:uppercase; opacity:0.8">${window.t ? window.t('Next') : 'Next'}: ${window.t ? window.t(next.label) : next.label}</span>
-          <span style="font-size:11px; font-weight:700; color:var(--color-text-secondary)">${Math.round(prog)}%</span>
+          <span style="font-size:11px; font-weight:700; color:var(--color-text-secondary)">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
         </div>
       </div>
       <div style="height:6px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible">
@@ -457,7 +457,7 @@ const Home = {
         
         const locale = (typeof App !== 'undefined' && App.lang === 'bn') ? 'bn-BD' : 'en-US';
         const timeStr = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        if (timeVal) timeVal.textContent = timeStr;
+        if (timeVal) timeVal.textContent = window.n ? window.n(timeStr) : timeStr;
 
         const enDate = now.toLocaleDateString(locale, { year: 'numeric', month: isMobile ? 'short' : 'long', day: 'numeric' });
         if (enVal && enVal.textContent !== enDate) enVal.textContent = enDate;
@@ -487,8 +487,8 @@ const Home = {
         <div style="font-size:10px; font-weight:700; opacity:0.35; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
         <div style="display:grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;">
           <div>
-            <div id="home-next-name" style="font-size:1.6rem; font-weight:800; color:var(--home-time-color); line-height:1; margin-bottom:4px; text-transform:capitalize;">${nextName}</div>
-            <div id="home-next-time" style="font-size:13px; font-weight:600; opacity:0.55;">${nextLabel}</div>
+            <div id="home-next-name" style="font-size:1.6rem; font-weight:800; color:var(--home-time-color); line-height:1; margin-bottom:4px; text-transform:capitalize;">${window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+            <div id="home-next-time" style="font-size:13px; font-weight:600; opacity:0.55;">${window.n ? window.n(next.timeStr) : next.timeStr}</div>
           </div>
           <div style="display: flex; flex-direction: column; align-items: center;">
             <div id="home-countdown" style="font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
@@ -503,7 +503,7 @@ const Home = {
     const nameEl = document.getElementById('home-next-name');
     const timeEl = document.getElementById('home-next-time');
     if (nameEl) nameEl.textContent = window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1);
-    if (timeEl) timeEl.textContent = nextLabel;
+    if (timeEl) timeEl.textContent = window.n ? window.n(next.timeStr) : next.timeStr;
 
     // Cancel previous loop
     if (this.countdownRAF) cancelAnimationFrame(this.countdownRAF);
@@ -532,7 +532,7 @@ const Home = {
       if (cd !== lastCountdown) {
         lastCountdown = cd;
         const cdEl = document.getElementById('home-countdown');
-        if (cdEl) cdEl.textContent = cd;
+        if (cdEl) cdEl.textContent = window.n ? window.n(cd) : cd;
       }
       this.countdownRAF = requestAnimationFrame(tickCountdown);
     };
@@ -563,7 +563,7 @@ const Home = {
       </div>
       <div style="text-align:center;">
         <div style="font-size:var(--text-lg);font-weight:700">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
-        <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px">0/5 ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
+        <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px">${window.n ? window.n('0/5') : '0/5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
         <div class="progress-bar mt-2" style="width:140px">
           <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>
         </div>
@@ -580,10 +580,10 @@ const Home = {
       fill.style.strokeDashoffset = offset;
     }
     if (count) {
-      count.textContent = score.done;
+      count.textContent = window.n ? window.n(score.done) : score.done;
       count.style.color = color;
     }
-    if (desc) desc.textContent = `${score.done}/5 ${window.t ? window.t('prayers completed') : 'prayers completed'}`;
+    if (desc) desc.textContent = `${window.n ? window.n(score.done) : score.done}/${window.n ? window.n('5') : '5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}`;
     if (bar) {
       bar.style.width = visualPct + '%';
       bar.style.background = color;

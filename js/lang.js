@@ -147,3 +147,11 @@ window.t = function(key) {
   }
   return key;
 };
+
+// Translate numbers to Bengali numerals
+window.n = function(num) {
+  const lang = localStorage.getItem('lamim_lang') || 'en';
+  if (lang !== 'bn') return num;
+  const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  return String(num).replace(/\d/g, d => bnNums[d]);
+};
