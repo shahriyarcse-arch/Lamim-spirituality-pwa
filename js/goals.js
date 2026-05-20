@@ -470,9 +470,9 @@ const Goals = {
           : `<div class="salah-status-selector">
                <div class="salah-options-label">Did you pray Witr?</div>
                <div class="salah-options-grid" style="grid-template-columns: repeat(2, 1fr);">
-                 <button class="salah-option-btn" style="border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.05);" onclick="Goals.toggleWitr()">
-                   <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(251,191,36,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#fbbf24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
-                   <span class="salah-opt-label" style="color: #fbbf24; margin-top:4px;">Prayed</span>
+                 <button class="salah-option-btn" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);" onclick="Goals.toggleWitr()">
+                   <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
+                   <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
                    <span class="salah-opt-desc">3 Rakat Wajib</span>
                    <span class="salah-opt-pts">+2 pts</span>
                  </button>
