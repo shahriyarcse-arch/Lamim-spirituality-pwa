@@ -60,11 +60,11 @@ const Home = {
     if (el) el.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px;">
         <h2 style="font-size: 1.3rem; font-weight: 700; line-height: 1.2; margin: 0; color: var(--home-salam-color);">
-          As-salamu alaykum, <span style="color: var(--home-name-color);">${safeLastName}</span>
+          ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px; opacity:0.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
         </h2>
         <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--color-accent-primary); opacity:0.8;">
-          ${greet}
+          ${window.t ? window.t(greet) : greet}
         </div>
       </div>
     `;
@@ -166,9 +166,9 @@ const Home = {
                 <div class="lb-item anim-fade-in" style="width:100%; cursor:pointer; border:1px solid var(--color-accent-blue); background:rgba(59,130,246,0.05)" onclick="App.navigateTo('leaderboard')">
                     <div class="lb-rank-num" style="color:var(--color-accent-blue)">#${rank}</div>
                     <div class="lb-info">
-                        <div class="lb-name" style="font-size:14px;">Global Vanguard</div>
+                        <div class="lb-name" style="font-size:14px;">${window.t ? window.t('Global Vanguard') : 'Global Vanguard'}</div>
                         <div class="lb-meta">
-                            <span class="lb-level-tag" style="background:rgba(59,130,246,0.2); color:#93c5fd">${Utils.escapeHTML(user.spirit_level || 'Ghafil')}</span>
+                            <span class="lb-level-tag" style="background:rgba(59,130,246,0.2); color:#93c5fd">${window.t ? window.t(Utils.escapeHTML(user.spirit_level || 'Ghafil')) : Utils.escapeHTML(user.spirit_level || 'Ghafil')}</span>
                         </div>
                     </div>
                     <div style="font-size:20px;">🏆</div>
@@ -222,11 +222,11 @@ const Home = {
     container.innerHTML = `
       <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:flex-end">
         <div style="display:flex; flex-direction:column">
-          <span style="font-size:9px; font-weight:800; opacity:0.5; text-transform:uppercase; letter-spacing:1px">Current Rank</span>
+          <span style="font-size:9px; font-weight:800; opacity:0.5; text-transform:uppercase; letter-spacing:1px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
           <span style="font-size:15px; font-weight:900; color:${shs.rating.color}">${current.label}</span>
         </div>
         <div style="text-align:right; display:flex; flex-direction:column">
-          <span style="font-size:9px; font-weight:800; color:var(--color-text-muted); text-transform:uppercase; opacity:0.8">Next: ${next.label}</span>
+          <span style="font-size:9px; font-weight:800; color:var(--color-text-muted); text-transform:uppercase; opacity:0.8">${window.t ? window.t('Next') : 'Next'}: ${window.t ? window.t(next.label) : next.label}</span>
           <span style="font-size:11px; font-weight:700; color:var(--color-text-secondary)">${Math.round(prog)}%</span>
         </div>
       </div>
@@ -329,9 +329,9 @@ const Home = {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg-primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         </div>
         <div style="display:flex; flex-direction:column; gap:2px; flex: 1;">
-          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-accent-primary)">Spiritual Insight</span>
+          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-accent-primary)">${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</span>
           <div style="min-height: 34px; display: flex; align-items: center;">
-            <p id="home-insight-text" class="ai-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.4; color:var(--color-text-secondary)">${quotes[qIdx]}</p>
+            <p id="home-insight-text" class="ai-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.4; color:var(--color-text-secondary)">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
           </div>
         </div>
       </div>
@@ -484,7 +484,7 @@ const Home = {
     // Ensure structure is always fresh and premium
     el.innerHTML = `
       <div class="card" style="margin-bottom:var(--space-6); padding: 18px 20px;">
-        <div style="font-size:10px; font-weight:700; opacity:0.35; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Next Prayer</div>
+        <div style="font-size:10px; font-weight:700; opacity:0.35; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
         <div style="display:grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;">
           <div>
             <div id="home-next-name" style="font-size:1.6rem; font-weight:800; color:var(--home-time-color); line-height:1; margin-bottom:4px; text-transform:capitalize;">${nextName}</div>
@@ -492,7 +492,7 @@ const Home = {
           </div>
           <div style="display: flex; flex-direction: column; align-items: center;">
             <div id="home-countdown" style="font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
-            <div style="font-size: 10px; font-weight: 600; color: var(--color-text-muted); margin-top: 5px; opacity: 0.8;">Remaining</div>
+            <div style="font-size: 10px; font-weight: 600; color: var(--color-text-muted); margin-top: 5px; opacity: 0.8;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
           </div>
         </div>
       </div>
@@ -502,7 +502,7 @@ const Home = {
     this._lastPrayerName = nextName;
     const nameEl = document.getElementById('home-next-name');
     const timeEl = document.getElementById('home-next-time');
-    if (nameEl) nameEl.textContent = nextName.charAt(0).toUpperCase() + nextName.slice(1);
+    if (nameEl) nameEl.textContent = window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1);
     if (timeEl) timeEl.textContent = nextLabel;
 
     // Cancel previous loop
@@ -558,11 +558,11 @@ const Home = {
         </svg>
         <div class="ring-chart-label">
           <div id="salah-ring-count" style="font-size:2rem;font-weight:800">0</div>
-          <div style="font-size:0.7rem;color:var(--color-text-muted)">of 5</div>
+          <div style="font-size:0.7rem;color:var(--color-text-muted)">${window.t ? window.t('of 5') : 'of 5'}</div>
         </div>
       </div>
       <div style="text-align:center;">
-        <div style="font-size:var(--text-lg);font-weight:700">Today's Salah</div>
+        <div style="font-size:var(--text-lg);font-weight:700">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
         <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px">0/5 ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
         <div class="progress-bar mt-2" style="width:140px">
           <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>

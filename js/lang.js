@@ -27,6 +27,7 @@ const Translations = {
   'Remaining': 'বাকি আছে',
   "Today's Salah": 'আজকের সালাত',
   'prayers completed': 'ওয়াক্ত সম্পন্ন',
+  'of 5': '৫ এর মধ্যে',
   'Perfect': 'পারফেক্ট',
   'CURRENT RANK': 'বর্তমান র‍্যাঙ্ক',
   'Global Vanguard': 'গ্লোবাল ভ্যানগার্ড',
@@ -45,6 +46,7 @@ const Translations = {
   'NEXT: SIDDIQ': 'পরবর্তী: সিদ্দিক',
   'MAX RANK': 'সর্বোচ্চ র‍্যাঙ্ক',
   'Sujud is the only position where your brain is below your heart. Let it lead.': 'সিজদাহ একমাত্র অবস্থা যেখানে আপনার মস্তিষ্ক হৃদয়ের নিচে থাকে। এটিকে পথ দেখাতে দিন।',
+  'A grateful heart is a magnet for miracles. Alhamdulillah for everything.': 'কৃতজ্ঞ অন্তর অলৌকিক ঘটনার চুম্বক। সবকিছুর জন্য আলহামদুলিল্লাহ।',
   
   // Salah
   'Fajr': 'ফজর',
