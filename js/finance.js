@@ -1507,6 +1507,11 @@ const Finance = {
       fillGradient.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
     }
 
+    // Dynamic contrast color resolution using CSS variables
+    const getStyleVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const tickColor = isDark ? '#cbd5e1' : '#334155'; // High contrast Slate-300 in dark mode, Slate-700 in light mode
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(99, 102, 241, 0.08)';
+
     this.mainChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -1523,7 +1528,7 @@ const Finance = {
           pointRadius: displayData.map(v => v > 0 ? 7 : 0), // Larger radius to show the hollow center
           pointHoverRadius: displayData.map(v => v > 0 ? 9 : 0),
           pointHitRadius: 12,
-          pointBackgroundColor: isDark ? '#0c0d12' : '#ffffff', // Matches theme background
+          pointBackgroundColor: isDark ? '#0a0f1c' : '#ffffff', // Matches primary background for hollow effect
           pointBorderColor: accentColor,
           pointBorderWidth: 2.5, // Thinner border to leave a clear center hole
           clip: false, // Prevents points at the top/sides from being cut off
@@ -1565,7 +1570,7 @@ const Finance = {
           x: { 
             grid: { display: false }, 
             ticks: { 
-              color: isDark ? '#94a3b8' : '#1e293b', // High contrast slate ticks in light mode
+              color: tickColor, // Optimized contrast Slate color
               font: { size: 10, weight: '700' }, 
               autoSkip: true, 
               maxTicksLimit: 12 
@@ -1576,11 +1581,11 @@ const Finance = {
             beginAtZero: true, 
             grace: '15%', // Adds 15% buffer at the top of the scale so peaks don't touch the edge
             grid: { 
-              color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(15, 23, 42, 0.08)', // More visible grid lines
+              color: gridColor, // Subtle theme-aware grid lines
               drawBorder: false 
             }, 
             ticks: { 
-              color: isDark ? '#94a3b8' : '#1e293b', // High contrast slate ticks in light mode
+              color: tickColor, // Optimized contrast Slate color
               font: { size: 10, weight: '700' }, 
               callback: (v) => {
                 if (v <= 0) return '';
