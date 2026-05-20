@@ -32,6 +32,10 @@ const Auth = {
     this._loginBound = true;
     const form = document.getElementById('login-form');
     if (!form) return;
+    const googleBtn = form.querySelector('.google-btn-xoss');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', () => this.handleGoogleSignIn());
+    }
     form.addEventListener('submit', async e => {
       e.preventDefault();
       if (!this.validateLogin()) return;
@@ -58,7 +62,13 @@ const Auth = {
           this.showError('login-email', error.message);
           Utils.toast(error.message, 'error');
         } else if (data.user) {
-          // Fetch profile details
+          const emailConfirmed = Boolean(data.user.email_confirmed_at || data.user.confirmed_at);
+          if (!emailConfirmed) {
+            await window.supabaseClient.auth.signOut();
+            Utils.toast('Please verify your email before logging in.', 'warning');
+            return;
+          }
+
           let { data: prof, error: pErr } = await window.supabaseClient
             .from('profiles')
             .select('*')
@@ -117,11 +127,40 @@ const Auth = {
     document.getElementById('show-password-login')?.addEventListener('click', () => this.togglePass('login-pass', 'show-password-login'));
   },
 
+  async handleGoogleSignIn() {
+    if (!window.supabaseClient) {
+      Utils.toast('Database connection not initialized yet. Please refresh the page.', 'error');
+      return;
+    }
+
+    try {
+      const { error } = await window.supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+
+      if (error) {
+        Utils.toast(error.message, 'error');
+      } else {
+        Utils.toast('Redirecting to Google...', 'info');
+      }
+    } catch (err) {
+      Utils.toast(err.message || 'Google sign-in failed', 'error');
+      console.error('Google sign-in error:', err);
+    }
+  },
+
   bindSignup() {
     if (this._signupBound) return;
     this._signupBound = true;
     const form = document.getElementById('signup-form');
     if (!form) return;
+    const googleBtn = form.querySelector('.google-btn-xoss');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', () => this.handleGoogleSignIn());
+    }
     form.addEventListener('submit', async e => {
       e.preventDefault();
       if (!this.validateSignup()) return;
@@ -144,6 +183,7 @@ const Auth = {
           email: email,
           password: pass,
           options: {
+            emailRedirectTo: window.location.origin,
             data: {
               name: name,
               gender: gender,
@@ -176,8 +216,9 @@ const Auth = {
             console.warn("Profile creation attempt error:", e);
           }
 
-          if (data.session) {
-            // Case 1: Logged in immediately (Email verification OFF)
+          const emailConfirmed = Boolean(data.user.email_confirmed_at || data.user.confirmed_at);
+
+          if (emailConfirmed) {
             const user = { 
               id: data.user.id, 
               name: name, 
@@ -192,8 +233,10 @@ const Auth = {
             Utils.toast('Account created! Welcome, ' + name, 'success');
             setTimeout(() => App.showDashboard(), 700);
           } else {
-            // Case 2: Email verification required
-            Utils.toast('Signup successful! Please check your email to confirm your account.', 'warning');
+            if (data.session) {
+              await window.supabaseClient.auth.signOut();
+            }
+            Utils.toast('Signup successful! Please verify your email before logging in.', 'warning');
             setTimeout(() => App.showPage('login'), 3000);
           }
         }
@@ -213,7 +256,7 @@ const Auth = {
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('forgot-email').value.trim();
-      if (!email) { this.showError('forgot-email', 'Enter your email'); return; }
+      if (!this.isValidEmail(email)) { this.showError('forgot-email', 'Enter a valid email'); return; }
       
       const btn = form.querySelector('button[type="submit"]');
       if (btn) btn.textContent = 'Sending link...';
@@ -255,12 +298,16 @@ const Auth = {
     });
   },
 
+  isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  },
+
   validateLogin() {
     let ok = true;
     const email = document.getElementById('login-email');
     const pass  = document.getElementById('login-pass');
     this.clearError('login-email'); this.clearError('login-pass');
-    if (!email.value.trim() || !email.value.includes('@')) { this.showError('login-email', 'Valid email required'); ok = false; }
+    if (!this.isValidEmail(email.value.trim())) { this.showError('login-email', 'Valid email required'); ok = false; }
     if (!pass.value || pass.value.length < 1) { this.showError('login-pass', 'Password required'); ok = false; }
     return ok;
   },
@@ -275,7 +322,7 @@ const Auth = {
     const terms = document.getElementById('signup-terms');
 
     if (!name) { this.showError('signup-name', 'Name is required'); ok = false; }
-    if (!email.includes('@')) { this.showError('signup-email', 'Valid email required'); ok = false; }
+    if (!this.isValidEmail(email)) { this.showError('signup-email', 'Valid email required'); ok = false; }
     if (pass.length < 6) { this.showError('signup-pass', 'Min 6 characters'); ok = false; }
     if (pass !== confirm) { this.showError('signup-confirm-pass', 'Passwords do not match'); ok = false; }
     if (terms && !terms.checked) { Utils.toast('Please agree to terms', 'error'); ok = false; }

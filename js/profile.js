@@ -461,14 +461,47 @@ const Profile = {
       async () => {
         try {
           Utils.toast('Deleting account...', 'warning');
-          
+          let authDeleted = false;
+          let profileDeleted = false;
+
           if (window.supabaseClient) {
-            const { error } = await window.supabaseClient.rpc('delete_user');
-            if (error) throw error;
+            const user = DB.getUser();
+            const userId = user?.id;
+
+            // Prefer Supabase built-in self-delete for the currently authenticated user.
+            if (window.supabaseClient.auth?.deleteUser) {
+              const { error } = await window.supabaseClient.auth.deleteUser();
+              if (error) {
+                console.warn('auth.deleteUser failed:', error.message);
+              } else {
+                authDeleted = true;
+              }
+            }
+
+            // If auth.deleteUser is unavailable, try RPC and profile delete fallback.
+            if (!authDeleted) {
+              if (userId) {
+                const { error: profileErr } = await window.supabaseClient.from('profiles').delete().eq('id', userId);
+                if (!profileErr) profileDeleted = true;
+                else console.warn('Profile delete failed:', profileErr.message);
+              }
+
+              const { error: rpcErr } = await window.supabaseClient.rpc('delete_user');
+              if (rpcErr) {
+                console.warn('delete_user RPC failed:', rpcErr.message);
+              } else {
+                authDeleted = true;
+              }
+            }
+
+            // Ensure sign out after delete attempt.
+            await window.supabaseClient.auth.signOut().catch(e => console.warn('Supabase signout failed', e));
+
+            if (!authDeleted && !profileDeleted) {
+              throw new Error('Unable to delete cloud account. Please contact support or try again later.');
+            }
           }
-          
-          // Safety: Clear all local data securely while keeping preferences
-          if (window.supabaseClient) await window.supabaseClient.auth.signOut();
+
           DB.clearAllUserData();
           DB.clearUser();
           
@@ -480,14 +513,16 @@ const Profile = {
 
         } catch (err) {
           console.error("Delete Account Error:", err);
-          Utils.toast('Request sent to admin. Logging out...', 'info');
-          setTimeout(async () => {
+          try {
             if (window.supabaseClient) await window.supabaseClient.auth.signOut();
-            DB.clearAllUserData();
-            DB.clearUser();
+          } catch (_) {}
+          DB.clearAllUserData();
+          DB.clearUser();
+          Utils.toast(err.message || 'Account removal in progress. Logging out...', 'info');
+          setTimeout(() => {
             if (typeof App !== 'undefined') App.showPage('login');
             else window.location.reload();
-          }, 2000);
+          }, 1500);
         }
       }
     );
