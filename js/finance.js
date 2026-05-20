@@ -1477,182 +1477,96 @@ const Finance = {
     const displayData = data.map(v => v * currencyMult);
     const isDaily = this.chartView === 'daily';
 
-    // --- DAILY: Premium Bar Chart ---
+    // Premium Color System
+    const accentColor = isDaily ? '#3b82f6' : '#a855f7'; // Vibrant Blue for Daily, Purple for Monthly
+    const fillGradient = ctx.createLinearGradient(0, 0, 0, 240);
+    
     if (isDaily) {
-      const barGradient = ctx.createLinearGradient(0, 0, 0, 220);
-      barGradient.addColorStop(0, isDark ? '#60a5fa' : '#3b82f6');
-      barGradient.addColorStop(1, isDark ? '#2563eb' : '#93c5fd');
-
-      // Generate per-bar colors: active bars get gradient accent, zero bars are transparent
-      const bgColors = displayData.map(v => v > 0 ? barGradient : 'transparent');
-      const hoverBg = displayData.map(v => v > 0 ? (isDark ? '#93c5fd' : '#2563eb') : 'transparent');
-
-      this.mainChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Daily Spend',
-            data: displayData,
-            backgroundColor: bgColors,
-            hoverBackgroundColor: hoverBg,
-            borderRadius: { topLeft: 6, topRight: 6 },
-            borderSkipped: 'bottom',
-            barPercentage: 0.6,
-            categoryPercentage: 0.7,
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: {
-            duration: 800,
-            easing: 'easeOutQuart',
-          },
-          interaction: { intersect: false, mode: 'index' },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              enabled: true,
-              backgroundColor: isDark ? 'rgba(20,20,25,0.95)' : 'rgba(255,255,255,0.97)',
-              titleColor: isDark ? '#e2e8f0' : '#1e293b',
-              bodyColor: isDark ? '#ffffff' : '#0f172a',
-              bodyFont: { size: 14, weight: '800' },
-              titleFont: { size: 11, weight: '600' },
-              borderColor: isDark ? 'rgba(96,165,250,0.2)' : 'rgba(59,130,246,0.15)',
-              borderWidth: 1,
-              cornerRadius: 14,
-              padding: { top: 10, bottom: 10, left: 14, right: 14 },
-              displayColors: false,
-              filter: (tooltipItem) => tooltipItem.raw > 0,
-              callbacks: {
-                title: (items) => `Day ${items[0].label}`,
-                label: (item) => `Spent: ${sym}${this.formatVal(item.raw / currencyMult)}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              border: { display: false },
-              ticks: {
-                color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(15,23,42,0.35)',
-                font: { size: 9, weight: '600' },
-                autoSkip: true,
-                maxTicksLimit: 15,
-              }
-            },
-            y: {
-              position: 'right',
-              beginAtZero: true,
-              border: { display: false },
-              grid: {
-                color: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.05)',
-                drawBorder: false,
-              },
-              ticks: {
-                color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(15,23,42,0.4)',
-                font: { size: 10, weight: '700' },
-                padding: 8,
-                callback: (v) => {
-                  if (v <= 0) return '';
-                  const base = v / currencyMult;
-                  const converted = DB.getSettings().currency === 'BDT' ? base * this.exchangeRate : base;
-                  return sym + Math.round(converted).toLocaleString();
-                }
-              }
-            }
-          }
-        }
-      });
+      fillGradient.addColorStop(0, 'rgba(59, 130, 246, 0.28)');
+      fillGradient.addColorStop(0.6, 'rgba(59, 130, 246, 0.08)');
+      fillGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
     } else {
-      // --- MONTHLY: Smooth Area Chart ---
-      const areaGradient = ctx.createLinearGradient(0, 0, 0, 220);
-      areaGradient.addColorStop(0, isDark ? 'rgba(168,85,247,0.25)' : 'rgba(168,85,247,0.15)');
-      areaGradient.addColorStop(0.7, isDark ? 'rgba(168,85,247,0.03)' : 'rgba(168,85,247,0.02)');
-      areaGradient.addColorStop(1, 'transparent');
+      fillGradient.addColorStop(0, 'rgba(168, 85, 247, 0.28)');
+      fillGradient.addColorStop(0.6, 'rgba(168, 85, 247, 0.08)');
+      fillGradient.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+    }
 
-      this.mainChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Monthly Spend',
-            data: displayData,
-            borderColor: isDark ? '#c084fc' : '#a855f7',
-            borderWidth: 3,
-            tension: 0.4,
-            fill: true,
-            backgroundColor: areaGradient,
-            pointRadius: displayData.map(v => v > 0 ? 6 : 0),
-            pointHoverRadius: displayData.map(v => v > 0 ? 9 : 0),
-            pointHitRadius: 12,
-            pointBackgroundColor: isDark ? '#1a1a2e' : '#ffffff',
-            pointBorderColor: isDark ? '#c084fc' : '#a855f7',
-            pointBorderWidth: 3,
-          }]
+    this.mainChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: isDaily ? 'Daily Spend' : 'Monthly Spend',
+          data: displayData,
+          borderColor: accentColor,
+          borderWidth: 3.5,
+          tension: 0.35,
+          fill: true,
+          backgroundColor: fillGradient,
+          // Only show circular points on days with actual expenses to avoid baseline clutter
+          pointRadius: displayData.map(v => v > 0 ? 5.5 : 0),
+          pointHoverRadius: displayData.map(v => v > 0 ? 8 : 0),
+          pointHitRadius: 12,
+          pointBackgroundColor: isDark ? '#0c0d12' : '#ffffff', // Matches card background
+          pointBorderColor: accentColor,
+          pointBorderWidth: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          y: { type: 'number', easing: 'easeOutQuart', duration: 800, from: (c) => c.chart.scales.y.getPixelForValue(0) }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: {
-            duration: 900,
-            easing: 'easeOutQuart',
-          },
-          interaction: { intersect: false, mode: 'index' },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: isDark ? 'rgba(20,20,25,0.95)' : 'rgba(255,255,255,0.97)',
-              titleColor: isDark ? '#e2e8f0' : '#1e293b',
-              bodyColor: isDark ? '#ffffff' : '#0f172a',
-              bodyFont: { size: 14, weight: '800' },
-              titleFont: { size: 11, weight: '600' },
-              borderColor: isDark ? 'rgba(192,132,252,0.2)' : 'rgba(168,85,247,0.15)',
-              borderWidth: 1,
-              cornerRadius: 14,
-              padding: { top: 10, bottom: 10, left: 14, right: 14 },
-              displayColors: false,
-              filter: (tooltipItem) => tooltipItem.raw > 0,
-              callbacks: {
-                title: (items) => items[0].label,
-                label: (item) => `Spent: ${sym}${this.formatVal(item.raw / currencyMult)}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              border: { display: false },
-              ticks: {
-                color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(15,23,42,0.35)',
-                font: { size: 10, weight: '700' },
-              }
-            },
-            y: {
-              position: 'right',
-              beginAtZero: true,
-              border: { display: false },
-              grid: {
-                color: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.05)',
-                drawBorder: false,
-              },
-              ticks: {
-                color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(15,23,42,0.4)',
-                font: { size: 10, weight: '700' },
-                padding: 8,
-                callback: (v) => {
-                  if (v <= 0) return '';
-                  const base = v / currencyMult;
-                  const converted = DB.getSettings().currency === 'BDT' ? base * this.exchangeRate : base;
-                  return sym + Math.round(converted).toLocaleString();
-                }
-              }
+        interaction: { intersect: false, mode: 'index' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: isDark ? 'rgba(20,20,25,0.96)' : 'rgba(255,255,255,0.98)',
+            titleColor: isDark ? '#ffffff' : '#0f172a',
+            bodyColor: isDark ? '#ffffff' : '#0f172a',
+            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+            borderWidth: 1,
+            cornerRadius: 12,
+            padding: 10,
+            displayColors: false,
+            callbacks: {
+              title: (items) => isDaily ? `Day ${items[0].label}` : items[0].label,
+              label: (item) => `Spent: ${sym}${this.formatVal(item.raw / currencyMult)}`
             }
           }
+        },
+        scales: {
+          x: { 
+            grid: { display: false }, 
+            ticks: { 
+              color: isDark ? '#94a3b8' : '#475569', // High contrast slate ticks
+              font: { size: 10, weight: '700' }, 
+              autoSkip: true, 
+              maxTicksLimit: 12 
+            } 
+          },
+          y: { 
+            position: 'right', 
+            beginAtZero: true, 
+            grid: { 
+              color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(15, 23, 42, 0.08)', // More visible grid lines
+              drawBorder: false 
+            }, 
+            ticks: { 
+              color: isDark ? '#94a3b8' : '#475569', 
+              font: { size: 10, weight: '700' }, 
+              callback: (v) => {
+                if (v <= 0) return '';
+                const baseVal = v / currencyMult;
+                const converted = DB.getSettings().currency === 'BDT' ? baseVal * this.exchangeRate : baseVal;
+                return sym + Math.round(converted).toLocaleString();
+              }
+            } 
+          }
         }
-      });
-    }
+      }
+    });
   },
 
   getStats(v) {
