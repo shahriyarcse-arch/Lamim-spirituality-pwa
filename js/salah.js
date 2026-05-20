@@ -616,7 +616,6 @@ const Salah = {
         body { padding: 0; }
         .page { padding: 20mm 18mm; }
         .summary-card { break-inside: avoid; }
-        .data-table thead { display: table-header-group; }
         .data-table tbody tr { break-inside: avoid; }
       }
     `;
