@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lamim-v53';
+const CACHE_NAME = 'lamim-v54';
 const ASSETS = [
   './',
   './index.html',
@@ -32,6 +32,9 @@ self.addEventListener('activate', (e) => {
 // - Navigation (HTML): Network-First (always get latest)
 // - Assets (JS/CSS/etc): Stale-While-Revalidate (fast + auto-update)
 self.addEventListener('fetch', (e) => {
+  // Only handle HTTP/HTTPS requests (ignores chrome-extension://, data:, etc.)
+  if (!e.request.url.startsWith('http')) return;
+
   // Skip external database, dynamic API, and Google API calls to prevent stale data
   const skipUrls = [
     'supabase.co',
