@@ -410,15 +410,17 @@ const Mujahid = {
             const currentInterval = Math.floor(Date.now() / (1000 * 30));
             const lastInterval = parseInt(el.dataset.lastInterval || '0');
             
-            const oldDays = parseInt(nums[0].textContent);
+            const lastKnownDays = el.dataset.lastKnownDays ? parseInt(el.dataset.lastKnownDays, 10) : timeStats.days;
+            el.dataset.lastKnownDays = timeStats.days;
+            
             nums[0].textContent = timeStats.days;
             nums[1].textContent = timeStats.hours;
             nums[2].textContent = timeStats.minutes;
             nums[3].textContent = timeStats.seconds;
             
             // MILESTONE SURGE: Detect Rank Change
-            if (oldDays !== timeStats.days && habitId) {
-              const oldBadge = this.getBadgeForDays(oldDays);
+            if (lastKnownDays !== timeStats.days && habitId) {
+              const oldBadge = this.getBadgeForDays(lastKnownDays);
               const newBadge = this.getBadgeForDays(timeStats.days);
               if (newBadge && (!oldBadge || newBadge.days > oldBadge.days)) {
                 Utils.toast(`RANK ADVANCEMENT: You have achieved the rank of "${newBadge.name}"! 🛡️✨`, 'success');
