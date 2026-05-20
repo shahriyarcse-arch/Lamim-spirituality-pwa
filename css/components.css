@@ -307,13 +307,14 @@ select.input option:disabled { color: var(--color-text-muted); }
 /* === BOTTOM NAV (mobile) === */
 .bottom-nav {
   display: none; position: fixed; bottom: 0; left: 0; right: 0;
-  height: var(--bottomnav-height); 
+  height: calc(var(--bottomnav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-top: 1px solid var(--color-divider-subtle); 
   z-index: var(--z-sidebar);
-  align-items: center; justify-content: space-around; padding: 0 var(--space-2);
+  align-items: center; justify-content: space-around; padding-left: var(--space-2); padding-right: var(--space-2);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .bottom-nav-item {
