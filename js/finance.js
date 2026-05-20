@@ -1473,12 +1473,13 @@ const Finance = {
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const sym = this.getSymbol();
-    const accentColor = this.chartView === 'daily' ? '#007aff' : '#af52de';
+    const accentColor = this.chartView === 'daily' ? '#3b82f6' : '#a855f7'; // Premium Blue / Violet
     const currencyMult = DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1;
+    const displayData = data.map(v => v * currencyMult);
 
-    const gradient = ctx.createLinearGradient(0, 0, 0, 240);
-    gradient.addColorStop(0, `${accentColor}55`);
-    gradient.addColorStop(0.5, `${accentColor}11`);
+    const gradient = ctx.createLinearGradient(0, 0, 0, 220);
+    gradient.addColorStop(0, `${accentColor}2c`);
+    gradient.addColorStop(0.5, `${accentColor}0a`);
     gradient.addColorStop(1, 'transparent');
 
     this.mainChart = new Chart(ctx, {
@@ -1487,36 +1488,38 @@ const Finance = {
         labels: labels,
         datasets: [{
           label: this.chartView === 'daily' ? 'Daily Spend' : 'Monthly Spend',
-          data: data.map(v => v * currencyMult),
+          data: displayData,
           borderColor: accentColor,
-          borderWidth: 4,
-          tension: 0.4,
+          borderWidth: 3.5,
+          tension: 0.35,
           fill: true,
           backgroundColor: gradient,
-          pointRadius: this.chartView === 'daily' ? (isDark ? 3 : 4) : 5,
-          pointHoverRadius: 6,
+          // Only show points on days with expenses (> 0) to avoid baseline clutter
+          pointRadius: displayData.map(v => v > 0 ? (isDark ? 5 : 6) : 0),
+          pointHoverRadius: displayData.map(v => v > 0 ? 8 : 0),
           pointHitRadius: 10,
-          pointBackgroundColor: accentColor,
-          pointBorderColor: isDark ? '#1c1c1e' : accentColor,
-          pointBorderWidth: isDark ? 2 : 1,
+          pointBackgroundColor: isDark ? '#12131a' : '#ffffff',
+          pointBorderColor: accentColor,
+          pointBorderWidth: 3.5,
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-          y: { type: 'number', easing: 'easeOutQuart', duration: 1000, from: (c) => c.chart.scales.y.getPixelForValue(0) }
+          y: { type: 'number', easing: 'easeOutQuart', duration: 800, from: (c) => c.chart.scales.y.getPixelForValue(0) }
         },
         interaction: { intersect: false, mode: 'index' },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: isDark ? 'rgba(30,30,30,0.9)' : 'rgba(255,255,255,0.9)',
-            titleColor: isDark ? '#fff' : '#000',
-            bodyColor: isDark ? '#fff' : '#000',
-            borderColor: `${accentColor}33`,
+            backgroundColor: isDark ? 'rgba(28,28,30,0.95)' : 'rgba(255,255,255,0.95)',
+            titleColor: isDark ? '#ffffff' : '#0f172a',
+            bodyColor: isDark ? '#ffffff' : '#0f172a',
+            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
             borderWidth: 1,
-            padding: 12,
+            cornerRadius: 12,
+            padding: 10,
             displayColors: false,
             callbacks: {
               title: (items) => this.chartView === 'daily' ? `Day ${items[0].label}` : items[0].label,
@@ -1538,13 +1541,18 @@ const Finance = {
             position: 'right', 
             beginAtZero: true, 
             grid: { 
-              color: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(15, 23, 42, 0.06)', 
+              color: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(15, 23, 42, 0.04)', 
               drawBorder: false 
             }, 
             ticks: { 
               color: isDark ? '#8e8e93' : '#475569', 
               font: { size: 10, weight: '700' }, 
-              callback: (v) => v > 0 ? sym + this.formatVal(v / currencyMult) : '' 
+              callback: (v) => {
+                if (v <= 0) return '';
+                const baseVal = v / currencyMult;
+                const converted = DB.getSettings().currency === 'BDT' ? baseVal * this.exchangeRate : baseVal;
+                return sym + Math.round(converted).toLocaleString();
+              }
             } 
           }
         }
