@@ -229,11 +229,10 @@ const App = {
             return;
           }
 
-          const emailConfirmed = Boolean(cloudUser.email_confirmed_at || cloudUser.confirmed_at);
-          if (!emailConfirmed) {
+          if (Auth.requiresEmailVerification(cloudUser)) {
             await window.supabaseClient.auth.signOut().catch(() => {});
             DB.clearUser();
-            Utils.toast('Your account is not verified. Please verify your email before logging in.', 'warning');
+            Utils.toast('Your account is not verified or needs re-verification. Please verify your email before logging in.', 'warning');
             this.showPage('login');
             return;
           }

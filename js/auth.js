@@ -27,6 +27,24 @@ const Auth = {
     }
   },
 
+  emailConfirmationEnabledDate: new Date('2025-06-01'),
+
+  isEmailConfirmed(user) {
+    return Boolean(user?.email_confirmed_at || user?.confirmed_at);
+  },
+
+  isOldAccount(user) {
+    if (!user?.created_at) return false;
+    const accountCreatedDate = new Date(user.created_at);
+    if (Number.isNaN(accountCreatedDate.valueOf())) return false;
+    return accountCreatedDate < this.emailConfirmationEnabledDate;
+  },
+
+  requiresEmailVerification(user) {
+    const emailConfirmed = this.isEmailConfirmed(user);
+    return !emailConfirmed || this.isOldAccount(user);
+  },
+
   bindLogin() {
     if (this._loginBound) return;
     this._loginBound = true;
@@ -76,13 +94,29 @@ const Auth = {
           this.showError('login-email', error.message);
           Utils.toast(error.message, 'error');
         } else if (data.user) {
-          const emailConfirmed = Boolean(data.user.email_confirmed_at || data.user.confirmed_at);
-          if (!emailConfirmed) {
+          const emailConfirmed = this.isEmailConfirmed(data.user);
+          const isOldAccount = this.isOldAccount(data.user);
+          const requiresReverification = isOldAccount && emailConfirmed;
+
+          if (!emailConfirmed || requiresReverification) {
             await window.supabaseClient.auth.signOut();
-            Utils.toast('Please verify your email before logging in.', 'warning');
-            if (resendBlock && resendText) {
-              resendText.textContent = 'Your email is not verified yet. Click below to resend the verification email.';
-              resendBlock.style.display = 'block';
+
+            if (requiresReverification) {
+              Utils.toast('Please re-verify your email to continue.', 'warning');
+              if (resendBlock && resendText) {
+                resendText.textContent = 'Your account was created before email confirmation was enabled. Click below to receive a new verification email.';
+                resendBlock.style.display = 'block';
+                const emailInput = document.getElementById('login-email');
+                if (emailInput) emailInput.value = email;
+              }
+            } else {
+              Utils.toast('Please verify your email before logging in.', 'warning');
+              if (resendBlock && resendText) {
+                resendText.textContent = 'Your email is not verified yet. Click below to resend the verification email.';
+                resendBlock.style.display = 'block';
+                const emailInput = document.getElementById('login-email');
+                if (emailInput) emailInput.value = email;
+              }
             }
             return;
           }
