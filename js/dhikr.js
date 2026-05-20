@@ -398,7 +398,7 @@ const Dhikr = {
       type: 'danger',
       onConfirm: () => {
         const today = Utils.todayStr();
-        DB.setDhikr(today, { sessions: [], count: 0 });
+        DB.setDhikr(today, {});
         this.init();
         Utils.toast('Dhikr data cleared', 'info');
       }

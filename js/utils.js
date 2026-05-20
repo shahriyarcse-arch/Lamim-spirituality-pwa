@@ -314,13 +314,6 @@ const Utils = {
     if (modal) modal.classList.add('hidden');
   },
 
-  escapeHTML(str) {
-    if (!str) return '';
-    return str.replace(/[&<>"']/g, m => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-    }[m]));
-  },
-
   timeAgo(d) {
     if (!d) return '—';
     const s = (Date.now() - new Date(d).getTime()) / 1000;
@@ -331,6 +324,8 @@ const Utils = {
     if (s < 604800) return Math.floor(s / 86400) + 'd ago';
     return new Date(d).toLocaleDateString();
   },
+
+  // NOTE: escapeHTML is defined once above (line 27). Do NOT add it again here.
 
   debounce(func, wait) {
     let timeout;

@@ -71,10 +71,16 @@ self.addEventListener('fetch', (e) => {
         const timeoutId = setTimeout(() => {
           if (!resolved) {
             caches.match(e.request).then((cached) => {
-              if (cached) {
+              if (!resolved) {
                 resolved = true;
-                console.log('[SW] Timeout fallback to cache for:', e.request.url);
-                resolve(cached);
+                if (cached) {
+                  console.log('[SW] Timeout fallback to cache for:', e.request.url);
+                  resolve(cached);
+                } else {
+                  // No cache AND network is slow — must resolve or the page hangs forever
+                  console.log('[SW] Timeout with no cache for:', e.request.url);
+                  resolve(new Response('Offline – resource unavailable', { status: 503, statusText: 'Service Unavailable' }));
+                }
               }
             });
           }

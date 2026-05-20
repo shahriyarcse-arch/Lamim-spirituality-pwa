@@ -23,8 +23,8 @@ const Profile = {
     el.innerHTML = `
       <div class="profile-avatar-wrap">
         ${user.avatar
-          ? `<img src="${user.avatar}" class="profile-avatar" alt="Avatar" onerror="this.outerHTML='<div class=\\'profile-avatar\\'>${initials}</div>'">`
-          : `<div class="profile-avatar">${initials}</div>`}
+          ? `<img src="${Utils.escapeHTML(user.avatar)}" class="profile-avatar" alt="Avatar" data-fallback="${Utils.escapeHTML(initials)}" onerror="this.outerHTML='<div class=\'profile-avatar\'>'+this.dataset.fallback+'</div>'">`
+          : `<div class="profile-avatar">${Utils.escapeHTML(initials)}</div>`}
         <label class="avatar-edit-btn" for="avatar-upload" title="Change photo">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
         </label>
@@ -91,11 +91,11 @@ const Profile = {
     const pi = document.getElementById('profile-personal-info');
     if (pi) pi.innerHTML = `
       <div class="settings-item" onclick="Profile.editField('name')">
-        <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.user}</div><div><div class="settings-item-label" data-i18n="Name">Name</div><div class="settings-item-value">${user?.name || '—'}</div></div></div>
+        <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.user}</div><div><div class="settings-item-label" data-i18n="Name">Name</div><div class="settings-item-value">${Utils.escapeHTML(user?.name || '—')}</div></div></div>
         <div class="settings-item-right"><span>›</span></div>
       </div>
       <div class="settings-item" style="cursor:default">
-        <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.mail}</div><div><div class="settings-item-label" data-i18n="Email">Email</div><div class="settings-item-value">${user?.email || '—'}</div></div></div>
+        <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.mail}</div><div><div class="settings-item-label" data-i18n="Email">Email</div><div class="settings-item-value">${Utils.escapeHTML(user?.email || '—')}</div></div></div>
         <div class="settings-item-right" style="color:var(--color-text-muted); opacity:0.6; display:flex; align-items:center; justify-content:center; width:20px; height:20px;">${icons.lock}</div>
       </div>
       <div class="settings-item" style="cursor:default">
@@ -108,7 +108,7 @@ const Profile = {
         </div>
       </div>
       <div class="settings-item" onclick="Profile.editField('bio')">
-        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.pen}</div><div><div class="settings-item-label">Bio / Status</div><div class="settings-item-value">${user?.bio || 'Not set'}</div></div></div>
+        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.pen}</div><div><div class="settings-item-label">Bio / Status</div><div class="settings-item-value">${Utils.escapeHTML(user?.bio || 'Not set')}</div></div></div>
         <div class="settings-item-right"><span>›</span></div>
       </div>
       <div class="settings-item" onclick="Profile.editField('dob')">

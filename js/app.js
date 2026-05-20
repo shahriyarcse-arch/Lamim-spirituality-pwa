@@ -340,20 +340,19 @@ const App = {
   updateAvatars() {
     const user = DB.getUser();
     if (!user) return;
-    console.log("App: Updating all avatars...");
-    const initials = user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || '?';
+    const safeInitials = Utils.escapeHTML(user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || '?');
     const html = user.avatar
-      ? `<img src="${user.avatar}" 
+      ? `<img src="${Utils.escapeHTML(user.avatar)}" 
               style="width:100%;height:100%;object-fit:cover;border-radius:50%" 
               alt="Avatar" 
-              onerror="this.parentElement.innerHTML='${initials}'">`
-      : initials;
+              data-fallback="${safeInitials}"
+              onerror="this.parentElement.textContent=this.dataset.fallback;this.remove()">`
+      : safeInitials;
 
     ['topbar-avatar', 'topbar-avatar-section'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.innerHTML = html;
-        // If it's an image, force a small delay or ensure it's visible
         el.style.display = 'flex';
       }
     });
