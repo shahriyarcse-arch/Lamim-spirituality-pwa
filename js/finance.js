@@ -971,6 +971,16 @@ const Finance = {
 
     const wasComplete = goal.saved >= goal.target;
     goal.saved += amountInBase;
+
+    // FIX: Vault deposit should act as an expense so it reduces available balance
+    this.data.expenses.push({ 
+      id: Utils.uid(), 
+      description: `Vault Deposit: ${goal.name}`, 
+      amount: amountInBase, 
+      category: 'transfer', 
+      date: Utils.todayStr() 
+    });
+
     this.saveData();
     this.closeModal();
     this.render();

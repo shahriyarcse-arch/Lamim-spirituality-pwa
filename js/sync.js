@@ -448,13 +448,23 @@ const Sync = {
         } catch (err) {
           console.error(`[Sync] Fatal error on ${item.type}:`, err);
           
-          if (err.message.includes("No active session")) {
+          if (err.message && err.message.includes("No active session")) {
             Utils.toast(`Authentication Required. Please login again to sync.`, 'warning');
             return; // Stop processing queue until login
           }
 
-          Utils.toast(`Sync failed (${item.type}): ${err.message || 'Unknown error'}`, 'error');
-          break; // Retry later
+          // FIX: Poison-pill protection. If it fails 3 times, drop it to prevent permanent queue freeze.
+          item.retries = (item.retries || 0) + 1;
+          if (item.retries > 3) {
+            console.error(`[Sync] Dropping corrupted item (${item.type}) after 3 failed retries.`);
+            q.shift();
+            DB.set('lamim_sync_queue', q);
+            continue;
+          } else {
+            DB.set('lamim_sync_queue', q); // save retry count
+            Utils.toast(`Sync failed (${item.type}): Retrying soon...`, 'error');
+            break; // Retry later
+          }
         }
       }
     } finally {
