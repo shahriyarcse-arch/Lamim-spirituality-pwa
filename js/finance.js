@@ -591,7 +591,7 @@ const Finance = {
         <div class="transaction-item" style="animation-delay: ${index * 0.05}s;">
           <div class="transaction-icon" style="background:${resolvedColor}15; color:${resolvedColor}">${c.icon}</div>
           <div class="transaction-info">
-            <div class="transaction-name">${isInc ? e.description : c.name}</div>
+            <div class="transaction-name">${Utils.escapeHTML(isInc ? e.description : c.name)}</div>
             <div class="transaction-meta">${isInc ? 'Deposit' : c.section}</div>
           </div>
           <div style="display:flex; align-items:center; gap:12px; position:relative; z-index:1;">
@@ -706,7 +706,7 @@ const Finance = {
         <div class="vault-header">
           <div class="vault-icon-box" style="background:${p >= 100 ? 'rgba(255,214,10,0.1)' : ''}; color:${p >= 100 ? '#FFD60A' : ''}; box-shadow:${p >= 100 ? '0 0 20px rgba(255,214,10,0.15)' : ''};">${icon}</div>
           <div class="vault-info">
-            <div class="vault-name">${g.name}</div>
+            <div class="vault-name">${Utils.escapeHTML(g.name)}</div>
             <div class="vault-status">${displayP}% Completed</div>
           </div>
           <div class="vault-action-slot">
@@ -917,7 +917,7 @@ const Finance = {
     const html = `
       <div class="finance-modal-content" style="max-width:400px;">
         <div class="fin-modal-header">
-          <div class="fin-modal-title">Deposit to ${goal.name}</div>
+          <div class="fin-modal-title">Deposit to ${Utils.escapeHTML(goal.name)}</div>
           <button class="fin-modal-close" onclick="Finance.closeModal()">✕</button>
         </div>
         
@@ -1447,7 +1447,7 @@ const Finance = {
                   return `
                     <tr>
                       <td style="color:#6366f1; font-weight:800; font-size:13px;">${new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</td>
-                      <td style="font-weight:700; color:#1e1b4b; font-size:15px;">${t.description}</td>
+                      <td style="font-weight:700; color:#1e1b4b; font-size:15px;">${Utils.escapeHTML(t.description)}</td>
                       <td><span class="cat-tag" style="background:${catBg}; color:${catColor}; border:1px solid ${catBorder};">${catText}</span></td>
                       <td class="amount ${classColor}">${sign}${sym}${this.formatVal(t.amount)}</td>
                     </tr>
