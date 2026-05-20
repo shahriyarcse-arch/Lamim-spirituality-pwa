@@ -230,7 +230,30 @@ const Translations = {
   'days': 'দিন',
   'hrs': 'ঘণ্টা',
   'min': 'মিনিট',
-  'sec': 'সেকেন্ড'
+  'sec': 'সেকেন্ড',
+  
+  // Toasts
+  'Great job! Stay strong! 💪': 'অসাধারণ! শক্ত থাকুন! 💪',
+  'Day marked as clean! Keep going! 🎉': 'দিনটি পরিষ্কার হিসেবে চিহ্নিত! চালিয়ে যান! 🎉',
+  'Relapse Undone! Your streak is restored. 🛡️✨': 'পতন বাতিল করা হয়েছে! আপনার স্ট্রিক ফিরে এসেছে। 🛡️✨',
+  'Habit forged! Your journey begins ⚔️': 'অভ্যাস তৈরি হয়েছে! আপনার যাত্রা শুরু ⚔️',
+  'Please select or type a habit name': 'অনুগ্রহ করে একটি অভ্যাসের নাম নির্বাচন করুন বা লিখুন',
+  'Start date updated!': 'শুরুর তারিখ আপডেট হয়েছে!',
+  'No messages found': 'কোনো বার্তা পাওয়া যায়নি',
+  'Location services not supported': 'লোকেশন সার্ভিস সমর্থিত নয়',
+  'Detecting your location...': 'আপনার লোকেশন শনাক্ত করা হচ্ছে...',
+  'Photo synced with cloud!': 'ছবি ক্লাউডের সাথে সিঙ্ক হয়েছে!',
+  'Uploading to cloud...': 'ক্লাউডে আপলোড হচ্ছে...',
+  'Profile picture removed': 'প্রোফাইল ছবি মুছে ফেলা হয়েছে',
+  'Account deleted permanently. Goodbye 👋': 'অ্যাকাউন্ট স্থায়ীভাবে মুছে ফেলা হয়েছে। বিদায় 👋',
+  'Notifications enabled 🔔': 'নোটিফিকেশন চালু হয়েছে 🔔',
+  'This field cannot be empty': 'এই ঘরটি খালি রাখা যাবে না',
+  'Please enter a valid email address': 'অনুগ্রহ করে একটি সঠিক ইমেইল ঠিকানা দিন',
+  'Salah data cleared': 'সালাতের ডেটা মুছে ফেলা হয়েছে',
+  '🎉 MashaAllah! All 5 farz prayers logged!': '🎉 মাশাআল্লাহ! ৫ ওয়াক্ত ফরজ সালাতই রেকর্ড করা হয়েছে!',
+  'Syncing...': 'সিঙ্ক হচ্ছে...',
+  'Copied to clipboard': 'ক্লিপবোর্ডে কপি হয়েছে',
+  'Saving...': 'সেভ হচ্ছে...'
 };
 
 window.t = function(key) {
