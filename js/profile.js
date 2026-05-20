@@ -192,7 +192,7 @@ const Profile = {
     if (ab) ab.innerHTML = `
       <div class="settings-item" onclick="Profile.showAppInfo()">
         <div class="settings-item-left"><div class="settings-item-icon ic-slate">${icons.info}</div><div><div class="settings-item-label" data-i18n="App Version">App Version</div><div class="settings-item-value">Tap to see app info</div></div></div>
-        <div class="settings-item-right"><span>v1.5.0</span><span>›</span></div>
+        <div class="settings-item-right"><span>v3.1.0</span><span>›</span></div>
       </div>
       <div class="settings-item" onclick="Profile.showPrivacyPolicy()">
         <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.shield}</div><div><div class="settings-item-label" data-i18n="Privacy Policy">Privacy Policy</div></div></div>
@@ -412,7 +412,7 @@ const Profile = {
     label.innerHTML = `
       <div style="font-size:14px;line-height:1.8;color:var(--color-text-secondary)">
         <div><strong>App Name:</strong> Lamim Spirituality</div>
-        <div><strong>Version:</strong> 1.5.0 "Vanguard"</div>
+        <div><strong>Version:</strong> 3.1.0 "Vanguard"</div>
         <div><strong>Account Created:</strong> ${createdDate}</div>
         <div><strong>Data Entries:</strong> ${totalKeys} keys</div>
         <div><strong>Storage Used:</strong> ${storageMB} MB</div>
@@ -433,13 +433,13 @@ const Profile = {
     title.textContent = 'Privacy Policy';
     label.innerHTML = `
       <div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);max-height:50vh;overflow-y:auto">
-        <p><strong>Last Updated:</strong> April 2026</p>
-        <p><strong>1. Data Storage & Sync</strong><br>Lamim uses a dual-storage system. Your data is stored locally for instant access and securely synchronized with **Supabase Cloud** for multi-device support and backup.</p>
-        <p><strong>2. End-to-End Integrity</strong><br>We ensure that your spiritual logs, finances, and habits are protected. Synchronization is encrypted and managed through secure authentication.</p>
-        <p><strong>3. Ownership</strong><br>You own your data. You can export it as a JSON backup or permanently delete it from both local and cloud servers at any time.</p>
-        <p><strong>4. No Third-Party Tracking</strong><br>We do not share your data with third parties or use tracking analytics. Your journey is private.</p>
-        <p><strong>5. Privacy by Design</strong><br>Sensitive information like your email is only used for authentication and account recovery purposes.</p>
-        <p><strong>6. Contact</strong><br>Developed with ❤️ by Shamim Shahriyar.</p>
+        <p><strong>Last Updated:</strong> May 2026</p>
+        <p><strong>1. Data Ownership & Storage</strong><br>Lamim is an offline-first PWA. All your spiritual logs (Salah, Dhikr, habits) and personal finance transactions (income, expenses, vaults) are primarily saved directly on your device's secure local database.</p>
+        <p><strong>2. Cloud Syncing (Supabase)</strong><br>If logged in, your local records are securely synchronized with our Supabase Cloud database via encrypted connections. This provides multi-device sync and server-side backups.</p>
+        <p><strong>3. Zero Third-Party Tracking</strong><br>We do not share, sell, or rent your spiritual or financial logs to any third-party advertising companies or trackers. Your personal data is completely private.</p>
+        <p><strong>4. Local Security & PDF Generation</strong><br>Financial reports and PDFs are generated entirely on your device client-side. We do not track or analyze your wallet transactions.</p>
+        <p><strong>5. Total Control & Deletion</strong><br>You have the full right to export your data as a JSON file or request permanent deletion (via "Delete Account"), which immediately purges all records from both local storage and cloud servers.</p>
+        <p><strong>6. Contact & Support</strong><br>Developed with ❤️ for spiritual productivity by Shamim Shahriyar.</p>
       </div>
     `;
     input.style.display = 'none';
