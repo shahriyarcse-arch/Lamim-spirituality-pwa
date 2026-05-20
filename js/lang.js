@@ -155,3 +155,84 @@ window.n = function(num) {
   const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   return String(num).replace(/\d/g, d => bnNums[d]);
 };
+// Auto-Translator MutationObserver
+const autoTranslateObserver = new MutationObserver((mutations) => {
+  const isBn = (localStorage.getItem('lamim_lang') || 'en') === 'bn';
+  const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  const enNums = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+
+  autoTranslateObserver.disconnect();
+
+  function processTextNode(node) {
+    if (node.parentElement && (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE')) return;
+    let text = node.nodeValue;
+    if (!text || !text.trim()) return;
+
+    let changed = false;
+    
+    // 1. Text Translation
+    let trimmed = text.trim();
+    if (isBn && Translations[trimmed]) {
+      text = text.replace(trimmed, Translations[trimmed]);
+      changed = true;
+    }
+
+    // 2. Number Translation
+    if (isBn && /\d/.test(text)) {
+      text = text.replace(/\d/g, d => bnNums[d]);
+      changed = true;
+    } else if (!isBn && /[০-৯]/.test(text)) {
+      text = text.replace(/[০-৯]/g, d => enNums[d]);
+      changed = true;
+    }
+
+    if (changed && node.nodeValue !== text) {
+      node.nodeValue = text;
+    }
+  }
+
+  for (let m of mutations) {
+    if (m.type === 'characterData') {
+      processTextNode(m.target);
+    } else if (m.type === 'childList') {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          processTextNode(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+           if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+           const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null, false);
+           let n;
+           while (n = walk.nextNode()) {
+             processTextNode(n);
+           }
+        }
+      });
+    }
+  }
+
+  autoTranslateObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+});
+
+// Start observer as soon as possible
+if (document.body) {
+  autoTranslateObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+} else {
+  window.addEventListener('DOMContentLoaded', () => {
+    autoTranslateObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+    
+    // Run an initial pass on the whole body
+    const isBn = (localStorage.getItem('lamim_lang') || 'en') === 'bn';
+    if (isBn) {
+      autoTranslateObserver.disconnect();
+      const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      let n;
+      while (n = walk.nextNode()) {
+        const text = n.nodeValue;
+        if (/\d/.test(text)) {
+           n.nodeValue = text.replace(/\d/g, d => ['০','১','২','৩','৪','৫','৬','৭','৮','৯'][d]);
+        }
+      }
+      autoTranslateObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+    }
+  });
+}
