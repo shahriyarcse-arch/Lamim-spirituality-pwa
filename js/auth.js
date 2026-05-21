@@ -411,6 +411,45 @@ const Auth = {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   },
 
+  checkEmailSecurity(email) {
+    const cleanEmail = email.toLowerCase().trim();
+    const domain = cleanEmail.split('@')[1];
+    if (!domain) return { ok: true };
+
+    // 1. Common Temporary/Disposable Email Domains to block
+    const disposableDomains = [
+      'tempmail.com', 'temp-mail.org', 'yopmail.com', '10minutemail.com', 
+      'mailinator.com', 'guerrillamail.com', 'dispostable.com', 'getairmail.com', 
+      'sharklasers.com', 'trashmail.com', 'mintemail.com', 'jetable.org', 
+      'generator.email', 'fakemailgenerator.com', 'tempmailaddress.com',
+      'grr.la', 'guerrillamail.net', 'guerrillamail.org', 'guerrillamail.biz',
+      'maildrop.cc', 'getnada.com', 'boun.cr', 'disposable.com', 'duck.com'
+    ];
+
+    if (disposableDomains.includes(domain)) {
+      return { ok: false, error: 'Temporary/disposable emails are not allowed.' };
+    }
+
+    // 2. Common Domain Typos to suggest correction
+    const typos = {
+      'gamil.com': 'gmail.com',
+      'gmaill.com': 'gmail.com',
+      'gmal.com': 'gmail.com',
+      'gmeil.com': 'gmail.com',
+      'yaho.com': 'yahoo.com',
+      'yahooo.com': 'yahoo.com',
+      'hotamil.com': 'hotmail.com',
+      'hotmial.com': 'hotmail.com',
+      'outlook.co': 'outlook.com'
+    };
+
+    if (typos[domain]) {
+      return { ok: false, error: `Did you mean @${typos[domain]}?` };
+    }
+
+    return { ok: true };
+  },
+
   validateLogin() {
     let ok = true;
     const email = document.getElementById('login-email');
@@ -431,7 +470,16 @@ const Auth = {
     const terms = document.getElementById('signup-terms');
 
     if (!name) { this.showError('signup-name', 'Name is required'); ok = false; }
-    if (!this.isValidEmail(email)) { this.showError('signup-email', 'Valid email required'); ok = false; }
+    if (!this.isValidEmail(email)) { 
+      this.showError('signup-email', 'Valid email required'); 
+      ok = false; 
+    } else {
+      const emailCheck = this.checkEmailSecurity(email);
+      if (!emailCheck.ok) {
+        this.showError('signup-email', emailCheck.error);
+        ok = false;
+      }
+    }
     if (pass.length < 6) { this.showError('signup-pass', 'Min 6 characters'); ok = false; }
     if (pass !== confirm) { this.showError('signup-confirm-pass', 'Passwords do not match'); ok = false; }
     if (terms && !terms.checked) { Utils.toast('Please agree to terms', 'error'); ok = false; }
