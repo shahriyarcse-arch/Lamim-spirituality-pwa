@@ -604,7 +604,7 @@ const Admin = {
         <span class="sa-uname">${safeName || 'Anonymous'}</span>
         <span class="sa-uemail">${safeEmail || '—'}</span>
       </div>
-      ${!compact ? `<span class="sa-utime">${this.timeAgo(u.updated_at || u.created_at)}</span>` : ''}
+      ${!compact ? `<span class="sa-utime">${isOnline ? 'Active now' : this.timeAgo(u.updated_at || u.created_at)}</span>` : ''}
       <span class="sa-role sa-r-${role}">${role}</span>
     </div>`;
   },
