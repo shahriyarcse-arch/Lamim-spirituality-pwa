@@ -97,7 +97,7 @@ const Sync = {
 
       // Fetch all core modules in parallel for maximum throughput
       const results = await Promise.all([
-        window.supabaseClient.from('profiles').select('*').eq('id', uid).single(),
+        window.supabaseClient.from('profiles').select('*').eq('id', uid).maybeSingle(),
         window.supabaseClient.from('user_settings').select('*').eq('user_id', uid).maybeSingle(),
         window.supabaseClient.from('salah_logs').select('*').eq('user_id', uid).order('date', {ascending: false}).limit(30),
         window.supabaseClient.from('dhikr_logs').select('*').eq('user_id', uid).limit(30),

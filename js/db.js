@@ -187,10 +187,6 @@ const DB = {
           user.spirit_score = roundedScore;
           user.spirit_level = shs.rating.label;
           this.setUser(user);
-          // FIX #1: Push updated score to Supabase so leaderboard stays in sync
-          if (window.Sync && typeof window.Sync.pushProfile === 'function') {
-            window.Sync.pushProfile(user).catch(e => console.warn('[DB] Profile sync failed:', e));
-          }
         }
       }
     }, 500);

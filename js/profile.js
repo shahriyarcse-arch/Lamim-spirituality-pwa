@@ -306,9 +306,6 @@ const Profile = {
     if (typeof App !== 'undefined') App.updateAvatars();
     Utils.toast((labels[this._editingField] || this._editingField) + ' updated!', 'success');
     
-    // Cloud Sync
-    if (window.Sync) window.Sync.pushProfile(user);
-    
     this._editingField = null;
   },
 
@@ -331,7 +328,6 @@ const Profile = {
     DB.setUser(user);
     this.renderProfile();
     this.renderSettings();
-    if (window.Sync) window.Sync.pushProfile(user);
     Utils.toast('Gender updated!', 'success');
   },
 
@@ -551,10 +547,7 @@ const Profile = {
           Profile.renderSettings();
           if (typeof App !== 'undefined') App.updateAvatars();
           
-          // 3. Cloud record update
-          if (window.Sync) await window.Sync.pushProfile(user);
-
-          // 4. Storage cleanup (Delete file from Supabase)
+          // 3. Storage cleanup (Delete file from Supabase)
           if (oldAvatarUrl && oldAvatarUrl.includes('/avatars/public/')) {
             const fileName = oldAvatarUrl.split('/avatars/public/').pop();
             if (fileName && window.supabaseClient) {
@@ -674,8 +667,6 @@ const Profile = {
       const freshUser = DB.getUser();
       freshUser.avatar = publicUrl;
       DB.setUser(freshUser);
-      if (window.Sync) window.Sync.pushProfile(freshUser);
-
       // 3. Professional Cleanup: Delete OLD file from storage if it exists
       if (oldAvatarUrl && oldAvatarUrl.includes('/avatars/public/')) {
         const oldFileName = oldAvatarUrl.split('/avatars/public/').pop();
