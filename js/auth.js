@@ -27,7 +27,7 @@ const Auth = {
     }
   },
 
-  emailConfirmationEnabledDate: new Date('2025-06-01'),
+  emailConfirmationEnabledDate: new Date('2026-05-21'),
 
   isEmailConfirmed(user) {
     return Boolean(user?.email_confirmed_at || user?.confirmed_at);
