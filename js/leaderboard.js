@@ -10,7 +10,7 @@ const Leaderboard = {
 
     async init() {
         const user = DB.getUser();
-        if (!user || (user.role !== 'admin' && user.email !== 'shamimshahriyar.cse@gmail.com')) {
+        if (!user || user.role !== 'admin') {
             const root = document.getElementById('leaderboard-content');
             if (root) {
                 root.innerHTML = `

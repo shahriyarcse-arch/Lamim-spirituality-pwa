@@ -254,11 +254,6 @@ const App = {
           } catch (e) { console.warn("Background role refresh failed", e); }
         }
 
-        // Failsafe admin check
-        if (user.email === 'shamimshahriyar.cse@gmail.com' || user.role === 'admin') {
-          user.role = 'admin';
-          DB.setUser(user);
-        }
         if (DB.refreshSpiritScore) DB.refreshSpiritScore();
         this.checkAdminUI();
 
@@ -352,7 +347,7 @@ const App = {
   checkAdminUI() {
     const user = DB.getUser();
     // console.log("Checking Admin UI Visibility for:", user ? user.email : 'No User');
-    const isAdmin = user && (user.role === 'admin' || user.email === 'shamimshahriyar.cse@gmail.com');
+    const isAdmin = user && user.role === 'admin';
     
     const adminNav = document.getElementById('admin-nav-item');
     if (adminNav) {

@@ -133,7 +133,7 @@ const Home = {
     const user = DB.getUser();
     if (!user) return;
 
-    if (user.role !== 'admin' && user.email !== 'shamimshahriyar.cse@gmail.com') {
+    if (user.role !== 'admin') {
       el.style.display = 'none';
       return;
     }
