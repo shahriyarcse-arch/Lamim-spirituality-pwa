@@ -132,7 +132,7 @@ const Auth = {
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
-            .single();
+            .maybeSingle();
 
           // HEALING LOGIC: If profile is missing in public.profiles, create it now
           if (!prof || pErr) {

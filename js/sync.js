@@ -98,13 +98,13 @@ const Sync = {
       // Fetch all core modules in parallel for maximum throughput
       const results = await Promise.all([
         window.supabaseClient.from('profiles').select('*').eq('id', uid).single(),
-        window.supabaseClient.from('user_settings').select('*').eq('user_id', uid).single(),
+        window.supabaseClient.from('user_settings').select('*').eq('user_id', uid).maybeSingle(),
         window.supabaseClient.from('salah_logs').select('*').eq('user_id', uid).order('date', {ascending: false}).limit(30),
         window.supabaseClient.from('dhikr_logs').select('*').eq('user_id', uid).limit(30),
-        window.supabaseClient.from('finance_store').select('*').eq('user_id', uid).single(),
+        window.supabaseClient.from('finance_store').select('*').eq('user_id', uid).maybeSingle(),
         window.supabaseClient.from('mujahid_habits').select('*').eq('user_id', uid),
-        window.supabaseClient.from('goals').select('*').eq('user_id', uid).single(),
-        window.supabaseClient.from('dhikr_presets').select('*').eq('user_id', uid).single()
+        window.supabaseClient.from('goals').select('*').eq('user_id', uid).maybeSingle(),
+        window.supabaseClient.from('dhikr_presets').select('*').eq('user_id', uid).maybeSingle()
       ]);
 
       const [profRes, settRes, salahRes, dhikrRes, finRes, mujRes, goalRes, preRes] = results;

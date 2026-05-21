@@ -245,7 +245,7 @@ const App = {
               .from('profiles')
               .select('role')
               .eq('id', user.id)
-              .single();
+              .maybeSingle();
 
             if (!roleErr && prof && prof.role) {
               user.role = prof.role;
