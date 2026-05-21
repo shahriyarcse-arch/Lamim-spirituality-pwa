@@ -336,6 +336,7 @@ const App = {
   },
 
   showDashboard(initialSection = 'home') {
+    this.checkAdminUI();
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const dash = document.getElementById('page-dashboard');
     if (dash) dash.classList.add('active');
