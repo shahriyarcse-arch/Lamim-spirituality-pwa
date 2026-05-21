@@ -60,13 +60,9 @@ const Auth = {
     this._loginBound = true;
     const form = document.getElementById('login-form');
     if (!form) return;
-    const googleBtn = form.querySelector('.google-btn-xoss');
     const resendBlock = document.getElementById('resend-verification-block');
     const resendText = document.getElementById('resend-verification-text');
     const resendBtn = document.getElementById('resend-verification-btn');
-    if (googleBtn) {
-      googleBtn.addEventListener('click', () => this.handleGoogleSignIn());
-    }
     if (resendBtn) {
       resendBtn.addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
@@ -190,31 +186,6 @@ const Auth = {
     document.getElementById('show-password-login')?.addEventListener('click', () => this.togglePass('login-pass', 'show-password-login'));
   },
 
-  async handleGoogleSignIn() {
-    if (!window.supabaseClient) {
-      Utils.toast('Database connection not initialized yet. Please refresh the page.', 'error');
-      return;
-    }
-
-    try {
-      const { error } = await window.supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
-      });
-
-      if (error) {
-        Utils.toast(error.message, 'error');
-      } else {
-        Utils.toast('Redirecting to Google...', 'info');
-      }
-    } catch (err) {
-      Utils.toast(err.message || 'Google sign-in failed', 'error');
-      console.error('Google sign-in error:', err);
-    }
-  },
-
   async resendVerificationEmail(email) {
     if (!window.supabaseClient) {
       Utils.toast('Database connection not initialized yet. Please refresh the page.', 'error');
@@ -256,10 +227,6 @@ const Auth = {
     this._signupBound = true;
     const form = document.getElementById('signup-form');
     if (!form) return;
-    const googleBtn = form.querySelector('.google-btn-xoss');
-    if (googleBtn) {
-      googleBtn.addEventListener('click', () => this.handleGoogleSignIn());
-    }
     form.addEventListener('submit', async e => {
       e.preventDefault();
       if (!this.validateSignup()) return;
