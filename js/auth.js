@@ -386,10 +386,12 @@ const Auth = {
       }
     });
 
-    // Handle New Password Submission
     document.getElementById('forgot-reset-btn')?.addEventListener('click', async () => {
       const pass = document.getElementById('new-pass').value;
-      if (pass.length < 6) { Utils.toast('Password must be at least 6 characters', 'error'); return; }
+      if (!this.isValidPassword(pass)) { 
+        Utils.toast('Password must be at least 8 characters and contain both letters and numbers', 'error'); 
+        return; 
+      }
       
       const btn = document.getElementById('forgot-reset-btn');
       if (btn) btn.textContent = 'Updating...';
@@ -409,6 +411,10 @@ const Auth = {
 
   isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  },
+
+  isValidPassword(pass) {
+    return pass.length >= 8 && /[a-zA-Z]/.test(pass) && /[0-9]/.test(pass);
   },
 
   checkEmailSecurity(email) {
@@ -480,7 +486,10 @@ const Auth = {
         ok = false;
       }
     }
-    if (pass.length < 6) { this.showError('signup-pass', 'Min 6 characters'); ok = false; }
+    if (!this.isValidPassword(pass)) { 
+      this.showError('signup-pass', 'Min 8 chars, 1 letter & 1 number'); 
+      ok = false; 
+    }
     if (pass !== confirm) { this.showError('signup-confirm-pass', 'Passwords do not match'); ok = false; }
     if (terms && !terms.checked) { Utils.toast('Please agree to terms', 'error'); ok = false; }
     return ok;
