@@ -34,8 +34,12 @@ Contains core logic helper routines used across all UI panels:
 ---
 
 ## 2. Authentication Flow (`auth.js`)
-* **Login/Signup:** Uses `supabase.auth.signInWithPassword`.
-* **Event Interception:** `auth.js` listens to `onAuthStateChange`. When a user logs in, it triggers a system-wide UI refresh (`App.initAll()`).
+* **Login/Signup:** Uses `supabase.auth.signInWithPassword` for login and `supabase.auth.signUp` for registration. Google OAuth has been removed to simplify the authentication flow.
+* **Email Security Gate:** Before a signup request reaches Supabase, the frontend runs `checkEmailSecurity()` which:
+  1. **Blocks Disposable Emails:** Rejects 20+ known temporary/throwaway email providers (e.g., `tempmail.com`, `yopmail.com`, `mailinator.com`, `guerrillamail.com`).
+  2. **Detects Domain Typos:** Catches common misspellings like `@gamil.com`, `@gmaill.com`, `@hotamil.com` and suggests the correct domain to the user.
+* **Password Strength:** Enforced via `isValidPassword()` — passwords must be at least 8 characters and contain both letters (a-z/A-Z) and numbers (0-9). This applies to both signup and password reset flows.
+* **Duplicate Detection:** Supabase v2 returns a fake user with empty `identities` when a duplicate email attempts signup. The app detects this and warns: *"An account with this email may already exist."*
 * **Self-Healing Profiles:** Sometimes, due to Row Level Security (RLS) delays or network drops during signup, a user is authenticated but their row in the `profiles` table fails to create. `auth.js` detects this and automatically triggers an `upsert` recovery command to "heal" the profile, preventing the app from crashing.
 
 ---
@@ -47,7 +51,8 @@ The entry point of the application. It handles:
 * **Splash Screen Boot Sequence:** Renders a cinematic splash screen while the app asynchronously bootstraps the `DB`, reconciles theme preferences, and prepares the DOM.
 * **SPA Routing:** Manages Single Page Application transitions (`App.navigateTo()`).
 * **Service Worker Registration:** Bootstraps the PWA capabilities.
-* **Version Tracking:** Forces a hard cache reset if a specific cache flag (e.g., `lamim_cache_cleared_v33`) is absent, acting as an aggressive recovery mechanism.
+* **Database-Driven Admin Check:** On every login, the app fetches the user's `role` from the Supabase `profiles` table and shows/hides Admin Panel and Vanguard navigation items accordingly. No hardcoded email overrides exist — admin status is determined strictly by `user.role === 'admin'`.
+* **Version Tracking:** Forces a hard cache reset if a specific cache flag (e.g., `lamim_cache_cleared_v34`) is absent, acting as an aggressive recovery mechanism.
 
 ### 3.1 Home Dashboard (`home.js`)
 * **Realtime Clock:** Uses `requestAnimationFrame` (instead of `setInterval`) to render the current time and live countdown to the next prayer, guaranteeing zero UI lag.
@@ -113,6 +118,8 @@ Tracking night prayers (Tahajjud/Witr) presents a unique timezone problem. If a 
 * **Offset Adjustments:** Allows for ±1 day adjustments depending on local moon sightings, syncing perfectly with the `home.js` dashboard display.
 
 ### 3.13 Sanctum Admin Panel (`admin.js`)
+* **Role-Based Access Control:** Only users with `role === 'admin'` in the `profiles` table can access the Admin Panel. If a logged-in admin's role is revoked remotely, the panel detects this during the next data sync and immediately kicks the user out with a toast: *"Your admin privileges were revoked."*
+* **In-App Role Management:** Admins can click on any user in the Users tab to open a detail modal. The modal contains a "Promote to Admin" or "Demote to User" button that updates the user's role in the `profiles` table via a Supabase RPC call.
 * **Parallel Loading:** Uses `Promise.allSettled` to fetch the user list, auth status, and storage status concurrently, mapping the latency to generate a "System Health API ms" metric.
 * **Realtime Presence:** Listens to a custom `lamim:presence-updated` event dispatched by `sync.js` to render green "Online" dots next to active users in real-time.
 * **Broadcasts:** Admins can compose a message. The payload is inserted into the `app_broadcasts` table in Supabase. Supabase Realtime immediately blasts this payload to all connected clients, rendering an in-app notification instantly.
@@ -143,6 +150,14 @@ All tables must have RLS enabled.
 * **Row Level Security (RLS):** 
   * All Postgres tables require `auth.uid() = user_id`.
   * The Admin panel bypasses this using an advanced `SECURITY DEFINER` SQL function `is_admin()`, completely preventing infinite recursion bugs.
+* **Database-Driven Admin Authorization:**
+  * Admin access is determined exclusively by the `role` column in the `profiles` table.
+  * No hardcoded email addresses or client-side overrides exist anywhere in the codebase.
+  * The first admin must be set manually via the Supabase Dashboard; subsequent admins can be promoted from the Admin Panel UI.
+* **Signup Security Gates:**
+  * **Disposable Email Blocking:** `checkEmailSecurity()` maintains a blocklist of 20+ temporary email providers and rejects signups from those domains.
+  * **Email Typo Detection:** Common domain misspellings (e.g., `@gamil.com`) are caught and the user is prompted with a correction suggestion.
+  * **Password Strength:** `isValidPassword()` enforces minimum 8 characters with at least one letter and one number, applied to both signup and password reset flows.
 * **Cross-Site Scripting (XSS) & Auto-Translation:** 
   * Any data pulled from Supabase (names, emails, broadcast texts) that is injected into `innerHTML` is first passed through `Utils.escapeHTML()`. This converts dangerous tags like `<script>` into safe strings like `&lt;script&gt;`.
   * The App uses a `MutationObserver` for real-time Bengali translation. To prevent DOM corruption, the observer explicitly blacklists `<svg>`, `INPUT`, `TEXTAREA`, and `<script>` nodes, ensuring numbers inside SVG `viewBox` coordinates are not accidentally translated into Bengali strings, which would break the graphics engine.
