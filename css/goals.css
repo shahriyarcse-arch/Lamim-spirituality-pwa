@@ -143,7 +143,7 @@ div#nafl-night-grid .salah-options-grid {
 
 /* Overlay */
 #nafl-history-modal.modal-overlay {
-  background: rgba(15, 23, 42, 0.85) !important;
+  background: rgba(2, 4, 8, 0.85) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   display: flex;
@@ -154,9 +154,9 @@ div#nafl-night-grid .salah-options-grid {
 
 /* Modal Container */
 #nafl-history-modal .history-modal-content-container {
-  background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%) !important;
-  border: 1px solid rgba(168, 85, 247, 0.3) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 40px rgba(168, 85, 247, 0.25) !important;
+  background: linear-gradient(180deg, #0c1322 0%, #020408 100%) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 40px rgba(168, 85, 247, 0.15) !important;
   border-radius: 28px !important;
   padding: 28px !important;
   width: 92% !important;
@@ -356,4 +356,74 @@ div#nafl-night-grid .salah-options-grid {
   color: #94a3b8 !important;
   font-size: 14px !important;
   font-weight: 600 !important;
+}
+
+/* Light Mode Overrides for Nafl History Modal */
+[data-theme="light"] #nafl-history-modal.modal-overlay {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .history-modal-content-container {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .modal-title {
+  background: var(--gradient-brand-text) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+[data-theme="light"] #nafl-history-modal .modal-close {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .modal-close:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-summary-card {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-sum-val {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-sum-label {
+  color: var(--color-text-muted) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .history-list-modern::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .history-item-modern {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+[data-theme="light"] #nafl-history-modal .history-item-modern:hover {
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-item-date {
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-pill {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme="light"] #nafl-history-modal .h-pill.missed {
+  background: rgba(220, 38, 38, 0.1) !important;
+  color: #DC2626 !important;
 }

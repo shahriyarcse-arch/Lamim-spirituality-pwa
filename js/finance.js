@@ -220,7 +220,7 @@ const Finance = {
       }
     }, 60000);
 
-    // Listen for cloud/local data updates
+    // Listen for local data updates
     if (!this.dataUpdateBound) {
       window.addEventListener('lamim:data-updated', () => {
         if (document.getElementById('section-finance')?.classList.contains('active')) {
@@ -325,7 +325,7 @@ const Finance = {
     `;
     setTimeout(() => {
       this.initChart(stats);
-    }, 50);
+    }, 100);
   },
 
   renderMonthSelector() {
@@ -1471,143 +1471,163 @@ const Finance = {
   initChart(stats) {
     const canvas = document.getElementById('finance-main-chart');
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (this.mainChart) this.mainChart.destroy();
 
-    let labels = [];
-    let data = [];
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const ctx = canvas.getContext('2d');
     const v = this.currentViewDate;
     const m = v.getMonth(), y = v.getFullYear();
+    const sym = this.getSymbol();
+    const currencyMult = DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1;
+    const isDaily = this.chartView === 'daily';
 
-    if (this.chartView === 'daily') {
+    let labels = [];
+    let rawData = [];
+
+    if (isDaily) {
       const daysInMonth = new Date(y, m + 1, 0).getDate();
-      data = new Array(daysInMonth).fill(0);
+      rawData = new Array(daysInMonth).fill(0);
       this.data.expenses.forEach(e => {
         const d = new Date(e.date);
         if (d.getMonth() === m && d.getFullYear() === y) {
-          data[d.getDate() - 1] += e.amount;
+          rawData[d.getDate() - 1] += e.amount;
         }
       });
       labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     } else {
-      labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      data = new Array(12).fill(0);
+      labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      rawData = new Array(12).fill(0);
       this.data.expenses.filter(e => new Date(e.date).getFullYear() === y).forEach(e => {
-        data[new Date(e.date).getMonth()] += e.amount;
+        rawData[new Date(e.date).getMonth()] += e.amount;
       });
     }
 
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const sym = this.getSymbol();
-    const currencyMult = DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1;
-    const displayData = data.map(v => v * currencyMult);
-    const isDaily = this.chartView === 'daily';
+    const displayData = rawData.map(v => v * currencyMult);
+    const maxVal = Math.max(...displayData, 1);
+    const accentColor = isDaily ? (isDark ? '#3b82f6' : '#2563eb') : (isDark ? '#a855f7' : '#9333ea');
+    const tickColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(71,85,105,0.15)';
+    const areaAlpha = isDark ? '15' : '20';
+    const bgColor = isDark ? '#0f172a' : '#ffffff';
 
-    // Premium Color System
-    const accentColor = isDaily ? '#3b82f6' : '#a855f7'; // Vibrant Blue for Daily, Purple for Monthly
-    const fillGradient = ctx.createLinearGradient(0, 0, 0, 240);
-    
-    if (isDaily) {
-      fillGradient.addColorStop(0, 'rgba(59, 130, 246, 0.28)');
-      fillGradient.addColorStop(0.6, 'rgba(59, 130, 246, 0.08)');
-      fillGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
-    } else {
-      fillGradient.addColorStop(0, 'rgba(168, 85, 247, 0.28)');
-      fillGradient.addColorStop(0.6, 'rgba(168, 85, 247, 0.08)');
-      fillGradient.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width;
+    const H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    const pad = { top: 20, bottom: 28, left: 50, right: 12 };
+    const chartW = W - pad.left - pad.right;
+    const chartH = H - pad.top - pad.bottom;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines & Y-axis labels
+    const gridCount = 4;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.font = '10px system-ui, sans-serif';
+    for (let i = 0; i <= gridCount; i++) {
+      const yPct = i / gridCount;
+      const yPos = pad.top + chartH * (1 - yPct);
+      
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, yPos);
+      ctx.lineTo(pad.left + chartW, yPos);
+      ctx.stroke();
+
+      const val = maxVal * yPct;
+      ctx.fillStyle = tickColor;
+      ctx.fillText(sym + Math.round(val).toLocaleString(), pad.left - 8, yPos);
     }
 
-    // Dynamic contrast color resolution using CSS variables
-    const getStyleVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    const tickColor = isDark ? '#cbd5e1' : '#334155'; // High contrast Slate-300 in dark mode, Slate-700 in light mode
-    const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(99, 102, 241, 0.08)';
-
-    this.mainChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: isDaily ? 'Daily Spend' : 'Monthly Spend',
-          data: displayData,
-          borderColor: accentColor,
-          borderWidth: 3.5,
-          tension: 0.35,
-          fill: true,
-          backgroundColor: fillGradient,
-          // Only show circular points on days with actual expenses to avoid baseline clutter
-          pointRadius: displayData.map(v => v > 0 ? 7 : 0), // Larger radius to show the hollow center
-          pointHoverRadius: displayData.map(v => v > 0 ? 9 : 0),
-          pointHitRadius: 12,
-          pointBackgroundColor: isDark ? '#0a0f1c' : '#ffffff', // Matches primary background for hollow effect
-          pointBorderColor: accentColor,
-          pointBorderWidth: 2.5, // Thinner border to leave a clear center hole
-          clip: false, // Prevents points at the top/sides from being cut off
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 14, // Extra top breathing room for point markers
-            bottom: 4,
-            left: 8,
-            right: 8
-          }
-        },
-        animation: {
-          y: { type: 'number', easing: 'easeOutQuart', duration: 800, from: (c) => c.chart.scales.y.getPixelForValue(0) }
-        },
-        interaction: { intersect: false, mode: 'index' },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: isDark ? 'rgba(20,20,25,0.96)' : 'rgba(255,255,255,0.98)',
-            titleColor: isDark ? '#ffffff' : '#0f172a',
-            bodyColor: isDark ? '#ffffff' : '#0f172a',
-            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
-            borderWidth: 1,
-            cornerRadius: 12,
-            padding: 10,
-            displayColors: false,
-            callbacks: {
-              title: (items) => isDaily ? `Day ${items[0].label}` : items[0].label,
-              label: (item) => `Spent: ${sym}${this.formatVal(item.raw / currencyMult)}`
-            }
-          }
-        },
-        scales: {
-          x: { 
-            grid: { display: false }, 
-            ticks: { 
-              color: tickColor, // Optimized contrast Slate color
-              font: { size: 10, weight: '700' }, 
-              autoSkip: true, 
-              maxTicksLimit: 12 
-            } 
-          },
-          y: { 
-            position: 'right', 
-            beginAtZero: true, 
-            grace: '15%', // Adds 15% buffer at the top of the scale so peaks don't touch the edge
-            grid: { 
-              color: gridColor, // Subtle theme-aware grid lines
-              drawBorder: false 
-            }, 
-            ticks: { 
-              color: tickColor, // Optimized contrast Slate color
-              font: { size: 10, weight: '700' }, 
-              callback: (v) => {
-                if (v <= 0) return '';
-                const baseVal = v / currencyMult;
-                const converted = DB.getSettings().currency === 'BDT' ? baseVal * this.exchangeRate : baseVal;
-                return sym + Math.round(converted).toLocaleString();
-              }
-            } 
-          }
-        }
-      }
+    // Line Chart (Trending)
+    const pointCount = displayData.length;
+    const pointGap = chartW / (pointCount > 1 ? pointCount - 1 : 1);
+    
+    // Calculate points
+    const points = displayData.map((val, i) => {
+      const x = pad.left + i * pointGap;
+      const barH = (val / maxVal) * chartH;
+      const y = pad.top + chartH - barH;
+      return { x, y, val };
     });
+
+    // Draw area under line
+    ctx.fillStyle = accentColor + areaAlpha;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, pad.top + chartH);
+    
+    for (let i = 0; i < points.length; i++) {
+      ctx.lineTo(points[i].x, points[i].y);
+    }
+    
+    ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw line
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    
+    for (let i = 1; i < points.length; i++) {
+      ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.stroke();
+
+    // Draw points with glow
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].val > 0) {
+        // Glow
+        const gradient = ctx.createRadialGradient(points[i].x, points[i].y, 0, points[i].x, points[i].y, 6);
+        gradient.addColorStop(0, accentColor + '40');
+        gradient.addColorStop(1, accentColor + '00');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(points[i].x, points[i].y, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dot
+        ctx.fillStyle = accentColor;
+        ctx.beginPath();
+        ctx.arc(points[i].x, points[i].y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // X-axis labels
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.font = '9px system-ui, sans-serif';
+    ctx.fillStyle = tickColor;
+
+    const maxLabels = isDaily ? Math.min(pointCount, 10) : pointCount;
+    const step = Math.max(1, Math.floor(pointCount / maxLabels));
+    for (let i = 0; i < pointCount; i += step) {
+      const x = pad.left + i * pointGap;
+      const y = pad.top + chartH + 8;
+      const label = labels[i];
+      ctx.fillText(String(label), x, y);
+    }
+
+    // Bottom line
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top + chartH);
+    ctx.lineTo(pad.left + chartW, pad.top + chartH);
+    ctx.stroke();
   },
 
   getStats(v) {
@@ -1640,5 +1660,6 @@ const Finance = {
       closingBalance: closingIncome - closingExpenses,
       openingBalance: openingBalance
     };
-  }
+  },
+
 };

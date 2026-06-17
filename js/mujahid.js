@@ -351,7 +351,7 @@ const Mujahid = {
     this.migrateIcons();
     this.render();
     
-    // Listen for cloud/local data updates
+    // Listen for local data updates
     if (!this.dataUpdateBound) {
       window.addEventListener('lamim:data-updated', () => {
         if (document.getElementById('section-mujahid')?.classList.contains('active')) {
@@ -752,14 +752,14 @@ const Mujahid = {
             <div class="mujahid-hero-icon-glow"></div>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <h2 style="font-size:32px; font-weight:900; margin-bottom:12px; background:linear-gradient(to bottom, #fff, rgba(255,255,255,0.7)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-1px;">The Forge of Resolve</h2>
+          <h2 style="font-size:32px; font-weight:900; margin-bottom:12px; color:var(--color-text-primary); letter-spacing:-1px;">The Forge of Resolve</h2>
           <p style="color:var(--color-text-muted); line-height:1.6; max-width:320px; margin:0 auto 32px; font-size:16px;">Every warrior starts with a single decision. Forge your first tracker to begin your journey toward mastery.</p>
           <button class="forge-action-btn pulse-indigo" onclick="Mujahid.showAddModal()" style="max-width:260px; margin:0 auto;">Initiate First Habit</button>
         </div>
         
-        <div style="margin-top:60px; display:flex; justify-content:center; gap:32px; opacity:0.3;">
-          <div style="text-align:center;"><div style="font-size:24px; font-weight:900;">0</div><div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Active Wars</div></div>
-          <div style="text-align:center;"><div style="font-size:24px; font-weight:900;">0</div><div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Badges Earned</div></div>
+        <div style="margin-top:60px; display:flex; justify-content:center; gap:32px;">
+          <div style="text-align:center;"><div style="font-size:24px; font-weight:900;">0</div><div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:700; color:var(--color-text-muted);">Active Wars</div></div>
+          <div style="text-align:center;"><div style="font-size:24px; font-weight:900;">0</div><div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:700; color:var(--color-text-muted);">Badges Earned</div></div>
         </div>
       </div>
     `;

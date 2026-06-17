@@ -28,8 +28,8 @@ const Salah = {
     this.selectedDate = Utils.todayStr();
     this.renderAll();
     
-    // Listen for cloud/local data updates
-    // Listen for cloud/local data updates
+    // Listen for local data updates
+    // Listen for local data updates
     if (!this._dataUpdateBound) {
       this._debouncedRender = Utils.debounce(() => {
         if (document.getElementById('section-salah')?.classList.contains('active')) {
@@ -691,7 +691,7 @@ const Salah = {
           </div>
           <div class="footer-brand">
             <div class="footer-left">LAMIM ECOSYSTEM • SECURE REPORT</div>
-            <div class="footer-right">v3.1.0</div>
+            <div class="footer-right">v4.0.0</div>
           </div>
         </div>
       </div>

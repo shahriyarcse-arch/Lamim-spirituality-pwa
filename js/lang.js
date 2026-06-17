@@ -8,9 +8,6 @@ const Translations = {
   'Islamic Finance': 'ইসলামিক ফাইন্যান্স',
   'Analysis': 'বিশ্লেষণ',
   'Profile': 'প্রোফাইল',
-  'Vanguard': 'অগ্রসেনা',
-  'Admin Panel': 'অ্যাডমিন প্যানেল',
-  
   // Dashboard & Home
   'Today': 'আজ',
   '📋 Today': '📋 আজকে',
@@ -34,7 +31,6 @@ const Translations = {
   'of 5': '৫ এর মধ্যে',
   'Perfect': 'পারফেক্ট',
   'CURRENT RANK': 'বর্তমান র‍্যাঙ্ক',
-  'Global Vanguard': 'গ্লোবাল ভ্যানগার্ড',
   'SPIRITUAL INSIGHT': 'আধ্যাত্মিক বার্তা',
   'Salah': 'সালাত',
   'Nafl': 'নফল',
@@ -138,15 +134,6 @@ const Translations = {
   'Location': 'অবস্থান',
   'Not set': 'সেট করা নেই',
   
-  // Vanguard / Leaderboard
-  'Spiritual Vanguard': 'স্পিরিচুয়াল ভ্যানগার্ড',
-  'The highest-ranking warriors of Lamim': 'লামিমের সর্বোচ্চ র‍্যাঙ্কিং যোদ্ধারা',
-  'Your Global Rank': 'আপনার গ্লোবাল র‍্যাঙ্ক',
-  'YOUR GLOBAL RANK': 'আপনার গ্লোবাল র‍্যাঙ্ক',
-  'Power': 'পাওয়ার',
-  'POWER': 'পাওয়ার',
-  'Vanguard Access Restricted': 'ভ্যানগার্ড প্রবেশাধিকার সীমাবদ্ধ',
-  
   // Analysis
   'Lamim Spirituality': 'লামিম স্পিরিচুয়ালিটি',
   'Score': 'স্কোর',
@@ -212,7 +199,6 @@ const Translations = {
   'Language / ভাষা': 'Language / ভাষা',
   'All 5': 'সবগুলো',
   'None': 'একটিও না',
-  'Administration Messages': 'প্রশাসনিক বার্তা',
   'Next': 'পরবর্তী',
   'Previous': 'পূর্ববর্তী',
   'Close': 'বন্ধ',
@@ -242,16 +228,12 @@ const Translations = {
   'No messages found': 'কোনো বার্তা পাওয়া যায়নি',
   'Location services not supported': 'লোকেশন সার্ভিস সমর্থিত নয়',
   'Detecting your location...': 'আপনার লোকেশন শনাক্ত করা হচ্ছে...',
-  'Photo synced with cloud!': 'ছবি ক্লাউডের সাথে সিঙ্ক হয়েছে!',
-  'Uploading to cloud...': 'ক্লাউডে আপলোড হচ্ছে...',
-  'Profile picture removed': 'প্রোফাইল ছবি মুছে ফেলা হয়েছে',
-  'Account deleted permanently. Goodbye 👋': 'অ্যাকাউন্ট স্থায়ীভাবে মুছে ফেলা হয়েছে। বিদায় 👋',
   'Notifications enabled 🔔': 'নোটিফিকেশন চালু হয়েছে 🔔',
   'This field cannot be empty': 'এই ঘরটি খালি রাখা যাবে না',
-  'Please enter a valid email address': 'অনুগ্রহ করে একটি সঠিক ইমেইল ঠিকানা দিন',
+
   'Salah data cleared': 'সালাতের ডেটা মুছে ফেলা হয়েছে',
   '🎉 MashaAllah! All 5 farz prayers logged!': '🎉 মাশাআল্লাহ! ৫ ওয়াক্ত ফরজ সালাতই রেকর্ড করা হয়েছে!',
-  'Syncing...': 'সিঙ্ক হচ্ছে...',
+
   'Copied to clipboard': 'ক্লিপবোর্ডে কপি হয়েছে',
   'Saving...': 'সেভ হচ্ছে...'
 };

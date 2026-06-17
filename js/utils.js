@@ -373,5 +373,36 @@ const UI = {
   hideSettingsModal() {
     const modal = document.getElementById('section-settings-modal');
     if (modal) modal.classList.add('hidden');
+  },
+
+  loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${url}"]`);
+      if (existing) {
+        if (existing.dataset.loaded === 'true') {
+          resolve();
+        } else {
+          existing.addEventListener('load', () => resolve());
+          existing.addEventListener('error', (e) => reject(e));
+        }
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.dataset.loaded = 'false';
+
+      script.onload = () => {
+        script.dataset.loaded = 'true';
+        resolve();
+      };
+
+      script.onerror = (e) => {
+        reject(e);
+      };
+
+      document.head.appendChild(script);
+    });
   }
 };

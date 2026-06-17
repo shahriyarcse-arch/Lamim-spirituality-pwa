@@ -8,7 +8,7 @@ const Home = {
 
   init() { 
     this.render(); 
-    // Listen for cloud/local data updates to refresh dashboard live
+    // Listen for local data updates to refresh dashboard live
     if (!this._boundDataUpdated) {
       window.addEventListener('lamim:data-updated', () => {
         if (document.getElementById('section-home')?.classList.contains('active')) {
@@ -119,80 +119,13 @@ const Home = {
     // 4. AI Spiritual Insight
     this.renderAIInsight();
 
-    // Vanguard Rank Card
-    this.renderVanguardCard();
+
 
     // 5. Nur Particles (Subtle Animation)
     this.renderNurParticles();
   },
 
-  async renderVanguardCard() {
-    const el = document.getElementById('home-vanguard-card');
-    if (!el) return;
-    
-    const user = DB.getUser();
-    if (!user) return;
 
-    if (user.role !== 'admin') {
-      el.style.display = 'none';
-      return;
-    }
-    el.style.display = 'block';
-
-    // Show loading first
-    el.innerHTML = `
-      <div class="card lb-item" style="padding:12px; cursor:pointer; opacity:0.8; border:1px solid var(--color-border);" onclick="App.navigateTo('leaderboard')">
-        <div style="font-size:10px; color:var(--color-text-muted); text-transform:uppercase;">Vanguard Position</div>
-        <div style="font-size:14px; font-weight:700; color:var(--color-text-primary)">Loading...</div>
-      </div>
-    `;
-
-    if (typeof Leaderboard !== 'undefined') {
-        // First try cached rank
-        let rank = Leaderboard.myRank;
-        
-        // If no cached rank, fetch fresh
-        if (!rank || rank === 0) {
-            try {
-                rank = await Leaderboard.getMyRank();
-            } catch(e) {
-                console.warn('Vanguard rank fetch failed:', e);
-            }
-        }
-        
-        // If we have a valid rank, show it
-        if (rank && rank > 0) {
-            el.innerHTML = `
-                <div class="lb-item anim-fade-in" style="width:100%; cursor:pointer; border:1px solid var(--color-accent-blue); background:rgba(59,130,246,0.05)" onclick="App.navigateTo('leaderboard')">
-                    <div class="lb-rank-num" style="color:var(--color-accent-blue)">#${rank}</div>
-                    <div class="lb-info">
-                        <div class="lb-name" style="font-size:14px;">${window.t ? window.t('Global Vanguard') : 'Global Vanguard'}</div>
-                        <div class="lb-meta">
-                            <span class="lb-level-tag" style="background:rgba(59,130,246,0.2); color:#93c5fd">${window.t ? window.t(Utils.escapeHTML(user.spirit_level || 'Ghafil')) : Utils.escapeHTML(user.spirit_level || 'Ghafil')}</span>
-                        </div>
-                    </div>
-                    <div style="font-size:20px;">🏆</div>
-                </div>
-            `;
-            return;
-        }
-        
-        // Fallback: Show power score if rank unavailable
-        const myScore = user.spirit_score || 0;
-        el.innerHTML = `
-            <div class="lb-item" style="width:100%; cursor:pointer; border:1px solid var(--color-border); background:rgba(255,255,255,0.03)" onclick="App.navigateTo('leaderboard')">
-                <div class="lb-rank-num" style="color:var(--color-text-muted)">⚡</div>
-                <div class="lb-info">
-                    <div class="lb-name" style="font-size:14px;">${myScore > 0 ? myScore + ' Power' : 'No Score Yet'}</div>
-                    <div class="lb-meta">
-                        <span class="lb-level-tag">${Utils.escapeHTML(user.spirit_level || 'Ghafil')}</span>
-                    </div>
-                </div>
-                <div style="font-size:16px; opacity:0.5;">→</div>
-            </div>
-        `;
-    }
-  },
 
   renderIhsanLevel() {
     const container = document.getElementById('home-level-progress-container');

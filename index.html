@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="description" content="Lamim — Track your salah, dhikr, goals and spiritual progress">
-  <meta name="theme-color" content="#8b5cf6">
+  <meta name="theme-color" content="#020408">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
@@ -13,50 +13,50 @@
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180x180.png">
-  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/variables.css?v=145">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components.css?v=143">
   <!-- Modularized Page CSS -->
   <link rel="stylesheet" href="css/splash.css">
-  <link rel="stylesheet" href="css/auth.css">
-  <link rel="stylesheet" href="css/home.css">
-  <link rel="stylesheet" href="css/salah.css">
-  <link rel="stylesheet" href="css/dhikr.css">
+  <link rel="stylesheet" href="css/auth.css?v=144">
+  <link rel="stylesheet" href="css/home.css?v=143">
+  <link rel="stylesheet" href="css/salah.css?v=143">
+  <link rel="stylesheet" href="css/dhikr.css?v=143">
   <link rel="stylesheet" href="css/mobile-optimizations.css">
-  <link rel="stylesheet" href="css/goals.css">
+  <link rel="stylesheet" href="css/goals.css?v=143">
   <link rel="stylesheet" href="css/analysis.css">
-  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/profile.css?v=143">
   <link rel="stylesheet" href="css/complete-cinematic-quote-effects.css">
-  <link rel="stylesheet" href="css/admin.css">
+
   <link rel="stylesheet" href="css/mini-badges.css">
-  <link rel="stylesheet" href="css/radiant-soul-animation-engine.css">
+  <link rel="stylesheet" href="css/radiant-soul-animation-engine.css?v=143">
   <link rel="stylesheet" href="css/stats-row.css">
   <link rel="stylesheet" href="css/main-layout.css">
   <link rel="stylesheet" href="css/glass-panel.css">
-  <link rel="stylesheet" href="css/user-list.css">
+
   <link rel="stylesheet" href="css/sidebar-widgets.css">
   <link rel="stylesheet" href="css/health-bars.css">
   <link rel="stylesheet" href="css/activity-log.css">
   <link rel="stylesheet" href="css/desktop-layout.css">
   <link rel="stylesheet" href="css/ultra-small-screens.css">
-  <link rel="stylesheet" href="css/profile-premium.css">
-  <link rel="stylesheet" href="css/leaderboard-premium.css">
+  <link rel="stylesheet" href="css/profile-premium.css?v=143">
+
   <!-- Mujahid MUST load last to override all competing rules -->
-  <link rel="stylesheet" href="css/mujahid.css">
+  <link rel="stylesheet" href="css/mujahid.css?v=143">
   <script>
     (function() {
       const saved = localStorage.getItem('lamim_settings');
-      let theme = 'dark';
+      let theme = 'light';
       try {
         if (saved && saved !== 'undefined') {
           const parsed = JSON.parse(saved);
-          theme = parsed.theme || 'dark';
+          theme = parsed.theme || 'light';
         } else {
-          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          theme = 'light';
         }
       } catch (e) {
-        console.warn("Settings parse error, falling back to dark theme");
+        console.warn("Settings parse error, falling back to light theme");
       }
       document.documentElement.setAttribute('data-theme', theme);
     })();
@@ -140,179 +140,204 @@
 <!-- TOAST -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- ======== AUTH: LOGIN ======== -->
-<div class="page" id="page-login">
+<!-- ======== OFFLINE SETUP ======== -->
+<div class="page" id="page-setup">
   <div class="auth-page">
     <div class="auth-card">
       <div class="auth-logo centered-logo">
-        <div class="glossy-icon-wrap">
-          <div class="glossy-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 512 512"><path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" fill="currentColor"/><path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" fill="#fcd34d"/><path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" fill="#fde68a" opacity="0.8"/></svg>
-          </div>
-          <div class="glossy-sweep"></div>
+        <div class="minimal-logo-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 512 512"><path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" fill="currentColor"/><path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" fill="#fcd34d"/><path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" fill="#fde68a" opacity="0.8"/></svg>
         </div>
         <div class="auth-logo-name">Lamim</div>
       </div>
-      <h1 class="auth-title" style="text-align:center">Welcome Back</h1>
-      <p class="auth-subtitle" style="text-align:center">Sign in to continue your journey</p>
-      <form class="auth-form" id="login-form">
-        <div class="input-group">
-          <label class="input-label" for="login-email">Email</label>
-          <div class="input-wrapper">
-            <input class="input input-with-icon" type="email" id="login-email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false">
-            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
+      <!-- Progress dots — 4 steps -->
+      <div class="setup-progress-dots">
+        <div class="setup-dot active" data-step="1"></div>
+        <div class="setup-dot" data-step="2"></div>
+        <div class="setup-dot" data-step="3"></div>
+        <div class="setup-dot" data-step="4"></div>
+      </div>
+
+      <form class="auth-form" id="setup-form">
+        <div class="setup-wizard-container">
+          <div class="setup-steps-wrapper" id="setup-steps-wrapper" style="transform: translateX(0%);">
+
+            <!-- ══════════════════════════════════════════ -->
+            <!-- STEP 1 — Name                             -->
+            <!-- Animation: Scale-up fade (calm arrival)  -->
+            <!-- ══════════════════════════════════════════ -->
+            <div class="setup-step" data-step="1">
+              <div class="anim-target" style="text-align:center; padding-top: var(--space-2);">
+                <div class="premium-step-icon-wrap step-name">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="premium-step-svg">
+                    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5" />
+                    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+                    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+                    <path d="M6 14v-1.5a1.5 1.5 0 0 0-3 0V18a6 6 0 0 0 6 6h4a6 6 0 0 0 6-6v-3a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2" />
+                  </svg>
+                </div>
+                <h1 class="auth-title">What should we call you?</h1>
+                <p class="auth-subtitle">Let's personalize your spiritual companion</p>
+              </div>
+
+              <div class="input-group" style="margin-top: var(--space-5);">
+                <div class="input-with-icon-wrap">
+                  <input class="premium-input" type="text" id="setup-name" placeholder="Your name" autocomplete="name">
+                  <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                </div>
+                <div class="field-error" id="setup-name-err"></div>
+              </div>
+
+              <div class="setup-actions">
+                <button type="button" class="btn-xoss btn-next" onclick="Auth.nextStep(1)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════ -->
+            <!-- STEP 2 — Gender                           -->
+            <!-- Animation: Slide-up fade (energetic rise) -->
+            <!-- ══════════════════════════════════════════ -->
+            <div class="setup-step" data-step="2">
+              <div class="anim-target" style="text-align:center; padding-top: var(--space-2);">
+                <h1 class="auth-title">Who are you?</h1>
+                <p class="auth-subtitle">This personalizes prayer times & greetings</p>
+              </div>
+
+              <div class="gender-cards-row anim-target" style="margin-top: var(--space-5);">
+                <!-- Male Card -->
+                <div class="gender-card-v2 male" id="setup-gender-male" onclick="Auth.setGender('male')">
+                  <div class="gcv2-check">✓</div>
+                  <div class="gcv2-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="gender-svg">
+                      <circle cx="10" cy="14" r="5" />
+                      <path d="M19 5h-4M19 5v4M19 5l-5.5 5.5" />
+                      <path d="M4 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
+                    </svg>
+                  </div>
+                  <div class="gcv2-title">Male</div>
+                  <div class="gcv2-sub">Brother</div>
+                </div>
+                <!-- Female Card -->
+                <div class="gender-card-v2 female" id="setup-gender-female" onclick="Auth.setGender('female')">
+                  <div class="gcv2-check">✓</div>
+                  <div class="gcv2-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="gender-svg">
+                      <circle cx="12" cy="9" r="5" />
+                      <path d="M12 14v6M9 17h6" />
+                      <path d="M6 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
+                    </svg>
+                  </div>
+                  <div class="gcv2-title">Female</div>
+                  <div class="gcv2-sub">Sister</div>
+                </div>
+              </div>
+
+              <div class="setup-actions-row">
+                <button type="button" class="btn-xoss btn-secondary" onclick="Auth.prevStep(2)">← Back</button>
+                <button type="button" class="btn-xoss btn-next" onclick="Auth.nextStep(2)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════ -->
+            <!-- STEP 3 — Date of Birth                    -->
+            <!-- Animation: Slide-right fade               -->
+            <!-- ══════════════════════════════════════════ -->
+            <!-- STEP 3 — Date of Birth (Custom Drum Picker) -->
+            <div class="setup-step" data-step="3">
+              <div class="anim-target" style="text-align:center; padding-top: var(--space-2);">
+                <div class="premium-step-icon-wrap step-dob">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="premium-step-svg">
+                    <rect x="3" y="4" width="18" height="18" rx="4" ry="4" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                    <path d="M12 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
+                  </svg>
+                </div>
+                <h1 class="auth-title">When were you born?</h1>
+                <p class="auth-subtitle">Scroll to select · Optional</p>
+              </div>
+
+              <!-- Drum Picker Shell -->
+              <div class="dob-drum-shell anim-target" style="margin-top: var(--space-5);">
+                <div class="dob-sel-bar"></div>
+                <div class="dob-drum-col" id="dob-col-d"></div>
+                <div class="dob-drum-sep">/</div>
+                <div class="dob-drum-col" id="dob-col-m"></div>
+                <div class="dob-drum-sep">/</div>
+                <div class="dob-drum-col dob-drum-col-wide" id="dob-col-y"></div>
+              </div>
+              <div class="dob-drum-labels anim-target">
+                <span>Day</span><span></span><span>Month</span><span></span><span>Year</span>
+              </div>
+              <input type="hidden" id="setup-dob" value="">
+
+              <div class="setup-actions-row">
+                <button type="button" class="btn-xoss btn-secondary" onclick="Auth.prevStep(3)">← Back</button>
+                <button type="button" class="btn-xoss btn-next" onclick="Auth.nextStep(3)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════ -->
+            <!-- STEP 4 — Location                         -->
+            <!-- Animation: Slide-up fade (final reveal)   -->
+            <!-- ══════════════════════════════════════════ -->
+            <div class="setup-step" data-step="4">
+              <div class="anim-target" style="text-align:center; padding-top: var(--space-2);">
+                <div class="premium-step-icon-wrap step-loc">
+                  <div class="radar-scan-bg"></div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="premium-step-svg">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <h1 class="auth-title">Almost there!</h1>
+                <p class="auth-subtitle">Your location calculates exact prayer times</p>
+              </div>
+
+              <!-- Pulsing Radar Detect Button -->
+              <div class="loc-detect-wrap anim-target" id="location-detector-panel" style="margin-top: var(--space-5);">
+                <button type="button" class="loc-detect-btn premium" id="setup-btn-detect" onclick="Auth.detectLocation(event)">
+                  <div class="loc-radar-ring"></div>
+                  <div class="loc-radar-ring" style="animation-delay:0.6s"></div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="setup-detect-icon" class="detect-icon loc-btn-icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+                  <span>Auto-Detect My Location</span>
+                </button>
+                <p class="location-status-text" id="setup-location-status">Tap to detect your GPS coordinates</p>
+              </div>
+
+              <!-- Coordinate Cards -->
+              <div class="coord-cards-row anim-target">
+                <div class="coord-card premium">
+                  <div class="coord-card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                    Latitude
+                  </div>
+                  <input class="coord-card-input" type="number" id="setup-lat" step="any" placeholder="0.0000">
+                </div>
+                <div class="coord-card premium">
+                  <div class="coord-card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                    Longitude
+                  </div>
+                  <input class="coord-card-input" type="number" id="setup-lng" step="any" placeholder="0.0000">
+                </div>
+              </div>
+              <div class="field-error" id="setup-loc-err"></div>
+
+              <div class="setup-actions-row">
+                <button type="button" class="btn-xoss btn-secondary" onclick="Auth.prevStep(4)">← Back</button>
+                <button type="button" class="btn-xoss purple-btn-xoss" onclick="Auth.submitSetup()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                  Start Journey
+                </button>
+              </div>
+            </div>
+
           </div>
-          <div class="field-error" id="login-email-err"></div>
-        </div>
-        <div class="input-group">
-          <label class="input-label" for="login-pass">Password</label>
-          <div class="input-wrapper">
-            <input class="input input-with-icon" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-            <button type="button" class="input-action" id="show-password-login"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-          </div>
-          <div class="field-error" id="login-pass-err"></div>
-        </div>
-        <div class="remember-row">
-          <label class="checkbox-wrap"><input type="checkbox" checked> Remember me</label>
-          <a href="#" onclick="App.showPage('forgot');return false" style="font-size:var(--text-sm)">Forgot password?</a>
-        </div>
-        <button type="submit" class="btn-xoss purple-btn-xoss">Sign In</button>
-        <div id="resend-verification-block" style="display:none;margin-top:16px;">
-          <p id="resend-verification-text" style="font-size:13px;color:#fbbf24;margin-bottom:10px;line-height:1.5;"></p>
-          <button id="resend-verification-btn" type="button" class="btn-xoss google-btn-xoss" style="display:flex;align-items:center;justify-content:center;gap:10px;">
-            <span style="position:relative;z-index:2;">Resend verification email</span>
-          </button>
         </div>
       </form>
-      <div class="auth-footer">Don't have an account? <a href="#" onclick="App.showPage('signup');return false">Sign Up</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- ======== AUTH: SIGNUP ======== -->
-<div class="page" id="page-signup">
-  <div class="auth-page">
-    <div class="auth-card">
-      <div class="auth-logo centered-logo">
-        <div class="glossy-icon-wrap">
-          <div class="glossy-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 512 512"><path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" fill="currentColor"/><path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" fill="#fcd34d"/><path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" fill="#fde68a" opacity="0.8"/></svg>
-          </div>
-          <div class="glossy-sweep"></div>
-        </div>
-        <div class="auth-logo-name">Lamim</div>
-      </div>
-      
-      <h1 class="auth-title" style="text-align:center">Create Account</h1>
-      <p class="auth-subtitle" style="text-align:center">Start your spiritual journey today</p>
-      <form class="auth-form" id="signup-form">
-        <div class="input-group">
-          <label class="input-label" for="signup-name">Full Name</label>
-          <div class="input-wrapper">
-            <input class="input input-with-icon" id="signup-name" placeholder="Your name" autocomplete="name">
-            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
-          </div>
-          <div class="field-error" id="signup-name-err"></div>
-        </div>
-        <div class="input-group">
-          <label class="input-label" for="signup-email">Email</label>
-          <div class="input-wrapper">
-            <input class="input input-with-icon" type="email" id="signup-email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false">
-            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
-          </div>
-          <div class="field-error" id="signup-email-err"></div>
-        </div>
-        <div class="grid-2">
-          <div class="input-group">
-            <label class="input-label" for="signup-pass">Password</label>
-            <div class="input-wrapper">
-              <input class="input input-with-icon" type="password" id="signup-pass" placeholder="Min 6 chars">
-              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-            </div>
-            <div class="field-error" id="signup-pass-err"></div>
-          </div>
-          <div class="input-group">
-            <label class="input-label" for="signup-confirm-pass">Confirm Password</label>
-            <div class="input-wrapper">
-              <input class="input input-with-icon" type="password" id="signup-confirm-pass" placeholder="Confirm">
-              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-            </div>
-            <div class="field-error" id="signup-confirm-pass-err"></div>
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="input-group">
-            <label class="input-label" for="signup-gender">Gender</label>
-            <div class="input-wrapper">
-              <select class="input input-with-icon custom-select" id="signup-gender">
-                <option value="" disabled selected>Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
-            </div>
-          </div>
-          <div class="input-group">
-            <label class="input-label" for="signup-age">Age</label>
-            <div class="input-wrapper">
-              <input class="input input-with-icon" type="number" id="signup-age" placeholder="Your age" min="13">
-              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
-            </div>
-          </div>
-        </div>
-        <div class="remember-row mb-4">
-          <label class="checkbox-wrap text-sm" style="color:#a1a1aa;"><input type="checkbox" id="signup-terms" style="border-radius:4px;width:16px;height:16px;border:1px solid rgba(255,255,255,0.2);"> I agree to the Terms & Conditions</label>
-        </div>
-        <button type="submit" class="btn-xoss purple-btn-xoss">Sign Up</button>
-      </form>
-      <div class="auth-footer mt-4">Already have an account? <a href="#" onclick="App.showPage('login');return false">Sign In</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- ======== AUTH: FORGOT ======== -->
-<div class="page" id="page-forgot">
-  <div class="auth-page">
-    <div class="auth-card">
-      <div class="auth-logo centered-logo">
-        <div class="glossy-icon-wrap">
-          <div class="glossy-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="premium-svg-logo" viewBox="0 0 512 512"><path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" fill="currentColor"/><path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" fill="#fcd34d"/><path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" fill="#fde68a" opacity="0.8"/></svg>
-          </div>
-          <div class="glossy-sweep"></div>
-        </div>
-        <div class="auth-logo-name" style="font-size:24px;">Reset Password</div>
-      </div>
-      <div id="forgot-step1">
-        <p class="auth-subtitle">Enter your email to receive a reset code</p>
-        <form class="auth-form" id="forgot-form">
-          <div class="input-group">
-            <label class="input-label" for="forgot-email">Email</label>
-            <div class="input-wrapper">
-              <input class="input input-with-icon" type="email" id="forgot-email" placeholder="your@email.com" autocapitalize="none" autocorrect="off" spellcheck="false">
-              <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
-            </div>
-          </div>
-          <button type="submit" class="btn-xoss blue-btn-xoss mt-4">Send OTP</button>
-        </form>
-      </div>
-      <div id="forgot-step2" class="hidden">
-        <p class="auth-subtitle">Enter the 4-digit OTP (hint: 1234)</p>
-        <div class="input-group mb-4"><input class="input text-center" id="forgot-otp" placeholder="1234" maxlength="4" style="font-size:24px;letter-spacing:0.5em;text-align:center"></div>
-        <button class="btn-xoss blue-btn-xoss" id="forgot-verify-btn">Verify OTP</button>
-      </div>
-      <div id="forgot-step3" class="hidden">
-        <p class="auth-subtitle">Set your new password</p>
-        <div class="input-group mb-4">
-          <div class="input-wrapper">
-            <input class="input input-with-icon" type="password" id="new-pass" placeholder="New password (min 6 chars)">
-            <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-          </div>
-        </div>
-        <button class="btn-xoss blue-btn-xoss mt-4" id="forgot-reset-btn">Update Password</button>
-      </div>
-      <div class="auth-footer mt-4"><a href="#" onclick="App.showPage('login');return false">← Back to Sign In</a></div>
+      <div class="auth-footer mt-4" style="color:var(--color-text-muted);font-size:12px;text-align:center;">All data is saved locally on your device. No internet required.</div>
     </div>
   </div>
 </div>
@@ -333,13 +358,7 @@
       <div class="nav-item" data-section="finance"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="nav-label">Islamic Finance</span></div>
       <div class="nav-item" data-section="analysis"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span class="nav-label">Analysis</span></div>
       <div class="nav-item" data-section="profile"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="nav-label">Profile</span></div>
-      <div class="nav-item" id="vanguard-nav-item" data-section="leaderboard" style="display:none"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span><span class="nav-label">Vanguard</span></div>
-      
-      <!-- Admin Panel (Hidden by default) -->
-      <div class="nav-item hidden" id="admin-nav-item" data-section="admin">
-        <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg></span>
-        <span class="nav-label">Admin Panel</span>
-      </div>
+
     </div>
     <div class="sidebar-footer"><div class="nav-item" onclick="Auth.logout()"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span><span class="nav-label">Logout</span></div></div>
   </nav>
@@ -466,8 +485,7 @@
                 <!-- Path to Ihsan (Level Progress Bar) -->
                 <div id="home-level-progress-container" style="width: 100%;"></div>
                 
-                <!-- Vanguard Rank Shortcut Card -->
-                <div id="home-vanguard-card" style="width: 100%;"></div>
+
               </div>
             </div>
           </div>
@@ -676,10 +694,7 @@
       <div class="settings-group" style="border-color:rgba(248,81,73,0.3)"><div class="settings-group-title" style="color:var(--color-accent-red)">Danger Zone</div><div id="profile-danger"></div></div>
     </section>
 
-    <!-- ===== LEADERBOARD ===== -->
-    <section class="section-panel" id="section-leaderboard">
-      <div id="leaderboard-content"></div>
-    </section>
+
 
     <!-- Profile Edit Modal -->
     <div class="modal-overlay hidden" id="profile-edit-modal">
@@ -710,16 +725,7 @@
         </div>
       </div>
     </div>
-    <!-- ===== ADMIN ===== -->
-    <section class="section-panel" id="section-admin">
-      <div id="admin-root">
-        <!-- Content injected by admin.js -->
-        <div class="p-8 text-center">
-          <div class="loader-spinner mb-4"></div>
-          <p>Initializing Admin Command Center...</p>
-        </div>
-      </div>
-    </section>
+
 
   </main>
 
@@ -733,7 +739,7 @@
     <div class="bottom-nav-item" data-section="mujahid"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 11 2 2 4-4"/></svg></span><span data-i18n="Mujahid">Mujahid</span></div>
     <div class="bottom-nav-item" data-section="finance"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span data-i18n="Finance">Finance</span></div>
     <div class="bottom-nav-item" data-section="analysis"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span data-i18n="Analysis">Analysis</span></div>
-    <div class="bottom-nav-item" id="vanguard-bnav-item" data-section="leaderboard" style="display:none"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span><span data-i18n="Vanguard">Vanguard</span></div>
+
     <div class="bottom-nav-item" data-section="profile"><span class="bnav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span><span data-i18n="Profile">Profile</span></div>
   </nav>
 </div>
@@ -780,11 +786,7 @@
 
 
 
-<!-- External Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="js/supabase-client.js?v=124"></script>
+<!-- External Libraries are lazy-loaded dynamically in JS -->
   <!-- NAFL HISTORY MODAL -->
   <div class="modal-overlay hidden" id="nafl-history-modal" onclick="if(event.target===this) Goals.hideHistory()">
     <div class="modal history-modal-content-container anim-scale-up">
@@ -1109,204 +1111,121 @@
     </div>
   </div>
 
-  <!-- GLOBAL SYNC INSPECTOR FAB (Modern, Faded, Glassmorphic) -->
-  <style>
-    .global-sync-fab {
-      position: fixed;
-      right: 16px;
-      bottom: 90px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text);
-      z-index: 9990;
-      opacity: 0.3;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    .global-sync-fab:hover, .global-sync-fab:active {
-      opacity: 1;
-      transform: scale(1.1);
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      color: var(--color-accent-blue);
-    }
-    .global-sync-fab svg {
-      width: 20px;
-      height: 20px;
-    }
-    
-    @keyframes syncPulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
-      70% { box-shadow: 0 0 0 12px rgba(74, 222, 128, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-    }
-    @keyframes syncPulseYellow {
-      0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6); }
-      70% { box-shadow: 0 0 0 12px rgba(251, 191, 36, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
-    }
-    @keyframes syncPulseGray {
-      0% { box-shadow: 0 0 0 0 rgba(148, 163, 184, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(148, 163, 184, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(148, 163, 184, 0); }
-    }
-    
-    .sync-pulse-green { animation: syncPulseGreen 2s infinite; color: #4ade80 !important; border-color: rgba(74, 222, 128, 0.3) !important; }
-    .sync-pulse-yellow { animation: syncPulseYellow 2s infinite; color: #fbbf24 !important; border-color: rgba(251, 191, 36, 0.3) !important; }
-    .sync-pulse-gray { animation: syncPulseGray 2s infinite; color: #94a3b8 !important; border-color: rgba(148, 163, 184, 0.2) !important; }
-  </style>
 
-  <button id="sync-fab-trigger" class="global-sync-fab" onclick="document.getElementById('sync-hub-modal').classList.remove('hidden')" title="Cloud Sync Inspector">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
-      <path d="m12 12 3-3 3 3"/>
-      <path d="M15 9v11"/>
-    </svg>
-  </button>
-
-  <!-- PREMIUM SYNC HUB MODAL -->
-  <div id="sync-hub-modal" class="modal-overlay hidden" onclick="if(event.target===this) this.classList.add('hidden')" style="z-index:10000; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
-    <div class="modal anim-scale-up" style="max-width:360px; width:90%; padding:24px; border-radius:28px; background: linear-gradient(145deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95)); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);">
-      
-      <!-- Header -->
-      <div style="display:flex; align-items:center; gap:14px; margin-bottom:24px;">
-        <div style="width:46px; height:46px; border-radius:14px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display:flex; align-items:center; justify-content:center; box-shadow: 0 8px 20px rgba(99,102,241,0.4);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-        </div>
-        <div>
-          <h3 style="margin:0; font-size:18px; font-weight:700; color:#fff; letter-spacing:-0.3px;">Data Sync Hub</h3>
-          <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary);" id="sync-hub-status-text">Checking connection...</div>
-        </div>
-      </div>
-
-      <!-- MODERN SYNC STATUS CARD -->
-      <div id="sync-status-main-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius:24px; padding:24px; text-align:center; margin-bottom:20px; position:relative; overflow:hidden;">
-        <div id="sync-status-icon-container" style="width:60px; height:60px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-           <!-- Icon will be injected by JS -->
-        </div>
-        <div id="sync-status-title" style="font-size:18px; font-weight:800; color:#fff; margin-bottom:4px;">Checking...</div>
-        <div id="sync-status-desc" style="font-size:13px; color:#64748b; font-weight:500;">Please wait a moment</div>
-        
-        <!-- Animated Pulse Ring -->
-        <div class="sync-pulse" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:100%; height:100%; pointer-events:none; opacity:0.1;"></div>
-      </div>
-
-      <!-- CONNECTIVITY BADGES -->
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:24px;">
-        <div class="sync-badge-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:18px; padding:12px; display:flex; align-items:center; gap:10px;">
-          <div id="conn-dot-local" style="width:8px; height:8px; border-radius:50%; background:#4ade80; box-shadow: 0 0 10px #4ade80;"></div>
-          <div style="font-size:12px; font-weight:700; color:#94a3b8;">Local Save</div>
-        </div>
-        <div class="sync-badge-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:18px; padding:12px; display:flex; align-items:center; gap:10px;">
-          <div id="conn-dot-cloud" style="width:8px; height:8px; border-radius:50%; background:#64748b;"></div>
-          <div style="font-size:12px; font-weight:700; color:#94a3b8;">Cloud Link</div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div style="display:flex;">
-        <button onclick="document.getElementById('sync-hub-modal').classList.add('hidden')" style="flex:1; padding:16px; border-radius:16px; background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.05); font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;">
-          Close
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    // Update Sync Hub
-    setInterval(() => {
-      const statusTitle = document.getElementById('sync-status-title');
-      const statusDesc = document.getElementById('sync-status-desc');
-      const statusHeader = document.getElementById('sync-hub-status-text');
-      const iconContainer = document.getElementById('sync-status-icon-container');
-      const dotCloud = document.getElementById('conn-dot-cloud');
-      const fab = document.getElementById('sync-fab-trigger');
-      
-      const q = (DB.rawGet('lamim_sync_queue') ? JSON.parse(DB.rawGet('lamim_sync_queue')) : []);
-      const isOnline = !!window.supabaseClient;
-      const isSynced = q.length === 0;
-
-      // Update Header Text
-      if (statusHeader) {
-        statusHeader.innerHTML = isOnline 
-          ? '<span style="color:#4ade80">● Active & Protected</span>'
-          : '<span style="color:#94a3b8">● Offline / Disconnected</span>';
-      }
-
-      // Update Floating FAB
-      if (fab) {
-        fab.classList.remove('sync-pulse-green', 'sync-pulse-yellow', 'sync-pulse-gray');
-        if (!isOnline) fab.classList.add('sync-pulse-gray');
-        else if (!isSynced) fab.classList.add('sync-pulse-yellow');
-        else fab.classList.add('sync-pulse-green');
-      }
-
-      if (!statusTitle || !iconContainer) return;
-
-      // Update Hub Modal Dot
-      if (dotCloud) {
-        dotCloud.style.background = isOnline ? '#4ade80' : '#64748b';
-        dotCloud.style.boxShadow = isOnline ? '0 0 10px #4ade80' : 'none';
-      }
-
-      if (!isOnline) {
-        statusTitle.textContent = "Offline Mode";
-        statusTitle.style.color = "#94a3b8";
-        statusDesc.textContent = "Data saving locally to your device";
-        iconContainer.style.background = "rgba(148, 163, 184, 0.1)";
-        iconContainer.style.color = "#94a3b8";
-        iconContainer.innerHTML = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
-      } else if (!isSynced) {
-        statusTitle.textContent = "Sync Pending";
-        statusTitle.style.color = "#fbbf24";
-        statusDesc.textContent = `${q.length} items waiting to upload`;
-        iconContainer.style.background = "rgba(251, 191, 36, 0.1)";
-        iconContainer.style.color = "#fbbf24";
-        iconContainer.innerHTML = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
-      } else {
-        statusTitle.textContent = "Fully Synced";
-        statusTitle.style.color = "#4ade80";
-        statusDesc.textContent = "All your data is safe in the cloud";
-        iconContainer.style.background = "rgba(74, 222, 128, 0.1)";
-        iconContainer.style.color = "#4ade80";
-        iconContainer.innerHTML = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11 11 13 15 9"/></svg>';
-      }
-    }, 1000);
-  </script>
 
   <!-- Core Engine -->
-  <script src="js/lang.js?v=125"></script>
-  <script src="js/utils.js?v=125"></script>
-  <script src="js/db.js?v=125"></script>
-  <script src="js/sync.js?v=125"></script>
-  <script src="js/auth.js?v=125"></script>
-  <script src="js/home.js?v=125"></script>
+  <script src="js/lang.js?v=127"></script>
+  <script src="js/utils.js?v=127"></script>
+  <script src="js/db.js?v=127"></script>
+  <script src="js/auth.js?v=146"></script>
+  <script src="js/home.js?v=137"></script>
   
   <!-- App Modules -->
-  <script src="js/hijri.js?v=125"></script>
-  <script src="js/salah.js?v=125"></script>
-  <script src="js/dhikr.js?v=125"></script>
-  <script src="js/goals.js?v=125"></script>
-  <script src="js/finance.js?v=125"></script>
-  <script src="js/mujahid.js?v=125"></script>
-  <script src="js/profile.js?v=125"></script>
-  <script src="js/analysis.js?v=125"></script>
-  <script src="js/leaderboard.js?v=125"></script>
-  <script src="js/admin.js?v=125"></script>
-  <script src="js/notifications.js?v=125"></script>
-  <script src="js/prayer-notifier.js?v=1"></script>
-  <script src="js/app.js?v=125"></script>
+  <script src="js/hijri.js?v=137"></script>
+  <script src="js/salah.js?v=137"></script>
+  <script src="js/dhikr.js?v=137"></script>
+  <script src="js/goals.js?v=137"></script>
+  <script src="js/finance.js?v=137"></script>
+  <script src="js/mujahid.js?v=137"></script>
+  <script src="js/profile.js?v=142"></script>
+  <script src="js/analysis.js?v=137"></script>
+
+
+  <script src="js/service-worker-register.js"></script>
+  
+  <style>
+    /* HOTFIX: Premium Setup Styles */
+    .premium-step-icon-wrap {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      background: var(--color-surface-nested, rgba(0,0,0,0.05));
+      border: 1px solid var(--color-border, rgba(0,0,0,0.1));
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px auto !important;
+      border-radius: 28px;
+      overflow: hidden;
+      --glow-color: 56, 189, 248;
+    }
+    .premium-step-icon-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(var(--glow-color), 0.15) 0%, transparent 70%);
+      animation: radar-pulse-bg 2s ease-in-out infinite;
+    }
+    .premium-step-icon-wrap svg { z-index: 2; position: relative; }
+    .premium-step-icon-wrap.step-loc { --glow-color: 56, 189, 248; }
+    .premium-step-icon-wrap.step-loc svg { color: rgb(var(--glow-color)); filter: drop-shadow(0 0 10px rgba(var(--glow-color), 0.6)); }
+    .premium-step-icon-wrap.step-name { --glow-color: 168, 85, 247; }
+    .premium-step-icon-wrap.step-name svg { filter: drop-shadow(0 0 10px rgba(var(--glow-color), 0.6)); }
+    .premium-step-icon-wrap.step-dob { --glow-color: 59, 130, 246; }
+    .premium-step-icon-wrap.step-dob svg { filter: drop-shadow(0 0 10px rgba(var(--glow-color), 0.6)); }
+
+    [data-theme="light"] .premium-step-icon-wrap {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(255,255,255,1) !important;
+    }
+    [data-theme="light"] .premium-step-icon-wrap::before {
+      background: radial-gradient(circle at center, rgba(var(--glow-color), 0.25) 0%, rgba(var(--glow-color), 0.05) 50%, transparent 80%);
+    }
+    [data-theme="light"] .premium-step-icon-wrap svg {
+      filter: drop-shadow(0 6px 12px rgba(var(--glow-color), 0.35));
+    }
+
+    /* Button and Input fixes */
+    .premium-input {
+      width: 100%; font-size: 1.1rem; height: 58px; padding-left: 52px; border-radius: 20px;
+      background: var(--color-surface-card); border: 1px solid var(--color-border);
+      color: var(--color-text-primary); transition: all 0.3s ease; font-weight: 600;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .premium-input:focus {
+      outline: none; border-color: #a855f7;
+      box-shadow: 0 0 0 3px rgba(168,85,247,0.15), inset 0 2px 4px rgba(0,0,0,0.02);
+      background: var(--color-surface-nested);
+    }
+    .loc-detect-btn.premium {
+      background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+      border: 1px solid rgba(56, 189, 248, 0.3) !important;
+      color: #38bdf8 !important; box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15) !important;
+    }
+    [data-theme="light"] .loc-detect-btn.premium {
+      background: #f0f9ff !important; border: 1px solid #bae6fd !important;
+      color: #0369a1 !important; box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2) !important;
+    }
+    .coord-card.premium {
+      background: var(--color-surface-card); border: 1px solid var(--color-border);
+      border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 6px;
+      position: relative; overflow: hidden; transition: all 0.3s ease;
+    }
+    .coord-card.premium:focus-within {
+      border-color: #38bdf8; box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
+    }
+    .coord-card-input {
+      font-family: 'Inter', system-ui, sans-serif !important;
+      font-size: 1.25rem !important;
+      font-weight: 600 !important;
+      color: var(--color-text-primary) !important;
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      padding: 4px 0 !important;
+      width: 100% !important;
+    }
+    .gender-card-v2.male::before  { background: radial-gradient(circle at top right, rgba(59,130,246,0.15), transparent 70%); }
+    .gender-card-v2.female::before{ background: radial-gradient(circle at top right, rgba(236,72,153,0.15), transparent 70%); }
+    .gender-card-v2.active::before{ opacity: 1; }
+    .gender-card-v2.active.male   { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15), 0 8px 25px rgba(59,130,246,0.2) !important; transform: scale(1.02); }
+    .gender-card-v2.active.female { border-color: #ec4899; box-shadow: 0 0 0 3px rgba(236,72,153,0.15), 0 8px 25px rgba(236,72,153,0.2) !important; transform: scale(1.02); }
+  </style>
+
+  <script src="js/prayer-notifier.js?v=2"></script>
+  <script src="js/app.js?v=137"></script>
 
   <!-- Service Worker Registration handled in app.js -->
   <script>
@@ -1328,18 +1247,6 @@
 
 </div>
 <div id="salah-print-report"></div>
-<!-- BROADCAST MODAL -->
-<div class="modal-overlay hidden" id="broadcast-modal" onclick="if(event.target===this) Notifications.hide()">
-  <div class="modal anim-scale-up" style="max-width:440px;">
-    <div class="modal-header">
-      <h3 class="modal-title" data-i18n="Administration Messages">Administration Messages</h3>
-      <button class="modal-close" onclick="document.getElementById('broadcast-modal').classList.add('hidden')">✕</button>
-    </div>
-    <div class="modal-body" id="broadcast-modal-body" style="padding:0 4px 20px;">
-      <!-- Content injected by JS -->
-    </div>
-  </div>
-</div>
 
 <!-- Mathematically Perfect iOS Squircle SVG ClipPath -->
 <svg width="0" height="0" style="position:absolute; width:0; height:0;">

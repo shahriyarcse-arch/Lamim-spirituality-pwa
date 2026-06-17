@@ -37,7 +37,6 @@ const Profile = {
       </div>
       <div class="profile-name" id="prof-display-name"></div>
       <div class="profile-bio" id="prof-display-bio"></div>
-      <div class="profile-email">${user.email || 'Anonymous Warrior'}</div>
       ${user.createdAt ? `<div class="profile-joined">Warrior since ${new Date(user.createdAt).toLocaleDateString('en-US', {month:'long', year:'numeric'})}</div>` : ''}
 
       <div class="profile-stats">
@@ -93,10 +92,6 @@ const Profile = {
       <div class="settings-item" onclick="Profile.editField('name')">
         <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.user}</div><div><div class="settings-item-label" data-i18n="Name">Name</div><div class="settings-item-value">${Utils.escapeHTML(user?.name || '—')}</div></div></div>
         <div class="settings-item-right"><span>›</span></div>
-      </div>
-      <div class="settings-item" style="cursor:default">
-        <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.mail}</div><div><div class="settings-item-label" data-i18n="Email">Email</div><div class="settings-item-value">${Utils.escapeHTML(user?.email || '—')}</div></div></div>
-        <div class="settings-item-right" style="color:var(--color-text-muted); opacity:0.6; display:flex; align-items:center; justify-content:center; width:20px; height:20px;">${icons.lock}</div>
       </div>
       <div class="settings-item" style="cursor:default">
         <div class="settings-item-left"><div class="settings-item-icon ic-violet">${icons.users}</div><div><div class="settings-item-label" data-i18n="Gender">Gender</div></div></div>
@@ -159,8 +154,8 @@ const Profile = {
           </select>
         </div>
       </div>
-      <div class="settings-item" onclick="Profile.syncLocation(event)">
-        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.globe}</div><div><div class="settings-item-label">Sync Location</div><div class="settings-item-value">${settings.locationName || (settings.lat ? settings.lat.toFixed(2) + ', ' + settings.lng.toFixed(2) : 'Not synced')}</div></div></div>
+      <div class="settings-item" onclick="Profile.detectLocation(event)">
+        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.globe}</div><div><div class="settings-item-label">Detect Location</div><div class="settings-item-value">${settings.locationName || (settings.lat ? settings.lat.toFixed(2) + ', ' + settings.lng.toFixed(2) : 'Not set')}</div></div></div>
         <div class="settings-item-right"><span>↻</span></div>
       </div>
       <div class="settings-item" style="cursor:default">
@@ -182,7 +177,11 @@ const Profile = {
         <div class="settings-item-right"><span>›</span></div>
       </div>
       <div class="settings-item" onclick="Profile.deleteAccount()">
-        <div class="settings-item-left"><div class="settings-item-icon ic-red">${icons.trash}</div><div><div class="settings-item-label" style="color:var(--color-accent-red)" data-i18n="Delete Account">Delete Account</div></div></div>
+        <div class="settings-item-left"><div class="settings-item-icon ic-red">${icons.trash}</div><div><div class="settings-item-label" style="color:var(--color-accent-red)" data-i18n="Delete Account">Wipe Data</div></div></div>
+        <div class="settings-item-right"><span>›</span></div>
+      </div>
+      <div class="settings-item" onclick="Profile.fullReset()">
+        <div class="settings-item-left"><div class="settings-item-icon ic-orange">${icons.refresh}</div><div><div class="settings-item-label" style="color:#f97316" data-i18n="Hard Reset App">Hard Reset App</div><div class="settings-item-value">Clear cache & all data</div></div></div>
         <div class="settings-item-right"><span>›</span></div>
       </div>
     `;
@@ -192,11 +191,7 @@ const Profile = {
     if (ab) ab.innerHTML = `
       <div class="settings-item" onclick="Profile.showAppInfo()">
         <div class="settings-item-left"><div class="settings-item-icon ic-slate">${icons.info}</div><div><div class="settings-item-label" data-i18n="App Version">App Version</div><div class="settings-item-value">Tap to see app info</div></div></div>
-        <div class="settings-item-right"><span>v3.1.0</span><span>›</span></div>
-      </div>
-      <div class="settings-item" onclick="Profile.showPrivacyPolicy()">
-        <div class="settings-item-left"><div class="settings-item-icon ic-indigo">${icons.shield}</div><div><div class="settings-item-label" data-i18n="Privacy Policy">Privacy Policy</div></div></div>
-        <div class="settings-item-right"><span>›</span></div>
+        <div class="settings-item-right"><span>v4.0.0</span><span>›</span></div>
       </div>
     `;
   },
@@ -206,7 +201,7 @@ const Profile = {
   editField(field) {
     const user = DB.getUser();
     if (!user) return;
-    const labels = { name: 'Your Name', email: 'Email Address', bio: 'Bio / Status', dob: 'Date of Birth' };
+    const labels = { name: 'Your Name', bio: 'Bio / Status', dob: 'Date of Birth' };
     this._editingField = field;
     const modal = document.getElementById('profile-edit-modal');
     const title = document.getElementById('profile-edit-title');
@@ -245,7 +240,7 @@ const Profile = {
     // Sanitize: Trim and replace multiple spaces with a single space
     const val = input.value.trim().replace(/\s+/g, ' ');
     
-    if ((this._editingField === 'name' || this._editingField === 'email') && !val) {
+    if (this._editingField === 'name' && !val) {
       Utils.toast('This field cannot be empty', 'error');
       return;
     }
@@ -288,16 +283,7 @@ const Profile = {
         return;
       }
     }
-    
-    // Usability: Basic Email Validation
-    if (this._editingField === 'email') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(val)) {
-        Utils.toast('Please enter a valid email address', 'error');
-        return;
-      }
-    }
-    const labels = { name: 'Your Name', email: 'Email Address', bio: 'Bio / Status', dob: 'Date of Birth' };
+    const labels = { name: 'Your Name', bio: 'Bio / Status', dob: 'Date of Birth' };
     user[this._editingField] = val;
     DB.setUser(user);
     this.closeEditModal();
@@ -339,8 +325,8 @@ const Profile = {
     const user = DB.getUser();
     if (user && key === 'madhab') { user.madhab = val; DB.setUser(user); }
     
-    // Trigger Cloud Sync for settings
-    if (window.Sync) window.Sync.queueSync('settings', 'all', s);
+    // Re-render settings UI
+    Profile.renderSettings();
     
     // If it's a critical app setting, notify App
     if (key === 'currency') this.renderSettings();
@@ -359,7 +345,7 @@ const Profile = {
     DB.setSettings(s);
     document.documentElement.setAttribute('data-theme', theme);
     this.renderSettings();
-    if (window.Sync) window.Sync.queueSync('settings', 'all', s);
+    Profile.renderSettings();
   },
 
   toggleNotifications() {
@@ -381,7 +367,7 @@ const Profile = {
       if (typeof PrayerNotifier !== 'undefined') PrayerNotifier.stop();
     }
     this.renderSettings();
-    if (window.Sync) window.Sync.queueSync('settings', 'all', s);
+    Profile.renderSettings();
   },
 
   toggleJumuahMode() {
@@ -389,7 +375,7 @@ const Profile = {
     s.jumuahMode = s.jumuahMode === undefined ? true : !s.jumuahMode;
     DB.setSettings(s);
     this.renderSettings();
-    if (window.Sync) window.Sync.queueSync('settings', 'all', s);
+    Profile.renderSettings();
   },
 
 
@@ -415,34 +401,12 @@ const Profile = {
     label.innerHTML = `
       <div style="font-size:14px;line-height:1.8;color:var(--color-text-secondary)">
         <div><strong>App Name:</strong> Lamim Spirituality</div>
-        <div><strong>Version:</strong> 3.1.0 "Vanguard"</div>
+        <div><strong>Version:</strong> 4.0.0 "Sovereign"</div>
         <div><strong>Account Created:</strong> ${createdDate}</div>
         <div><strong>Data Entries:</strong> ${totalKeys} keys</div>
         <div><strong>Storage Used:</strong> ${storageMB} MB</div>
-        <div><strong>Platform:</strong> PWA / Cloud Sync</div>
+        <div><strong>Platform:</strong> Standalone Offline PWA</div>
         <div><strong>Developer:</strong> Shamim Shahriyar</div>
-      </div>
-    `;
-    input.style.display = 'none';
-    modal.classList.remove('hidden');
-    this._editingField = '__info__';
-  },
-
-  showPrivacyPolicy() {
-    const modal = document.getElementById('profile-edit-modal');
-    const title = document.getElementById('profile-edit-title');
-    const label = document.getElementById('profile-edit-label');
-    const input = document.getElementById('profile-edit-input');
-    title.textContent = 'Privacy Policy';
-    label.innerHTML = `
-      <div style="font-size:13px;line-height:1.7;color:var(--color-text-secondary);max-height:50vh;overflow-y:auto">
-        <p><strong>Last Updated:</strong> May 2026</p>
-        <p><strong>1. Data Ownership & Storage</strong><br>Lamim is an offline-first PWA. All your spiritual logs (Salah, Dhikr, habits) and personal finance transactions (income, expenses, vaults) are primarily saved directly on your device's secure local database.</p>
-        <p><strong>2. Cloud Syncing (Supabase)</strong><br>If logged in, your local records are securely synchronized with our Supabase Cloud database via encrypted connections. This provides multi-device sync and server-side backups.</p>
-        <p><strong>3. Zero Third-Party Tracking</strong><br>We do not share, sell, or rent your spiritual or financial logs to any third-party advertising companies or trackers. Your personal data is completely private.</p>
-        <p><strong>4. Local Security & PDF Generation</strong><br>Financial reports and PDFs are generated entirely on your device client-side. We do not track or analyze your wallet transactions.</p>
-        <p><strong>5. Total Control & Deletion</strong><br>You have the full right to export your data as a JSON file or request permanent deletion (via "Delete Account"), which immediately purges all records from both local storage and cloud servers.</p>
-        <p><strong>6. Contact & Support</strong><br>Developed with ❤️ for spiritual productivity by Shamim Shahriyar.</p>
       </div>
     `;
     input.style.display = 'none';
@@ -452,90 +416,126 @@ const Profile = {
 
   deleteAccount() {
     Utils.confirm(
-      'Delete Account',
-      'Are you absolutely SURE? This will permanently delete ALL your prayer logs, finances, and data from both your device and the cloud. This action cannot be undone.',
-      async () => {
-        try {
-          Utils.toast('Deleting account...', 'warning');
-          let authDeleted = false;
-          let profileDeleted = false;
-
-          if (window.supabaseClient) {
-            const user = DB.getUser();
-            const userId = user?.id;
-
-            // Prefer Supabase built-in self-delete for the currently authenticated user.
-            if (window.supabaseClient.auth?.deleteUser) {
-              const { error } = await window.supabaseClient.auth.deleteUser();
-              if (error) {
-                console.warn('auth.deleteUser failed:', error.message);
-              } else {
-                authDeleted = true;
-              }
-            }
-
-            // If auth.deleteUser is unavailable, try RPC and profile delete fallback.
-            if (!authDeleted) {
-              if (userId) {
-                const { error: profileErr } = await window.supabaseClient.from('profiles').delete().eq('id', userId);
-                if (!profileErr) profileDeleted = true;
-                else console.warn('Profile delete failed:', profileErr.message);
-              }
-
-              const { error: rpcErr } = await window.supabaseClient.rpc('delete_user');
-              if (rpcErr) {
-                console.warn('delete_user RPC failed:', rpcErr.message);
-              } else {
-                authDeleted = true;
-              }
-            }
-
-            // Ensure sign out after delete attempt.
-            await window.supabaseClient.auth.signOut().catch(e => console.warn('Supabase signout failed', e));
-
-            if (!authDeleted && !profileDeleted) {
-              throw new Error('Unable to delete cloud account. Please contact support or try again later.');
-            }
-          }
-
-          DB.clearAllUserData();
-          DB.clearUser();
-          
-          Utils.toast('Account deleted permanently. Goodbye 👋', 'info');
-          setTimeout(() => {
-            if (typeof App !== 'undefined') App.showPage('login');
-            else window.location.reload();
-          }, 1000);
-
-        } catch (err) {
-          console.error("Delete Account Error:", err);
-          try {
-            if (window.supabaseClient) await window.supabaseClient.auth.signOut();
-          } catch (_) {}
-          DB.clearAllUserData();
-          DB.clearUser();
-          Utils.toast(err.message || 'Account removal in progress. Logging out...', 'info');
-          setTimeout(() => {
-            if (typeof App !== 'undefined') App.showPage('login');
-            else window.location.reload();
-          }, 1500);
-        }
+      'Wipe All Local Data?', 
+      'This will permanently delete all your data from this device. Are you sure?', 
+      () => {
+        DB.clearAllUserData();
+        DB.remove('lamim_user');
+        Utils.toast('Local data wiped.', 'success');
+        setTimeout(() => App.showPage('setup'), 1000);
       }
     );
   },
 
+  fullReset() {
+    Utils.confirm(
+      'Hard Reset App?', 
+      'This will wipe all data, clear the app cache, and reset everything (useful for fixing issues on iPhone). Are you sure?', 
+      async () => {
+        // Clear database and local storage
+        DB.clear();
+        
+        // Unregister service workers
+        if ('serviceWorker' in navigator) {
+          try {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let reg of registrations) {
+              await reg.unregister();
+            }
+          } catch(e) { console.error('SW unregister error', e); }
+        }
+        
+        // Clear caches
+        if ('caches' in window) {
+          try {
+            const keys = await caches.keys();
+            for (let key of keys) {
+              await caches.delete(key);
+            }
+          } catch(e) { console.error('Cache delete error', e); }
+        }
+        
+        Utils.toast('App reset successfully! Reloading...', 'success');
+        setTimeout(() => window.location.reload(true), 1500);
+      }
+    );
+  },
+
+  exportData() {
+    try {
+      const data = {};
+      const keys = DB.keys();
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (key.startsWith('lamim_')) {
+          data[key] = DB.rawGet(key);
+        }
+      }
+      
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lamim_backup_${Utils.todayStr()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      // Reset the backup timer
+      const s = DB.getSettings();
+      s.lastBackupDate = Utils.todayStr();
+      DB.setSettings(s);
+
+      Utils.toast('Data exported successfully!', 'success');
+    } catch (e) {
+      console.error(e);
+      Utils.toast('Failed to export data', 'error');
+    }
+  },
+
+  importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        
+        Utils.confirm('Restore Data?', 'This will overwrite your current data with the backup file. Continue?', () => {
+          let restored = 0;
+          for (const key in data) {
+            if (key.startsWith('lamim_')) {
+              DB.rawSet(key, data[key]);
+              restored++;
+            }
+          }
+          if (restored > 0) {
+            Utils.toast('Backup restored successfully! Reloading...', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+          } else {
+            Utils.toast('No valid Lamim data found in file', 'error');
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        Utils.toast('Invalid backup file', 'error');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = ''; // Reset input
+  },
 
 
-  // Task 1: Avatar Upload to Supabase Storage
+
+  // Task 1: Avatar Upload (Local Storage Only)
   removeAvatar() {
     Utils.confirm(
       'Remove Photo',
       'Are you sure you want to remove your profile picture?',
-      async () => {
+      () => {
         const user = DB.getUser();
         if (!user) return;
-
-        const oldAvatarUrl = user.avatar;
 
         try {
           // 1. Local update
@@ -547,20 +547,10 @@ const Profile = {
           Profile.renderSettings();
           if (typeof App !== 'undefined') App.updateAvatars();
           
-          // 3. Storage cleanup (Delete file from Supabase)
-          if (oldAvatarUrl && oldAvatarUrl.includes('/avatars/public/')) {
-            const fileName = oldAvatarUrl.split('/avatars/public/').pop();
-            if (fileName && window.supabaseClient) {
-              // Handle storage cleanup silently since it's just garbage collection
-              window.supabaseClient.storage.from('avatars').remove([`public/${fileName}`])
-                .catch(e => console.warn('Storage cleanup failed silently', e));
-            }
-          }
-          
           Utils.toast("Profile picture removed", "success");
         } catch (err) {
           console.error("Remove Avatar Error:", err);
-          Utils.toast("Failed to remove photo from cloud", "error");
+          Utils.toast("Failed to remove photo", "error");
         }
       }
     );
@@ -568,7 +558,7 @@ const Profile = {
 
   async handleAvatarUpload(e) {
     const file = e.target.files[0];
-    if (!file || !window.supabaseClient) return;
+    if (!file) return;
     
     // Robustness: File type check
     if (!file.type.startsWith('image/')) {
@@ -585,10 +575,6 @@ const Profile = {
       return;
     }
 
-    const user = DB.getUser();
-    if (!user) return;
-    const originalAvatar = user.avatar; // Save for fallback
-
     Utils.toast('Processing image...', 'info');
 
     // 1. Client-side Image Compression (Safe for localStorage limit)
@@ -601,7 +587,7 @@ const Profile = {
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            const MAX_DIMENSION = 400; // Optimal for avatars
+            const MAX_DIMENSION = 200; // Optimal for avatars and localStorage
 
             if (width > height) {
               if (width > MAX_DIMENSION) {
@@ -618,11 +604,10 @@ const Profile = {
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
             
-            canvas.toBlob((blob) => {
-              resolve({ dataUrl, blob });
-            }, 'image/jpeg', 0.7);
+            // Heavy compression to prevent blowing up localStorage
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.5); 
+            resolve(dataUrl);
           };
           img.onerror = reject;
           img.src = event.target.result;
@@ -633,68 +618,28 @@ const Profile = {
     };
 
     try {
-      const { dataUrl, blob } = await compressImage(file);
+      const dataUrl = await compressImage(file);
 
-      // 2. Instant Preview (Optimistic UI) with compressed image
+      // 2. Final Update Local User
       const updatedUser = DB.getUser();
+      if (!updatedUser) return;
       updatedUser.avatar = dataUrl; 
       DB.setUser(updatedUser);
       Profile.renderProfile();
       Profile.renderSettings();
       if (typeof App !== 'undefined') App.updateAvatars();
 
-      Utils.toast('Uploading to cloud...', 'info');
-      
-      const oldAvatarUrl = originalAvatar;
-      const fileExt = 'jpg';
-      const fileName = `${user.id}-${Math.round(Date.now() / 1000)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
-
-      // 3. Upload compressed blob
-      const { error: uploadError } = await window.supabaseClient.storage
-        .from('avatars')
-        .upload(filePath, blob, { cacheControl: '3600', upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data } = window.supabaseClient.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const publicUrl = data.publicUrl;
-      
-      // 2. Final Update with Public URL
-      const freshUser = DB.getUser();
-      freshUser.avatar = publicUrl;
-      DB.setUser(freshUser);
-      // 3. Professional Cleanup: Delete OLD file from storage if it exists
-      if (oldAvatarUrl && oldAvatarUrl.includes('/avatars/public/')) {
-        const oldFileName = oldAvatarUrl.split('/avatars/public/').pop();
-        if (oldFileName && oldFileName !== fileName) {
-          await window.supabaseClient.storage.from('avatars').remove([`public/${oldFileName}`]);
-        }
-      }
-      
-      Utils.toast('Photo synced with cloud!', 'success');
+      Utils.toast('Photo updated!', 'success');
     } catch (err) {
       console.error(err);
-      const msg = !navigator.onLine ? "No internet connection" : err.message;
-      Utils.toast('Cloud sync failed: ' + msg, 'error');
-      
-      // Revert optimistic update on failure
-      const revertedUser = DB.getUser();
-      revertedUser.avatar = originalAvatar;
-      DB.setUser(revertedUser);
-      Profile.renderProfile();
-      Profile.renderSettings();
-      if (typeof App !== 'undefined') App.updateAvatars();
+      Utils.toast('Failed to process image', 'error');
     } finally {
       e.target.value = ''; // Reset input to allow selecting the same file again
     }
   },
 
 
-  async syncLocation(e) {
+  async detectLocation(e) {
     if (this._isSyncingLocation) return;
     
     if (!navigator.geolocation && !window.fetch) {
@@ -735,7 +680,7 @@ const Profile = {
       
       const successMsg = settings.locationName ? `Location synced: ${settings.locationName}` : 'Location updated successfully!';
       Utils.toast(successMsg, 'success');
-      if (window.Sync) window.Sync.queueSync('settings', 'all', settings);
+      Profile.renderSettings();
       icons.forEach(icon => icon.classList.remove('rotating'));
       this._isSyncingLocation = false;
     };

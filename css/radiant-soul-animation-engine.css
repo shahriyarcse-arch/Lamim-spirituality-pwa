@@ -124,8 +124,8 @@
 
 [data-theme="dark"] .iw-mini-badge.locked {
   color: #94A3B8;
-  border: 1.5px dashed #334155;
-  background: #1E293B;
+  border: 1.5px dashed #172033;
+  background: #0c1322;
   opacity: 1 !important;
 }
 
@@ -2575,8 +2575,8 @@
 }
 
 #finance-main-chart {
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
 }
 
 /* --- Ultra-Glossy Living UI --- */
@@ -3906,7 +3906,13 @@
 }
 
 [data-theme="light"] .btn-xoss {
-  color: var(--color-bg-primary) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .btn-xoss.btn-secondary {
+  color: var(--color-text-primary) !important;
+  background: var(--color-surface-hollow) !important;
+  border: 1px solid var(--color-border) !important;
 }
 
 [data-theme="light"] .finance-save-btn {
@@ -3977,7 +3983,7 @@
 }
 
 [data-theme="light"] .card-main-balance.is-negative .balance-value {
-  color: var(--color-text-on-danger) !important;
+  color: var(--fin-red) !important;
 }
 
 [data-theme="light"] .fin-stat-card {
@@ -3986,11 +3992,11 @@
 }
 
 [data-theme="light"] .fin-stat-value.income {
-  color: var(--color-text-on-success) !important;
+  color: var(--fin-green) !important;
 }
 
 [data-theme="light"] .fin-stat-value.expense {
-  color: var(--color-text-on-danger) !important;
+  color: var(--fin-red) !important;
 }
 
 
@@ -4598,7 +4604,7 @@
 
 /* --- Celestial Nafl Overhaul --- */
 .nafl-celestial-glass {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(49, 46, 129, 0.7));
+  background: linear-gradient(135deg, rgba(6, 11, 19, 0.9), rgba(30, 27, 75, 0.5));
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 32px;
   padding: 40px;

@@ -1,519 +1,387 @@
 /* =============================================
-   LAMIM — AUTH MODULE
+   LAMIM — OFFLINE AUTH/SETUP MODULE
    ============================================= */
 const Auth = {
   init() {
-    this.bindLogin();
-    this.bindSignup();
-    this.bindForgot();
+    this.selectedGender = null;
+    this.bindSetup();
+  },
 
-    // Official Supabase way to handle Password Recovery
-    if (window.supabaseClient) {
-      window.supabaseClient.auth.onAuthStateChange((event, session) => {
-        if (event === "PASSWORD_RECOVERY") {
-          console.log("Password recovery event detected!");
-          setTimeout(() => {
-            App.showPage('forgot');
-            const s1 = document.getElementById('forgot-step1');
-            const s2 = document.getElementById('forgot-step2');
-            const s3 = document.getElementById('forgot-step3');
-            if (s1) s1.classList.add('hidden');
-            if (s2) s2.classList.add('hidden');
-            if (s3) s3.classList.remove('hidden');
-            Utils.toast('Recovery session active. Please set your new password.', 'info');
-          }, 500);
-        }
-      });
+  setGender(gender) {
+    this.selectedGender = gender;
+    const maleCard = document.getElementById('setup-gender-male');
+    const femaleCard = document.getElementById('setup-gender-female');
+    if (gender === 'male') {
+      maleCard?.classList.add('active');
+      femaleCard?.classList.remove('active');
+    } else {
+      femaleCard?.classList.add('active');
+      maleCard?.classList.remove('active');
     }
   },
 
-  emailConfirmationEnabledDate: new Date('2026-05-21'),
-
-  isEmailConfirmed(user) {
-    return Boolean(user?.email_confirmed_at || user?.confirmed_at);
-  },
-
-  isOAuthUser(user) {
-    // Google/OAuth users don't need email verification
-    const provider = user?.app_metadata?.provider || user?.raw_app_meta_data?.provider || '';
-    return provider !== 'email' && provider !== '';
-  },
-
-  isOldAccount(user) {
-    if (!user?.created_at) return false;
-    const accountCreatedDate = new Date(user.created_at);
-    if (Number.isNaN(accountCreatedDate.valueOf())) return false;
-    return accountCreatedDate < this.emailConfirmationEnabledDate;
-  },
-
-  requiresEmailVerification(user) {
-    // OAuth users (Google etc) never need email verification
-    if (this.isOAuthUser(user)) return false;
-    // If already confirmed, no verification needed
-    if (this.isEmailConfirmed(user)) return false;
-    // Not confirmed = needs verification
-    return true;
-  },
-
-  bindLogin() {
-    if (this._loginBound) return;
-    this._loginBound = true;
-    const form = document.getElementById('login-form');
-    if (!form) return;
-    const resendBlock = document.getElementById('resend-verification-block');
-    const resendText = document.getElementById('resend-verification-text');
-    const resendBtn = document.getElementById('resend-verification-btn');
-    if (resendBtn) {
-      resendBtn.addEventListener('click', async () => {
-        const email = document.getElementById('login-email').value.trim();
-        if (!this.isValidEmail(email)) {
-          Utils.toast('Enter a valid email first', 'error');
-          return;
-        }
-        await this.resendVerificationEmail(email);
-      });
+  setLang(lang) {
+    const hiddenInput = document.getElementById('setup-lang');
+    if (hiddenInput) hiddenInput.value = lang;
+    const cardEn = document.getElementById('pref-lang-en');
+    const cardBn = document.getElementById('pref-lang-bn');
+    if (lang === 'en') {
+      cardEn?.classList.add('active');
+      cardBn?.classList.remove('active');
+    } else {
+      cardBn?.classList.add('active');
+      cardEn?.classList.remove('active');
     }
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      if (!this.validateLogin()) return;
-      if (resendBlock) resendBlock.style.display = 'none';
-      
-      const email = document.getElementById('login-email').value.trim();
-      const pass  = document.getElementById('login-pass').value;
-      const btn   = form.querySelector('button[type="submit"]');
-      const originalText = btn ? btn.textContent : '';
-      
-      if (btn) btn.textContent = 'Authenticating...';
-
-      try {
-        if (!window.supabaseClient) throw new Error("Database connection not initialized yet. Please refresh the page.");
-
-        // 1. Supabase Cloud Login
-        const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: pass,
-        });
-
-        if (btn) btn.textContent = originalText;
-
-        if (error) {
-          this.showError('login-email', error.message);
-          Utils.toast(error.message, 'error');
-
-          const isUnconfirmed = error.message && (
-            error.message.toLowerCase().includes('confirm') || 
-            error.message.toLowerCase().includes('verify')
-          );
-          if (isUnconfirmed && resendBlock && resendText) {
-            resendText.textContent = 'Your email is not verified yet. Click below to resend the verification email.';
-            resendBlock.style.display = 'block';
-            const emailInput = document.getElementById('login-email');
-            if (emailInput) emailInput.value = email;
-          }
-        } else if (data.user) {
-          // Skip verification check for OAuth (Google) users
-          if (this.isOAuthUser(data.user)) {
-            // OAuth user - always confirmed, proceed directly
-          } else if (!this.isEmailConfirmed(data.user)) {
-            await window.supabaseClient.auth.signOut();
-            Utils.toast('Please verify your email before logging in.', 'warning');
-            if (resendBlock && resendText) {
-              resendText.textContent = 'Your email is not verified yet. Click below to resend the verification email.';
-              resendBlock.style.display = 'block';
-              const emailInput = document.getElementById('login-email');
-              if (emailInput) emailInput.value = email;
-            }
-            return;
-          }
-
-          if (resendBlock) resendBlock.style.display = 'none';
-
-          let { data: prof, error: pErr } = await window.supabaseClient
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .maybeSingle();
-
-          // HEALING LOGIC: If profile is missing in public.profiles, create it now
-          if (!prof || pErr) {
-            // console.log("Profile missing, creating recovery record...");
-            const name = data.user.user_metadata?.name || email.split('@')[0];
-            const { data: newProf, error: iErr } = await window.supabaseClient
-              .from('profiles')
-              .insert([{
-                id: data.user.id,
-                name: name,
-                email: email,
-                role: 'user'
-              }])
-              .select()
-              .single();
-            
-            if (!iErr) prof = newProf;
-          }
-
-          const name = prof?.name || data.user.user_metadata?.name || email.split('@')[0];
-          const user = { 
-            id: data.user.id, 
-            name: name, 
-            email: data.user.email,
-            role: prof?.role || 'user',
-            gender: prof?.gender || data.user.user_metadata?.gender || '',
-            age: prof?.age || data.user.user_metadata?.age || '',
-            avatar: prof?.avatar || null, 
-            location: prof?.location || '', 
-            createdAt: data.user.created_at
-          };
-          
-          DB.setUser(user);
-          Utils.toast('Welcome back, ' + name + '!', 'success');
-          setTimeout(() => {
-            App.checkAdminUI();
-            if (user.role === 'admin') {
-              App.showDashboard('admin');
-            } else {
-              App.showDashboard();
-            }
-            if (window.Sync) window.Sync.pullAll();
-          }, 600);
-        }
-      } catch (err) {
-        if (btn) btn.textContent = originalText;
-        Utils.toast(err.message || 'Authentication failed', 'error');
-        console.error("Login Error:", err);
-      }
-    });
-    document.getElementById('show-password-login')?.addEventListener('click', () => this.togglePass('login-pass', 'show-password-login'));
   },
 
-  async resendVerificationEmail(email) {
-    if (!window.supabaseClient) {
-      Utils.toast('Database connection not initialized yet. Please refresh the page.', 'error');
-      return;
-    }
-
-    if (!this.isValidEmail(email)) {
-      Utils.toast('Enter a valid email to resend verification.', 'error');
-      return;
-    }
-
-    if (!window.supabaseClient.auth.resend) {
-      Utils.toast('Resend verification is not supported by this version. Use Forgot Password instead.', 'warning');
-      return;
-    }
-
-    try {
-      const { error } = await window.supabaseClient.auth.resend({
-        email,
-        type: 'signup',
-        options: {
-          emailRedirectTo: window.location.origin
-        }
-      });
-
-      if (error) {
-        Utils.toast(error.message, 'error');
+  setCurrency(curr) {
+    const hiddenInput = document.getElementById('setup-currency');
+    if (hiddenInput) hiddenInput.value = curr;
+    const currencies = ['USD', 'BDT', 'SAR', 'EUR', 'GBP'];
+    currencies.forEach(c => {
+      const card = document.getElementById(`curr-${c}`);
+      if (c === curr) {
+        card?.classList.add('active');
       } else {
-        Utils.toast('Verification email resent. Please check your inbox.', 'success');
+        card?.classList.remove('active');
       }
-    } catch (err) {
-      Utils.toast(err.message || 'Failed to resend verification email', 'error');
-      console.error('Resend verification error:', err);
+    });
+  },
+
+  nextStep(currentStep) {
+    if (currentStep === 1) {
+      const nameInput = document.getElementById('setup-name');
+      const err = document.getElementById('setup-name-err');
+      const name = nameInput.value.trim();
+      if (!name) {
+        nameInput.classList.add('input-error');
+        if (err) { err.textContent = 'Name is required'; err.classList.add('show'); }
+        nameInput.focus();
+        return;
+      }
+      nameInput.classList.remove('input-error');
+      if (err) err.classList.remove('show');
     }
-  },
-
-  bindSignup() {
-    if (this._signupBound) return;
-    this._signupBound = true;
-    const form = document.getElementById('signup-form');
-    if (!form) return;
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      if (!this.validateSignup()) return;
-      
-      const name   = document.getElementById('signup-name').value.trim();
-      const email  = document.getElementById('signup-email').value.trim();
-      const pass   = document.getElementById('signup-pass').value;
-      const gender = document.getElementById('signup-gender').value;
-      const age    = document.getElementById('signup-age').value;
-      
-      const btn = form.querySelector('button[type="submit"]');
-      const originalText = btn ? btn.textContent : '';
-      if (btn) btn.textContent = 'Creating account...';
-
-      try {
-        if (!window.supabaseClient) throw new Error("Database connection not initialized yet. Please refresh the page.");
-
-        // 1. Supabase Cloud Signup
-        const { data, error } = await window.supabaseClient.auth.signUp({
-          email: email,
-          password: pass,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: {
-              name: name,
-              gender: gender,
-              age: age
-            }
-          }
-        });
-
-        if (btn) btn.textContent = originalText;
-
-        if (error) {
-          console.error('Signup API error:', error);
-          this.showError('signup-email', error.message);
-          Utils.toast(error.message, 'error');
-        } else if (data.user) {
-          // BUG FIX: Supabase v2 returns a fake user with empty identities
-          // when user already exists and "Confirm email" is ON.
-          // No email is sent in this case, so detect and warn.
-          const identities = data.user.identities || [];
-          if (identities.length === 0) {
-            this.showError('signup-email', 'An account with this email may already exist. Try logging in instead.');
-            Utils.toast('An account with this email may already exist. Try logging in.', 'warning');
-            return;
-          }
-          // Attempt to create profile immediately (even if email confirmation is pending)
-          // Note: This might fail if RLS is strict, but we try anyway.
-          try {
-            const profilePayload = {
-              id: data.user.id,
-              name: name || email.split('@')[0],
-              email: email,
-              role: 'user'
-            };
-            
-            const { error: insertErr } = await window.supabaseClient.from('profiles').insert([profilePayload]);
-            if (insertErr && insertErr.code !== '23505') {
-              console.warn("Initial profile creation failed (likely RLS or pending verification):", insertErr);
-            }
-          } catch (e) {
-            console.warn("Profile creation attempt error:", e);
-          }
-
-          const emailConfirmed = Boolean(data.user.email_confirmed_at || data.user.confirmed_at);
-
-          if (emailConfirmed) {
-            const user = { 
-              id: data.user.id, 
-              name: name, 
-              email: email, 
-              gender: gender, 
-              age: age, 
-              avatar: null, 
-              location: '', 
-              createdAt: data.user.created_at || new Date().toISOString() 
-            };
-            DB.setUser(user);
-            Utils.toast('Account created! Welcome, ' + name, 'success');
-            setTimeout(() => App.showDashboard(), 700);
-          } else {
-            if (data.session) {
-              await window.supabaseClient.auth.signOut();
-            }
-            Utils.toast('Signup successful! Please verify your email before logging in.', 'warning');
-            setTimeout(() => App.showPage('login'), 3000);
-          }
-        }
-      } catch (err) {
-        if (btn) btn.textContent = originalText;
-        Utils.toast(err.message || 'Signup failed', 'error');
-        console.error("Signup Error:", err);
+    
+    if (currentStep === 2) {
+      if (!this.selectedGender) {
+        Utils.toast('Please select a gender to continue', 'warning');
+        return; // Prevent skipping
       }
-    });
-  },
-
-  bindForgot() {
-    if (this._forgotBound) return;
-    this._forgotBound = true;
-    const form = document.getElementById('forgot-form');
-    if (!form) return;
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = document.getElementById('forgot-email').value.trim();
-      if (!this.isValidEmail(email)) { this.showError('forgot-email', 'Enter a valid email'); return; }
-      
-      const btn = form.querySelector('button[type="submit"]');
-      if (btn) btn.textContent = 'Sending link...';
-
-      try {
-        const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin,
-        });
-        if (btn) btn.textContent = 'Send OTP';
-        if (error) throw error;
-        
-        Utils.toast('Password reset link sent to your email!', 'success');
-        // Optional: Hide forgot steps and go back to login
-        setTimeout(() => App.showPage('login'), 3000);
-      } catch (err) {
-        if (btn) btn.textContent = 'Send OTP';
-        Utils.toast(err.message, 'error');
-      }
-    });
-
-    document.getElementById('forgot-reset-btn')?.addEventListener('click', async () => {
-      const pass = document.getElementById('new-pass').value;
-      if (!this.isValidPassword(pass)) { 
-        Utils.toast('Password must be at least 8 characters and contain both letters and numbers', 'error'); 
-        return; 
-      }
-      
-      const btn = document.getElementById('forgot-reset-btn');
-      if (btn) btn.textContent = 'Updating...';
-
-      try {
-        const { error } = await window.supabaseClient.auth.updateUser({ password: pass });
-        if (error) throw error;
-        
-        Utils.toast('Password updated successfully! Please login.', 'success');
-        setTimeout(() => App.showPage('login'), 1500);
-      } catch (err) {
-        if (btn) btn.textContent = 'Update Password';
-        Utils.toast(err.message, 'error');
-      }
-    });
-  },
-
-  isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  },
-
-  isValidPassword(pass) {
-    return pass.length >= 8 && /[a-zA-Z]/.test(pass) && /[0-9]/.test(pass);
-  },
-
-  checkEmailSecurity(email) {
-    const cleanEmail = email.toLowerCase().trim();
-    const domain = cleanEmail.split('@')[1];
-    if (!domain) return { ok: true };
-
-    // 1. Common Temporary/Disposable Email Domains to block
-    const disposableDomains = [
-      'tempmail.com', 'temp-mail.org', 'yopmail.com', '10minutemail.com', 
-      'mailinator.com', 'guerrillamail.com', 'dispostable.com', 'getairmail.com', 
-      'sharklasers.com', 'trashmail.com', 'mintemail.com', 'jetable.org', 
-      'generator.email', 'fakemailgenerator.com', 'tempmailaddress.com',
-      'grr.la', 'guerrillamail.net', 'guerrillamail.org', 'guerrillamail.biz',
-      'maildrop.cc', 'getnada.com', 'boun.cr', 'disposable.com', 'duck.com'
-    ];
-
-    if (disposableDomains.includes(domain)) {
-      return { ok: false, error: 'Temporary/disposable emails are not allowed.' };
     }
 
-    // 2. Common Domain Typos to suggest correction
-    const typos = {
-      'gamil.com': 'gmail.com',
-      'gmaill.com': 'gmail.com',
-      'gmal.com': 'gmail.com',
-      'gmeil.com': 'gmail.com',
-      'yaho.com': 'yahoo.com',
-      'yahooo.com': 'yahoo.com',
-      'hotamil.com': 'hotmail.com',
-      'hotmial.com': 'hotmail.com',
-      'outlook.co': 'outlook.com'
+    // Step 3 (DOB) always has a valid value via drum picker, so we can proceed safely
+    this.goToStep(currentStep + 1);
+  },
+
+  prevStep(currentStep) {
+    this.goToStep(currentStep - 1);
+  },
+
+  goToStep(stepNum) {
+    const wrapper = document.getElementById('setup-steps-wrapper');
+    if (!wrapper) return;
+
+    // 4 steps — each is 25% wide
+    const translatePct = -((stepNum - 1) * 25);
+    wrapper.style.transform = `translateX(${translatePct}%)`;
+
+    // Update progress dots
+    const dots = document.querySelectorAll('.setup-dot');
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === (stepNum - 1));
+    });
+
+    // Re-trigger anim-target animations on the new step
+    const newStep = document.querySelector(`.setup-step[data-step="${stepNum}"]`);
+    if (newStep) {
+      newStep.querySelectorAll('.anim-target').forEach((el, i) => {
+        el.style.animation = 'none';
+        void el.offsetHeight;
+        el.style.animation = '';
+        el.style.animationDelay = (i * 0.08) + 's';
+      });
+    }
+
+    // Initialise DOB drum picker when arriving at step 3
+    if (stepNum === 3) this.initDOBPicker();
+  },
+
+  initDOBPicker() {
+    if (this._dobReady) return; // only build once
+    this._dobReady = true;
+
+    const ITEM_H = 44;
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let selD = 0, selM = 0, selY = 60; // defaults: day=1, Jan, year=2000
+
+    const fill = (colId, labels, defaultIdx) => {
+      const col = document.getElementById(colId);
+      if (!col) return;
+      let h = '<div class="dob-drum-pad"></div>';
+      labels.forEach(l => { h += `<div class="dob-drum-item">${l}</div>`; });
+      h += '<div class="dob-drum-pad"></div>';
+      col.innerHTML = h;
+      requestAnimationFrame(() => { col.scrollTop = defaultIdx * ITEM_H; });
+
+      let t;
+      col.addEventListener('scroll', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const idx = Math.round(col.scrollTop / ITEM_H);
+          col.scrollTo({ top: idx * ITEM_H, behavior: 'smooth' });
+          return idx;
+        }, 80);
+      }, { passive: true });
+      return col;
     };
 
-    if (typos[domain]) {
-      return { ok: false, error: `Did you mean @${typos[domain]}?` };
-    }
+    const days = Array.from({length:31}, (_,i) => String(i+1).padStart(2,'0'));
+    const years = Array.from({length:86}, (_,i) => String(1930+i));
 
-    return { ok: true };
+    const colD = fill('dob-col-d', days, selD);
+    const colM = fill('dob-col-m', MONTHS, selM);
+    const colY = fill('dob-col-y', years, selY);
+
+    const sync = () => {
+      if (colD) selD = Math.round(colD.scrollTop / ITEM_H);
+      if (colM) selM = Math.round(colM.scrollTop / ITEM_H);
+      if (colY) selY = Math.round(colY.scrollTop / ITEM_H);
+      const inp = document.getElementById('setup-dob');
+      if (inp) inp.value = `${1930+selY}-${String(selM+1).padStart(2,'0')}-${String(selD+1).padStart(2,'0')}`;
+    };
+
+    [colD, colM, colY].forEach(col => {
+      if (!col) return;
+      col.addEventListener('scroll', () => { clearTimeout(col._st); col._st = setTimeout(sync, 120); }, {passive:true});
+    });
+
+    sync();
   },
 
-  validateLogin() {
-    let ok = true;
-    const email = document.getElementById('login-email');
-    const pass  = document.getElementById('login-pass');
-    this.clearError('login-email'); this.clearError('login-pass');
-    if (!this.isValidEmail(email.value.trim())) { this.showError('login-email', 'Valid email required'); ok = false; }
-    if (!pass.value || pass.value.length < 1) { this.showError('login-pass', 'Password required'); ok = false; }
-    return ok;
-  },
+  async detectLocation(e) {
+    if (this._isSyncingLocation) return;
+    this._isSyncingLocation = true;
 
-  validateSignup() {
-    let ok = true;
-    ['signup-name','signup-email','signup-pass','signup-confirm-pass'].forEach(id => this.clearError(id));
-    const name  = document.getElementById('signup-name').value.trim();
-    const email = document.getElementById('signup-email').value.trim();
-    const pass  = document.getElementById('signup-pass').value;
-    const confirm = document.getElementById('signup-confirm-pass')?.value;
-    const terms = document.getElementById('signup-terms');
+    const statusText = document.getElementById('setup-location-status');
+    const icon = document.getElementById('setup-detect-icon');
+    const latInput = document.getElementById('setup-lat');
+    const lngInput = document.getElementById('setup-lng');
+    const err = document.getElementById('setup-loc-err');
 
-    if (!name) { this.showError('signup-name', 'Name is required'); ok = false; }
-    if (!this.isValidEmail(email)) { 
-      this.showError('signup-email', 'Valid email required'); 
-      ok = false; 
-    } else {
-      const emailCheck = this.checkEmailSecurity(email);
-      if (!emailCheck.ok) {
-        this.showError('signup-email', emailCheck.error);
-        ok = false;
+    if (statusText) statusText.textContent = 'Detecting your coordinates...';
+    if (icon) icon.classList.add('rotating');
+    if (err) err.classList.remove('show');
+
+    const updateFields = async (lat, lng, isIP = false) => {
+      if (latInput) latInput.value = lat.toFixed(6);
+      if (lngInput) lngInput.value = lng.toFixed(6);
+
+      let locationName = '';
+      try {
+        const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+        const data = await res.json();
+        const city = data.city || data.locality || '';
+        const country = data.countryName || '';
+        locationName = city && country ? `${city}, ${country}` : (city || country || 'Detected Location');
+      } catch (geocodeErr) {
+        locationName = isIP ? 'Detected via IP' : (lat.toFixed(2) + ', ' + lng.toFixed(2));
       }
+
+      if (statusText) statusText.textContent = `Detected: ${locationName}`;
+      Utils.toast(`Location detected: ${locationName}`, 'success');
+      if (icon) icon.classList.remove('rotating');
+      this._isSyncingLocation = false;
+    };
+
+    if (!navigator.geolocation) {
+      this.ipLocationFallback(updateFields, icon, statusText);
+      return;
     }
-    if (!this.isValidPassword(pass)) { 
-      this.showError('signup-pass', 'Min 8 chars, 1 letter & 1 number'); 
-      ok = false; 
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => updateFields(pos.coords.latitude, pos.coords.longitude),
+      (geoErr) => {
+        console.warn("Setup geolocation failed, trying IP fallback...", geoErr);
+        this.ipLocationFallback(updateFields, icon, statusText);
+      },
+      { timeout: 6000 }
+    );
+  },
+
+  async ipLocationFallback(updateFields, icon, statusText) {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const data = await res.json();
+      if (data.latitude && data.longitude) {
+        updateFields(data.latitude, data.longitude, true);
+      } else {
+        throw new Error("IP Geolocation failed");
+      }
+    } catch (ipErr) {
+      Utils.toast('Could not detect location. Please input coordinates manually.', 'warning');
+      if (statusText) statusText.textContent = 'Auto-detection failed. Enter manually.';
+      if (icon) icon.classList.remove('rotating');
+      this._isSyncingLocation = false;
     }
-    if (pass !== confirm) { this.showError('signup-confirm-pass', 'Passwords do not match'); ok = false; }
-    if (terms && !terms.checked) { Utils.toast('Please agree to terms', 'error'); ok = false; }
-    return ok;
   },
 
-  showError(inputId, msg) {
-    const input = document.getElementById(inputId);
-    const err   = document.getElementById(inputId + '-err');
-    if (input) input.classList.add('input-error');
-    if (err)   { err.textContent = msg; err.classList.add('show'); }
+  submitSetup() {
+    try {
+      const nameInput = document.getElementById('setup-name');
+      const name = (nameInput ? nameInput.value.trim() : '');
+
+      if (!name) {
+        this.goToStep(1);
+        if (nameInput) nameInput.classList.add('input-error');
+        const err = document.getElementById('setup-name-err');
+        if (err) { err.textContent = 'Name is required'; err.classList.add('show'); }
+        return;
+      }
+
+      const langSelect = document.getElementById('setup-lang');
+      const currencySelect = document.getElementById('setup-currency');
+      const latInput = document.getElementById('setup-lat');
+      const lngInput = document.getElementById('setup-lng');
+      const dobInput = document.getElementById('setup-dob');
+      const bioInput = document.getElementById('setup-bio');
+
+      if (!latInput || !latInput.value || isNaN(parseFloat(latInput.value)) || !lngInput || !lngInput.value || isNaN(parseFloat(lngInput.value))) {
+        Utils.toast('Please detect your location or enter coordinates manually', 'warning');
+        const err = document.getElementById('setup-loc-err');
+        if (err) { err.textContent = 'Location is required'; err.classList.add('show'); }
+        return; // Prevent form submission without location
+      }
+
+      const language = langSelect ? langSelect.value : 'en';
+      const currency = currencySelect ? currencySelect.value : 'USD';
+      const lat = parseFloat(latInput.value);
+      const lng = parseFloat(lngInput.value);
+      const gender = this.selectedGender || 'male';
+      const dob = dobInput ? dobInput.value : '';
+      const bio = bioInput ? bioInput.value.trim() : '';
+
+      const user = {
+        id: 'local_' + Date.now(),
+        name: name,
+        email: 'local@lamim.offline',
+        role: 'user',
+        gender: gender,
+        dob: dob,
+        bio: bio,
+        avatar: null,
+        location: '',
+        createdAt: new Date().toISOString()
+      };
+
+      const settings = DB.getSettings();
+      settings.language = language;
+      settings.currency = currency;
+      settings.lat = lat;
+      settings.lng = lng;
+
+      const statusText = document.getElementById('setup-location-status');
+      if (statusText && statusText.textContent.startsWith('Detected: ')) {
+        settings.locationName = statusText.textContent.replace('Detected: ', '');
+      } else {
+        settings.locationName = lat.toFixed(2) + ', ' + lng.toFixed(2);
+      }
+
+      DB.setUser(user);
+      DB.setSettings(settings);
+
+      Utils.toast('Welcome, ' + name + '!', 'success');
+
+      setTimeout(() => {
+        App.showDashboard();
+      }, 400);
+    } catch (err) {
+      console.error('[Auth] submitSetup error:', err);
+      Utils.toast('Something went wrong. Please try again.', 'error');
+    }
   },
 
-  clearError(inputId) {
-    const input = document.getElementById(inputId);
-    const err   = document.getElementById(inputId + '-err');
-    if (input) input.classList.remove('input-error');
-    if (err)   err.classList.remove('show');
-  },
+  bindSetup() {
+    if (this._setupBound) return;
+    this._setupBound = true;
+    const form = document.getElementById('setup-form');
+    if (!form) return;
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('setup-name');
+      const err = document.getElementById('setup-name-err');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        this.goToStep(1);
+        nameInput.classList.add('input-error');
+        if (err) { err.textContent = 'Name is required'; err.classList.add('show'); }
+        return;
+      }
 
-  togglePass(inputId, btnId) {
-    const input = document.getElementById(inputId);
-    const btn   = document.getElementById(btnId);
-    if (!input) return;
-    const isPass = input.type === 'password';
-    input.type = isPass ? 'text' : 'password';
-    if (btn) btn.textContent = isPass ? '🙈' : '👁️';
+      const langSelect = document.getElementById('setup-lang');
+      const currencySelect = document.getElementById('setup-currency');
+      const latInput = document.getElementById('setup-lat');
+      const lngInput = document.getElementById('setup-lng');
+
+      const language = langSelect ? langSelect.value : 'en';
+      const currency = currencySelect ? currencySelect.value : 'USD';
+      const lat = latInput ? parseFloat(latInput.value) : 23.8103;
+      const lng = lngInput ? parseFloat(lngInput.value) : 90.4125;
+
+      const user = { 
+        id: 'local_' + Date.now(), 
+        name: name, 
+        email: 'local@lamim.offline',
+        role: 'user',
+        gender: '',
+        age: '',
+        avatar: null, 
+        location: '', 
+        createdAt: new Date().toISOString()
+      };
+      
+      const settings = DB.getSettings();
+      settings.language = language;
+      settings.currency = currency;
+      settings.lat = lat;
+      settings.lng = lng;
+      
+      const statusText = document.getElementById('setup-location-status');
+      if (statusText && statusText.textContent.startsWith('Detected: ')) {
+        settings.locationName = statusText.textContent.replace('Detected: ', '');
+      } else {
+        settings.locationName = lat.toFixed(2) + ', ' + lng.toFixed(2);
+      }
+
+      DB.setUser(user);
+      DB.setSettings(settings);
+
+      if (typeof Home !== 'undefined') Home.render();
+      if (typeof Salah !== 'undefined') Salah.init();
+      if (typeof Profile !== 'undefined') {
+        Profile.renderSettings();
+        Profile.render();
+      }
+
+      Utils.toast('Welcome, ' + name + '!', 'success');
+      
+      setTimeout(() => {
+        App.showDashboard();
+      }, 500);
+    });
   },
 
   logout() {
     Utils.confirm(
-      'Logout',
-      'Are you sure you want to logout of your account?',
-      async () => {
-        // Sign out of Supabase (no await, so it doesn't hang if offline)
-        if (navigator.onLine) {
-          window.supabaseClient.auth.signOut().catch(e => console.warn('Supabase signout failed', e));
-        } else {
-          try { window.supabaseClient.auth.signOut(); } catch(e){}
-        }
-        
-        // Clean up presence channel & subscription state
-        if (window.Sync) {
-          if (window.Sync.presenceChannel) {
-            try {
-              window.Sync.presenceChannel.unsubscribe();
-            } catch (e) {}
-            window.Sync.presenceChannel = null;
-          }
-          window.Sync.isSubscribed = false;
-        }
-
-        // Clear local storage DB user
-        DB.clearAllUserData();
+      'Reset Data',
+      'Are you sure you want to delete your profile? This will log you out but keep your local data.',
+      () => {
         DB.remove('lamim_user');
-        
         Utils.toast('Logged out successfully', 'info');
-        setTimeout(() => App.showPage('login'), 500);
+        setTimeout(() => App.showPage('setup'), 500);
       }
     );
   }

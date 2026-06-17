@@ -16,20 +16,12 @@ const Analysis = {
   _cachedHabits: null,
   _isGeneratingPDF: false,
 
-  async syncHistory() {
-    if (window.Sync && window.Sync.pushHistory) {
-      try {
-        await window.Sync.pushHistory();
-      } catch (e) {
-        console.error("Sync failed", e);
-      }
-    }
-  },
+
 
   init() {
     this.render();
 
-    // Listen for cloud/local data updates with debouncing to prevent UI lag
+    // Listen for local data updates with debouncing to prevent UI lag
     if (!this.dataUpdateBound) {
       this._debouncedRender = Utils.debounce(() => {
         if (document.getElementById('section-analysis')?.classList.contains('active')) {
@@ -458,7 +450,13 @@ const Analysis = {
     ];
 
     const labels = ['Salah', 'Nafl', 'Dhikr', 'Mujahid', 'Spirit'];
-    const colors = ['#f87171', '#a855f7', '#38bdf8', '#fbbf24', '#10b981'];
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const colors = isLight 
+      ? ['#DC2626', '#7C3AED', '#2563EB', '#D97706', '#059669'] 
+      : ['#f87171', '#a855f7', '#38bdf8', '#fbbf24', '#10b981'];
+    const polyStroke = isLight ? '#6366F1' : '#a78bfa';
+    const polyGradStart = isLight ? '#6366F1' : '#818cf8';
+    const polyGradEnd = isLight ? '#7C3AED' : '#c084fc';
     
     const center = 100;
     const maxRadius = 75;
@@ -509,12 +507,12 @@ const Analysis = {
       <svg viewBox="0 0 200 200" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: visible;">
         <defs>
           <radialGradient id="radar-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#818cf8" stop-opacity="0.2" />
-            <stop offset="100%" stop-color="#818cf8" stop-opacity="0" />
+            <stop offset="0%" stop-color="${polyGradStart}" stop-opacity="0.2" />
+            <stop offset="100%" stop-color="${polyGradStart}" stop-opacity="0" />
           </radialGradient>
           <linearGradient id="poly-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#818cf8" stop-opacity="0.6" />
-            <stop offset="100%" stop-color="#c084fc" stop-opacity="0.3" />
+            <stop offset="0%" stop-color="${polyGradStart}" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="${polyGradEnd}" stop-opacity="0.3" />
           </linearGradient>
         </defs>
         
@@ -523,7 +521,7 @@ const Analysis = {
         ${axisElements}
         
         <!-- The Morphing Polygon -->
-        <polygon points="${polygonPoints}" fill="url(#poly-grad)" stroke="#a78bfa" stroke-width="2" style="transition: points 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <polygon points="${polygonPoints}" fill="url(#poly-grad)" stroke="${polyStroke}" stroke-width="2" style="transition: points 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
           <animate attributeName="opacity" values="0.4;0.7;0.4" dur="4s" repeatCount="indefinite" />
         </polygon>
         
@@ -589,7 +587,15 @@ const Analysis = {
     }
 
     if (typeof html2pdf === 'undefined') {
-      Utils.toast('PDF generator is still loading. Please try again in a moment.', 'warning');
+      Utils.toast('Loading PDF generator, please wait...', 'info');
+      Utils.loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
+        .then(() => {
+          this.exportMonthlyReport();
+        })
+        .catch(err => {
+          console.error("Failed to load html2pdf", err);
+          Utils.toast('Failed to load PDF library.', 'error');
+        });
       return;
     }
 

@@ -14,11 +14,11 @@
   position: relative;
   text-align: center;
   padding: var(--space-8) var(--space-6) var(--space-6);
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--color-surface-card);
   border-radius: var(--card-radius);
   margin-bottom: var(--space-5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   overflow: hidden;
@@ -26,9 +26,9 @@
 }
 
 [data-theme="light"] .profile-hero {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08);
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 /* Remove all old lighting overlays completely */
@@ -38,22 +38,22 @@
 }
 
 [data-theme="light"] .profile-name {
-  color: #0F172A !important;
+  color: var(--color-text-primary) !important;
   font-weight: 850;
 }
 
 [data-theme="light"] .profile-bio {
-  color: #334155 !important;
+  color: var(--color-text-secondary) !important;
   font-weight: 600;
 }
 
 [data-theme="light"] .profile-email {
-  color: #64748B !important;
+  color: var(--color-text-muted) !important;
   opacity: 1;
 }
 
 [data-theme="light"] .profile-joined {
-  color: #4F46E5 !important;
+  color: var(--color-accent-primary) !important;
   opacity: 1;
   font-weight: 800;
 }
@@ -95,7 +95,7 @@
   position: absolute;
   inset: 3px;
   border-radius: 50%;
-  background: #0f172a;
+  background: var(--color-bg-secondary);
   z-index: -1;
 }
 
@@ -207,7 +207,7 @@
   color: var(--color-text-muted);
   margin-top: 2px;
   font-weight: 500;
-  opacity: 0.7;
+  opacity: 1;
 }
 .profile-joined {
   font-size: 11px;
@@ -216,7 +216,7 @@
   color: var(--color-accent-primary);
   margin-top: 8px;
   font-weight: 700;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 /* ---- Settings Groups ---- */
@@ -235,13 +235,13 @@
 }
 
 [data-theme="light"] .settings-group {
-  background: #FFFFFF !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  background: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: var(--shadow-sm);
 }
 
 [data-theme="light"] .settings-group-title {
-  color: #64748B !important;
+  color: var(--color-text-muted) !important;
   font-weight: 800;
 }
 .settings-group-title {
@@ -330,17 +330,17 @@
 }
 
 [data-theme="light"] .settings-item-label {
-  color: #0F172A !important;
+  color: var(--color-text-primary) !important;
   font-weight: 750;
 }
 
 [data-theme="light"] .settings-item-value {
-  color: #475569 !important;
+  color: var(--color-text-secondary) !important;
   font-weight: 600;
 }
 
 [data-theme="light"] .settings-item-right {
-  color: #64748B !important;
+  color: var(--color-text-muted) !important;
   font-weight: 700;
 }
 .settings-item-right {
@@ -558,4 +558,20 @@
 }
 [data-theme="light"] .dob-sep {
   color: rgba(234, 88, 12, 0.35);
+}
+
+/* ---- Install Banner — Light Mode ---- */
+[data-theme="light"] #install-banner {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(99, 102, 241, 0.08)) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] #install-banner strong {
+  color: #1F2937;
+}
+
+[data-theme="light"] #install-banner p {
+  color: #4B5563;
+  font-weight: 500;
 }

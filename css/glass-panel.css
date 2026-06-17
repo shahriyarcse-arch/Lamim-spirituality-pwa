@@ -1,9 +1,9 @@
 /* === GLASS PANEL === */
 .sa-panel {
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--color-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
   border-radius: 20px;
   padding: 20px;
   box-sizing: border-box;
@@ -13,28 +13,13 @@
 .sa-panel h3 {
   font-size: 15px;
   font-weight: 800;
-  color: #e2e8f0;
+  color: var(--color-text-primary);
   margin: 0 0 10px;
-}
-
-[data-theme="light"] .sa-panel {
-  background: #FFFFFF !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="light"] .sa-panel h3,
-[data-theme="light"] .sa-panel-head h2 {
-  color: #0F172A !important;
-}
-
-[data-theme="light"] .sa-panel p {
-  color: #475569 !important;
 }
 
 .sa-panel p {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0 0 16px;
 }
@@ -47,19 +32,19 @@
   gap: 8px;
   margin-bottom: 16px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--color-divider-subtle);
 }
 
 .sa-panel-head h2 {
   font-size: clamp(16px, 3vw, 19px);
   font-weight: 800;
-  color: #f1f5f9;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .sa-count {
   font-size: 12px;
-  color: #64748b;
+  color: var(--color-text-muted);
   font-weight: 600;
   white-space: nowrap;
 }

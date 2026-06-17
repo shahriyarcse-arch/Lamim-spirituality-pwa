@@ -1,60 +1,269 @@
 /* =============================================
-   LAMIM — DB LAYER (localStorage abstraction)
+   LAMIM — DB LAYER (IndexedDB Cache Engine)
    ============================================= */
 const DB = {
-  get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
-  set(key, val) { 
-    try { 
-      localStorage.setItem(key, JSON.stringify(val)); 
-      return true; 
-    } catch (e) { 
-      if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-        if (typeof Utils !== 'undefined') Utils.toast('Storage limit reached! Please backup and clear some data.', 'error');
-        console.error('LAMIM DB: QuotaExceededError', e);
+  _cache: {},
+  _db: null,
+
+  init() {
+    return new Promise((resolve) => {
+      // 1. Open IndexedDB
+      let request;
+      try {
+        request = indexedDB.open('lamim_db', 1);
+      } catch (err) {
+        console.error("IndexedDB.open failed, falling back to localStorage", err);
+        this._fallbackToLocalStorage();
+        resolve();
+        return;
       }
-      return false; 
-    } 
+
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('keyvalue')) {
+          db.createObjectStore('keyvalue');
+        }
+      };
+
+      request.onsuccess = (e) => {
+        this._db = e.target.result;
+        this._loadCache()
+          .then(() => this._migrateFromLocalStorage())
+          .then(() => {
+            this.migrate();
+            resolve();
+          })
+          .catch((err) => {
+            console.error("IndexedDB cache loading/migration failed, falling back", err);
+            this._fallbackToLocalStorage();
+            resolve();
+          });
+      };
+
+      request.onerror = (e) => {
+        console.error("IndexedDB onerror, falling back to localStorage", e);
+        this._fallbackToLocalStorage();
+        resolve();
+      };
+    });
   },
-  remove(key) { localStorage.removeItem(key); },
-  rawGet(key) { return localStorage.getItem(key); },
-  rawSet(key, val) { localStorage.setItem(key, val); return true; },
-  clear() { localStorage.clear(); },
-  keys() { return Object.keys(localStorage); },
+
+  _fallbackToLocalStorage() {
+    this._cache = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('lamim_')) {
+        this._cache[k] = localStorage.getItem(k);
+      }
+    }
+  },
+
+  _loadCache() {
+    return new Promise((resolve, reject) => {
+      if (!this._db) {
+        reject(new Error("No database connection"));
+        return;
+      }
+      try {
+        const transaction = this._db.transaction(['keyvalue'], 'readonly');
+        const store = transaction.objectStore(['keyvalue']);
+        const request = store.openCursor();
+        this._cache = {};
+
+        request.onsuccess = (e) => {
+          const cursor = e.target.result;
+          if (cursor) {
+            this._cache[cursor.key] = cursor.value;
+            cursor.continue();
+          } else {
+            resolve();
+          }
+        };
+
+        request.onerror = (e) => {
+          reject(e.target.error);
+        };
+      } catch (err) {
+        reject(err);
+      }
+    });
+  },
+
+  _migrateFromLocalStorage() {
+    const keysToMigrate = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('lamim_')) {
+        keysToMigrate.push(k);
+      }
+    }
+
+    if (keysToMigrate.length === 0) return Promise.resolve();
+
+    console.log(`[DB] Migrating ${keysToMigrate.length} keys from localStorage to IndexedDB...`);
+
+    return new Promise((resolve) => {
+      try {
+        const transaction = this._db.transaction(['keyvalue'], 'readwrite');
+        const store = transaction.objectStore(['keyvalue']);
+
+        keysToMigrate.forEach(key => {
+          const val = localStorage.getItem(key);
+          store.put(val, key);
+          this._cache[key] = val;
+        });
+
+        transaction.oncomplete = () => {
+          console.log("[DB] Migration transaction complete. Clearing localStorage...");
+          keysToMigrate.forEach(key => {
+            if (key !== 'lamim_lang' && key !== 'lamim_settings') {
+              localStorage.removeItem(key);
+            }
+          });
+          resolve();
+        };
+
+        transaction.onerror = (e) => {
+          console.error("[DB] Migration transaction failed:", e.target.error);
+          resolve();
+        };
+      } catch (err) {
+        console.error("[DB] Migration execution error:", err);
+        resolve();
+      }
+    });
+  },
+
+  _asyncWrite(key, val) {
+    if (!this._db) return;
+    try {
+      const transaction = this._db.transaction(['keyvalue'], 'readwrite');
+      const store = transaction.objectStore(['keyvalue']);
+      const req = store.put(val, key);
+      
+      req.onerror = (e) => {
+        const err = e.target.error;
+        console.error(`[DB] Async write failed for key: ${key}`, err);
+        if (err && (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
+          if (typeof Utils !== 'undefined') {
+            Utils.toast('Storage limit reached! Please backup and clear some data.', 'error');
+          }
+        }
+      };
+    } catch (e) {
+      console.error(`[DB] Async write failed for key: ${key}`, e);
+    }
+  },
+
+  _asyncDelete(key) {
+    if (!this._db) return;
+    try {
+      const transaction = this._db.transaction(['keyvalue'], 'readwrite');
+      const store = transaction.objectStore(['keyvalue']);
+      store.delete(key);
+    } catch (e) {
+      console.error(`[DB] Async delete failed for key: ${key}`, e);
+    }
+  },
+
+  _asyncClear() {
+    if (!this._db) return;
+    try {
+      const transaction = this._db.transaction(['keyvalue'], 'readwrite');
+      const store = transaction.objectStore(['keyvalue']);
+      store.clear();
+    } catch (e) {
+      console.error('[DB] Async clear failed:', e);
+    }
+  },
+
+  get(key) {
+    const val = this._cache[key];
+    if (!val) return null;
+    try {
+      return JSON.parse(val);
+    } catch {
+      return null;
+    }
+  },
+
+  set(key, val) {
+    try {
+      const strVal = JSON.stringify(val);
+      this._cache[key] = strVal;
+
+      if (key === 'lamim_lang' || key === 'lamim_settings') {
+        try { localStorage.setItem(key, strVal); } catch {}
+      }
+
+      this._asyncWrite(key, strVal);
+      return true;
+    } catch (e) {
+      console.error(`[DB] Error in set for key: ${key}`, e);
+      return false;
+    }
+  },
+
+  remove(key) {
+    delete this._cache[key];
+    if (key === 'lamim_lang' || key === 'lamim_settings') {
+      try { localStorage.removeItem(key); } catch {}
+    }
+    this._asyncDelete(key);
+  },
+
+  rawGet(key) {
+    return this._cache[key] || null;
+  },
+
+  rawSet(key, val) {
+    try {
+      this._cache[key] = val;
+
+      if (key === 'lamim_lang' || key === 'lamim_settings') {
+        try { localStorage.setItem(key, val); } catch {}
+      }
+
+      this._asyncWrite(key, val);
+      return true;
+    } catch (e) {
+      console.error(`[DB] Error in rawSet for key: ${key}`, e);
+      return false;
+    }
+  },
+
+  clear() {
+    this._cache = {};
+    try { localStorage.clear(); } catch {}
+    this._asyncClear();
+  },
+
+  keys() {
+    return Object.keys(this._cache);
+  },
 
   // User
   getUser()      { return this.get('lamim_user'); },
-  setUser(u, skipSync = false)     { 
-    const res = this.set('lamim_user', u); 
-    if (res && !skipSync && window.Sync) window.Sync.queueSync('profile', 'all', u);
-    return res;
-  },
+  setUser(u)     { return this.set('lamim_user', u); },
   clearUser()    { this.remove('lamim_user'); },
   
   clearAllUserData() {
-    // Clear all local data except settings (so theme/currency preferences remain)
-    const keys = Object.keys(localStorage);
+    const keys = this.keys();
     keys.forEach(k => {
       if (k.startsWith('lamim_') && k !== 'lamim_settings') {
-        localStorage.removeItem(k);
+        this.remove(k);
       }
     });
   },
 
   // Settings
-  getSettings()  { return this.get('lamim_settings') || { theme: 'dark', notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125 }; },
-  setSettings(s, skipSync = false) { 
-    const res = this.set('lamim_settings', s); 
-    if (res && !skipSync && window.Sync) window.Sync.queueSync('settings', 'all', s);
-    return res;
-  },
+  getSettings()  { return this.get('lamim_settings') || { theme: 'light', notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125 }; },
+  setSettings(s) { return this.set('lamim_settings', s); },
 
   // Salah — keyed by date YYYY-MM-DD
   getSalah(date)  { return this.get(`lamim_salah_${date}`) || { fajr: null, dhuhr: null, asr: null, maghrib: null, isha: null, tahajjud: false, jummah: false, notes: {} }; },
-  setSalah(date, d, skipSync = false) { 
+  setSalah(date, d) { 
     const res = this.set(`lamim_salah_${date}`, d); 
-    if (res && !skipSync && window.Sync) {
-      window.Sync.queueSync('salah', date, d);
-    }
     this._streakCache = null; // Invalidate streak cache
     this.refreshSpiritScore();
     return res;
@@ -62,32 +271,20 @@ const DB = {
 
   // Dhikr — keyed by date
   getDhikr(date)  { return this.get(`lamim_dhikr_${date}`) || {}; },
-  setDhikr(date, d, skipSync = false) { 
+  setDhikr(date, d) { 
     const res = this.set(`lamim_dhikr_${date}`, d);
-    if (res && !skipSync && window.Sync) {
-      window.Sync.queueSync('dhikr', date, d);
-    }
     this.refreshSpiritScore();
     return res;
   },
 
   // Goals
   getGoals()     { return this.get('lamim_goals') || []; },
-  setGoals(g, skipSync = false)    { 
-    const res = this.set('lamim_goals', g); 
-    if (res && !skipSync && window.Sync) {
-      window.Sync.queueSync('goals', 'all', g);
-    }
-    return res;
-  },
+  setGoals(g)    { return this.set('lamim_goals', g); },
   
   // Mujahid
   getMujahid()    { return this.get('lamim_mujahid_habits') || []; },
-  setMujahid(h, skipSync = false) {
+  setMujahid(h)   {
     const res = this.set('lamim_mujahid_habits', h);
-    if (res && !skipSync && window.Sync) {
-      window.Sync.queueSync('mujahid', 'all', h);
-    }
     this.refreshSpiritScore();
     return res;
   },
@@ -101,11 +298,7 @@ const DB = {
 
   // Dhikr custom presets
   getDhikrPresets() { return this.get('lamim_dhikr_presets') || []; },
-  setDhikrPresets(p, skipSync = false) { 
-    const res = this.set('lamim_dhikr_presets', p); 
-    if (res && !skipSync && window.Sync) window.Sync.queueSync('dhikr_presets', 'all', p);
-    return res;
-  },
+  setDhikrPresets(p) { return this.set('lamim_dhikr_presets', p); },
 
   _streakCache: null,
   getSalahStreak() {
@@ -194,30 +387,19 @@ const DB = {
 
   // Finance & Zakat
   getFinance() { return this.get('lamim_finance') || { nisab: 600, cash: 0, gold: 0, silver: 0, business: 0, stocks: 0, debts: [], savings_goals: [] }; },
-  setFinance(d, skipSync = false) { 
-    const res = this.set('lamim_finance', d); 
-    if (res && !skipSync && window.Sync) {
-      window.Sync.queueSync('finance', 'all', d);
-    }
-    return res;
-  },
+  setFinance(d) { return this.set('lamim_finance', d); },
 
   // Migration & Housekeeping
   migrate() {
-    // 1. Finance Migration: lamim_finance_data -> lamim_finance
-    const oldFin = localStorage.getItem('lamim_finance_data');
+    const oldFin = this.rawGet('lamim_finance_data');
     if (oldFin) {
-      if (!localStorage.getItem('lamim_finance')) {
-        localStorage.setItem('lamim_finance', oldFin);
-        console.log("Finance data migrated to new sync-ready key.");
+      if (!this.rawGet('lamim_finance')) {
+        this.rawSet('lamim_finance', oldFin);
+        console.log("Finance data migrated to new key.");
       }
-      localStorage.removeItem('lamim_finance_data');
+      this.remove('lamim_finance_data');
     }
     
-    // 2. Clean up any other dead keys if found in the future
     console.log("LAMIM: Storage housekeeping complete.");
   }
 };
-
-// Auto-run migration on load
-DB.migrate();

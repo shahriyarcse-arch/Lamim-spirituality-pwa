@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lamim-v100';
+const CACHE_NAME = 'lamim-v122';
 const ASSETS = [
   './',
   './index.html',
@@ -36,12 +36,14 @@ self.addEventListener('fetch', (e) => {
   if (!e.request.url.startsWith('http')) return;
 
   // Skip external database, dynamic API, and Google API calls to prevent stale data
+  // Also skip CDN libraries that must always be fetched fresh
   const skipUrls = [
-    'supabase.co',
     'api.bigdatacloud.net',
     'ipapi.co',
     'open.er-api.com',
-    'googleapis.com'
+    'googleapis.com',
+    'cdn.jsdelivr.net',  // Chart.js and other CDN libraries
+    'fonts.googleapis.com'
   ];
   if (skipUrls.some(url => e.request.url.includes(url))) return;
 
@@ -119,18 +121,21 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // EXTERNAL STATIC ASSETS (fonts, CDN icons, etc.) → Stale-While-Revalidate
+  // EXTERNAL STATIC ASSETS (fonts, CDN icons, etc.) → Network-First with Cache Fallback
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const networkFetch = fetch(e.request).then((res) => {
+    fetch(e.request)
+      .then((res) => {
         if (res && res.ok) {
           const copy = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
         }
         return res;
-      }).catch(() => null);
-
-      return cached || networkFetch;
-    })
+      })
+      .catch(() => {
+        // Network failed, try cache, otherwise return error response
+        return caches.match(e.request).then((cached) => {
+          return cached || new Response('Offline – CDN unavailable', { status: 503, statusText: 'Service Unavailable' });
+        });
+      })
   );
 });
