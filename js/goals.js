@@ -34,6 +34,30 @@ const Goals = {
 
   init() {
     this.render(false);
+    this.bindNaflDelegation();
+  },
+
+  bindNaflDelegation() {
+    const panel = document.getElementById('section-nafl');
+    if (!panel) return;
+    panel.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-nafl]');
+      if (!btn) return;
+      const type = btn.dataset.nafl;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      const rakat = btn.dataset.rakat;
+      if (type === 'sunnah' && id && action) {
+        this.selectSunnah(id, action);
+      } else if (type === 'tahajjud') {
+        if (rakat) this.setTahajjudRakat(Number(rakat));
+        else if (action === 'missed') this.setTahajjudMissed();
+        else if (action === 'custom') this.promptCustomTahajjud();
+      } else if (type === 'witr') {
+        if (action === 'prayed') this.toggleWitr();
+        else if (action === 'missed') this.toggleWitrMissed();
+      }
+    });
   },
 
   render(skipAnim = false) {
@@ -221,18 +245,18 @@ const Goals = {
             : `<div class="salah-status-selector">
                  <div class="salah-options-label">Did you pray this Sunnah?</div>
                  <div class="salah-options-grid" style="grid-template-columns: repeat(2, 1fr);">
-                   <button class="salah-option-btn" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);" onclick="Goals.selectSunnah('${item.id}', 'prayed')">
-                     <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
-                     <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
-                     <span class="salah-opt-desc">Sunnah Mu'akkadah</span>
-                     <span class="salah-opt-pts">+${pts} pts</span>
-                   </button>
-                   <button class="salah-option-btn" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);" onclick="Goals.selectSunnah('${item.id}', 'missed')">
-                     <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
-                     <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
-                     <span class="salah-opt-desc">Not prayed</span>
-                     <span class="salah-opt-pts">+0 pts</span>
-                   </button>
+                    <button class="salah-option-btn" data-nafl="sunnah" data-id="${item.id}" data-action="prayed" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);">
+                      <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
+                      <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
+                      <span class="salah-opt-desc">Sunnah Mu'akkadah</span>
+                      <span class="salah-opt-pts">+${pts} pts</span>
+                    </button>
+                    <button class="salah-option-btn" data-nafl="sunnah" data-id="${item.id}" data-action="missed" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);">
+                      <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                      <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
+                      <span class="salah-opt-desc">Not prayed</span>
+                      <span class="salah-opt-pts">+0 pts</span>
+                    </button>
                  </div>
                </div>`
           }
@@ -350,16 +374,16 @@ const Goals = {
           : `<div class="salah-status-selector">
                <div class="salah-options-label" style="display:flex; justify-content:space-between; align-items:center;">
                  <span>How many Rakat did you pray?</span>
-                 <button onclick="Goals.setTahajjudMissed()" style="background:rgba(248,81,73,0.1); border:1px solid rgba(248,81,73,0.3); color:#f85149; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed</button>
+                  <button data-nafl="tahajjud" data-action="missed" style="background:rgba(248,81,73,0.1); border:1px solid rgba(248,81,73,0.3); color:#f85149; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed</button>
                </div>
                <div class="salah-options-grid" style="grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:8px;">
                  ${[2, 4, 6, 8, 10, 12].map(opt => `
-                   <button class="salah-option-btn" style="border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:55px; padding:8px;" onclick="Goals.setTahajjudRakat(${opt})">
-                     <span class="salah-opt-label" style="color: #818cf8; font-size:13px">${opt} RK</span>
-                     <span class="salah-opt-pts">+3 pts</span>
-                   </button>
+                    <button class="salah-option-btn" data-nafl="tahajjud" data-rakat="${opt}" style="border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:55px; padding:8px;">
+                      <span class="salah-opt-label" style="color: #818cf8; font-size:13px">${opt} RK</span>
+                      <span class="salah-opt-pts">+3 pts</span>
+                    </button>
                  `).join('')}
-                 <button class="salah-option-btn" style="grid-column: span 3; border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:40px; flex-direction:row; gap:6px; padding:6px; display:flex; align-items:center; justify-content:center;" onclick="Goals.promptCustomTahajjud()">
+                  <button class="salah-option-btn" data-nafl="tahajjud" data-action="custom" style="grid-column: span 3; border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:40px; flex-direction:row; gap:6px; padding:6px; display:flex; align-items:center; justify-content:center;">
                    <span class="salah-opt-icon" style="display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px; color:#818cf8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
                    <span class="salah-opt-label" style="color: #818cf8; margin-top:0;">Custom Rakat</span>
                  </button>
@@ -481,18 +505,18 @@ const Goals = {
           : `<div class="salah-status-selector">
                <div class="salah-options-label">Did you pray Witr?</div>
                <div class="salah-options-grid" style="grid-template-columns: repeat(2, 1fr);">
-                 <button class="salah-option-btn" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);" onclick="Goals.toggleWitr()">
-                   <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
-                   <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
-                   <span class="salah-opt-desc">3 Rakat Wajib</span>
-                   <span class="salah-opt-pts">+2 pts</span>
-                 </button>
-                 <button class="salah-option-btn" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);" onclick="Goals.toggleWitrMissed()">
-                   <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
-                   <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
-                   <span class="salah-opt-desc">Not prayed</span>
-                   <span class="salah-opt-pts">+0 pts</span>
-                 </button>
+                  <button class="salah-option-btn" data-nafl="witr" data-action="prayed" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);">
+                    <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
+                    <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
+                    <span class="salah-opt-desc">3 Rakat Wajib</span>
+                    <span class="salah-opt-pts">+2 pts</span>
+                  </button>
+                  <button class="salah-option-btn" data-nafl="witr" data-action="missed" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);">
+                    <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                    <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
+                    <span class="salah-opt-desc">Not prayed</span>
+                    <span class="salah-opt-pts">+0 pts</span>
+                  </button>
                </div>
              </div>`
         }
@@ -675,4 +699,3 @@ const Goals = {
     Utils.closeModal(document.getElementById('nafl-history-modal'));
   }
 };
-window.Goals = Goals;
