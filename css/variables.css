@@ -169,7 +169,7 @@
   /* LAYOUT */
   --sidebar-width:       260px;
   --sidebar-width-mini:  72px;
-  --header-height:       64px;
+  --header-height:       72px;
   --bottomnav-height:    72px;
   --content-max:         1200px;
   --card-radius:         var(--radius-xl);
