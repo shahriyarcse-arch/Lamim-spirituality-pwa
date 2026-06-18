@@ -683,9 +683,10 @@ const Analysis = {
         Close &amp; Go Back
       </button>
     </div>`;
-    const fullHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM — ${monthName} ${currentYear} Spiritual Report</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>@page { size: A4; margin: 0; } * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; } body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #ffffff; color: #0f172a; font-size: 10px; line-height: 1.4; padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style><script>window.onload = () => { setTimeout(() => { window.print(); try { window.close(); } catch(e) {} }, 800); }<\/script></head><body>${bodyHTML}${closeBtn}</body></html>`;
+    const fullHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM — ${monthName} ${currentYear} Spiritual Report</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>@page { size: A4; margin: 0; } * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; } body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #ffffff; color: #0f172a; font-size: 10px; line-height: 1.4; padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style></head><body>${bodyHTML}${closeBtn}<script>setTimeout(() => { window.print(); }, 1200);<\/script></body></html>`;
 
-    const printWindow = window.open('', '_blank');
+    const winName = 'lamim_pdf_' + Date.now();
+    const printWindow = window.open('', winName);
     if (!printWindow) {
       Utils.toast('Popup blocked. Please allow popups and try again.', 'error');
       this._isGeneratingPDF = false;

@@ -703,10 +703,11 @@ const Salah = {
       + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>'
       + 'Close &amp; Go Back</button></div>';
 
-    const fullHTML = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM - Salah Report ' + monthName + ' ' + year + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>' + css + ' body { padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style><script>window.onload = () => { setTimeout(() => { window.print(); try { window.close(); } catch(e) {} }, 800); }<\/script></head><body>' + bodyHTML + closeBtn + '</body></html>';
+    const fullHTML = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM - Salah Report ' + monthName + ' ' + year + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>' + css + ' body { padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style></head><body>' + bodyHTML + closeBtn + '<script>setTimeout(function(){ window.print(); }, 1200);<\/script></body></html>';
 
     // Open in new window
-    const printWindow = window.open('', '_blank');
+    const winName = 'lamim_pdf_' + Date.now();
+    const printWindow = window.open('', winName);
     if (!printWindow) {
       Utils.toast('Popup blocked. Please allow popups and try again.', 'error');
       return;
