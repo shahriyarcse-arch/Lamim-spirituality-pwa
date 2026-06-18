@@ -181,6 +181,17 @@
   }
 }
 
+@keyframes q-stars {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+@keyframes q-mask {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* 3,000 Days: Sovereign (The Cold Void) */
 .is-divine:not(.is-master) {
   background: #000 !important;

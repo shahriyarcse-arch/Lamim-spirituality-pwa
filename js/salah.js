@@ -859,7 +859,8 @@ const Salah = {
     });
 
     // Dismiss on mobile when clicking outside
-    document.addEventListener('click', (e) => {
+    if (this._calDismissHandler) document.removeEventListener('click', this._calDismissHandler);
+    this._calDismissHandler = (e) => {
       const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768;
       if (isMobile) {
         if (!e.target.closest('.salah-cal-cell') && !e.target.closest('#salah-cal-tooltip')) {
@@ -867,7 +868,8 @@ const Salah = {
            tooltip.dataset.activeDate = '';
         }
       }
-    });
+    };
+    document.addEventListener('click', this._calDismissHandler);
   },
 
   resetToday() {

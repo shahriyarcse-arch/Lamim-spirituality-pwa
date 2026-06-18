@@ -13,12 +13,6 @@
   .dhikr-preset-icon {
     font-size: 1.3rem;
   }
-
-  height: 12px;
-  border-radius: 50%;
-  background: var(--color-bg-tertiary);
-  border: 1.5px solid var(--color-border);
-  transition: all 0.15s ease;
 }
 
 .dhikr-beads-container .bead.lit {
@@ -262,6 +256,11 @@
   50% {
     filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.6));
   }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 @keyframes dhikrFloatUp {
