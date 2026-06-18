@@ -264,8 +264,6 @@ const Dhikr = {
   },
 
   bindKeyboard() {
-    if (this._keydownBound) return;
-    this._keydownBound = true;
     document.addEventListener('keydown', e => {
       if (e.code === 'Space' && document.getElementById('section-dhikr')?.classList.contains('active')) {
         e.preventDefault();

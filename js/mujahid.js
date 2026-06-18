@@ -396,7 +396,7 @@ const Mujahid = {
 
   startLiveCounter() {
     let lastSec = -1;
-      this._liveInterval = setInterval(() => {
+      setInterval(() => {
         const now = new Date();
         const currentSec = now.getSeconds();
         if (currentSec === lastSec) return;
@@ -1726,9 +1726,5 @@ const Mujahid = {
     this.breatheInterval = setTimeout(() => {
       runPhase(0);
     }, 1500);
-  },
-
-  cleanup() {
-    if (this._liveInterval) { clearInterval(this._liveInterval); this._liveInterval = null; }
   }
 };

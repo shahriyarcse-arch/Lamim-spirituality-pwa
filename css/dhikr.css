@@ -3596,11 +3596,6 @@
   100% { background-position: 0% 0%; }
 }
 
-@keyframes glossy-sweep {
-  0% { transform: translateX(-100%) rotate(45deg); }
-  100% { transform: translateX(200%) rotate(45deg); }
-}
-
 [data-theme="light"] span.dhikr-tap-count#dhikr-tap-count {
   color: #0f172a !important;
   text-shadow: 0 4px 12px rgba(100, 116, 139, 0.15) !important;

@@ -300,11 +300,8 @@ const App = {
       return;
     }
 
-    // Cleanup previous section's timers/listeners
-    const modMap = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, profile: Profile, mujahid: Mujahid, finance: Finance };
-    if (this.currentSection && modMap[this.currentSection]?.cleanup) {
-      modMap[this.currentSection].cleanup();
-    }
+    // Cleanup previous section's resources (e.g., Home rAF loops)
+    if (this.currentSection === 'home' && typeof Home !== 'undefined') Home.cleanup();
 
     this.currentSection = sectionId;
 

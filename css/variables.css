@@ -94,9 +94,6 @@
   --gradient-stat-text: linear-gradient(135deg, #34D399, #10B981);
   --gradient-brand-text: linear-gradient(135deg, #10B981, #3B82F6);
 
-  /* SECTION ACCENT - Dynamically set by JS per section, fallback gold */
-  --section-accent: #F59E0B;
-
   /* FINTECH */
   --fin-green: #10B981;
   --fin-red: #EF4444;

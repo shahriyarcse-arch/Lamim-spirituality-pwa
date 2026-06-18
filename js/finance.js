@@ -255,7 +255,7 @@ const Finance = {
           }
         }
       }
-    } catch (e) { console.warn('[Finance] Exchange rate fetch failed:', e); }
+    } catch (e) {}
   },
 
   getSymbol() { return DB.getSettings().currency === 'BDT' ? '৳' : '$'; },
@@ -1809,7 +1809,4 @@ const Finance = {
     };
   },
 
-  cleanup() {
-    if (this.rateInterval) { clearInterval(this.rateInterval); this.rateInterval = null; }
-  },
 };
