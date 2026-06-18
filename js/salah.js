@@ -699,11 +699,15 @@ const Salah = {
 
     const closeBtn = '<div id="lamim-close-bar" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #e2e8f0;padding:14px 20px;text-align:center;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:space-between;">'
       + '<span style="font-size:12px;font-weight:600;color:#64748b;">LAMIM Report</span>'
-      + '<button onclick="window.close()" style="background:#6366f1;color:#fff;border:none;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(99,102,241,0.3);">'
+      + '<div style="display:flex;gap:10px;">'
+      + '<button onclick="window.print()" style="background:#10b981;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(16,185,129,0.3);">'
+      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>'
+      + 'Print / PDF</button>'
+      + '<button onclick="window.close()" style="background:#64748b;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;">'
       + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>'
-      + 'Close &amp; Go Back</button></div>';
+      + 'Close</button></div></div>';
 
-    const fullHTML = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM - Salah Report ' + monthName + ' ' + year + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>' + css + ' body { padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style></head><body>' + bodyHTML + closeBtn + '<script>setTimeout(function(){ window.print(); }, 1200);<\/script></body></html>';
+    const fullHTML = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAMIM - Salah Report ' + monthName + ' ' + year + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>' + css + ' body { padding-bottom: 70px; } @media print { #lamim-close-bar { display: none !important; } body { padding-bottom: 0; } }</style></head><body>' + bodyHTML + closeBtn + '</body></html>';
 
     // Open in new window
     const winName = 'lamim_pdf_' + Date.now();
