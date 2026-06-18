@@ -133,13 +133,14 @@ const Analysis = {
   },
 
   getMonthDailyTrend(year, month) {
-    const todayOffset = Utils.getOffsetDate();
+    const offsetDate = Utils.getOffsetDate();
+    const todayStart = new Date(offsetDate.getFullYear(), offsetDate.getMonth(), offsetDate.getDate());
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const days = [];
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(year, month, d);
-      if (date > todayOffset) break;
+      if (date > todayStart) break;
       const shs = this.calculateSHS(Utils.dateStr(date));
       days.push({
         dateNum: d.toString(),
@@ -543,8 +544,9 @@ const Analysis = {
     }
     this._isGeneratingPDF = true;
 
-    const todayOffset = Utils.getOffsetDate();
-    let targetDate = todayOffset;
+    const offsetDate = Utils.getOffsetDate();
+    const todayStart = new Date(offsetDate.getFullYear(), offsetDate.getMonth(), offsetDate.getDate());
+    let targetDate = todayStart;
     if (monthStr) {
       const [y, m] = monthStr.split('-');
       targetDate = new Date(parseInt(y), parseInt(m), 1);
@@ -561,7 +563,7 @@ const Analysis = {
 
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(currentYear, currentMonth, i);
-      if (date > todayOffset) break;
+      if (date > todayStart) break;
       const ds = Utils.dateStr(date);
       const shs = this.calculateSHS(ds);
       totalSHS += shs.total;
