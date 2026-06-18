@@ -86,10 +86,43 @@ const Dhikr = {
     });
   },
 
+  getSuggestedDhikr() {
+    if (typeof Analysis === 'undefined') return null;
+    const shs = Analysis.calculateSHS();
+    if (!shs) return null;
+    const { breakdown } = shs;
+    const weakest = Object.entries(breakdown).sort((a, b) => a[1] - b[1])[0];
+    if (!weakest) return null;
+    const map = {
+      salah: { preset: 'astghfirullah', hint: 'Strengthen your Salah with Istighfar' },
+      nafl: { preset: 'ya-hayyu', hint: 'Boost your Nafl with Ya Hayyu Ya Qayyum' },
+      dhikr: { preset: 'subhanallah', hint: 'Keep going! SubhanAllah fills the scales' },
+      mujahid: { preset: 'hasbunallah', hint: 'For your jihad: Hasbunallah wa ni\'mal Wakil' },
+      consistency: { preset: 'alhamdulillah', hint: 'Build consistency with Alhamdulillah' }
+    };
+    return map[weakest[0]] || null;
+  },
+
   renderPresetRow() {
     const grid = document.getElementById('dhikr-grid');
     if (!grid) return;
     const presets = this.getAllPresets();
+
+    // Smart suggestion
+    const sug = this.getSuggestedDhikr();
+    const sugEl = document.getElementById('dhikr-suggestion');
+    if (sugEl && sug) {
+      const isActive = this.currentId === sug.preset;
+      sugEl.innerHTML = `
+        <div class="dhikr-suggestion-badge" style="${isActive ? 'opacity:0.5' : ''}">
+          <span>💡</span>
+          <span>${sug.hint}</span>
+          ${!isActive ? `<button class="dhikr-suggestion-apply" onclick="Dhikr.selectDhikr('${sug.preset}')">Try</button>` : ''}
+        </div>
+      `;
+    } else if (sugEl) {
+      sugEl.innerHTML = '';
+    }
 
     grid.innerHTML = presets.map(p => `
       <div class="dhikr-preset-card ${p.id === this.currentId ? 'active' : ''}" onclick="Dhikr.selectDhikr('${p.id}')">

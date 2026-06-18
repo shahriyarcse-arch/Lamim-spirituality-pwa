@@ -288,6 +288,96 @@
   100% { opacity: 0; transform: translateY(-8px); }
 }
 
+/* 3D perspective tilt on cards */
+.tilt-3d {
+  perspective: 800px;
+}
+.tilt-3d .card, .tilt-3d .salah-prayer-card, .tilt-3d .nafl-card-modern, .tilt-3d .goal-card {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+}
+.tilt-3d .card:hover, .tilt-3d .salah-prayer-card:hover, .tilt-3d .nafl-card-modern:hover, .tilt-3d .goal-card:hover {
+  transform: rotateX(-2deg) rotateY(2deg) translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.3);
+}
+
+/* Morphing card on hover — auto-applied */
+.salah-prayer-card:hover, .nafl-card-modern:hover, .goal-card:hover, .settings-item:hover, .dhikr-session-item:hover {
+  border-radius: 12px !important;
+}
+
+/* Dual-layer glass depth */
+.glass-deep {
+  position: relative;
+}
+.glass-deep::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none; z-index: 1;
+}
+.glass-deep::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.1);
+  pointer-events: none; z-index: 2;
+}
+.glass-deep > * { position: relative; z-index: 3; }
+
+/* Glossy sweep across all cards */
+.card, .card-glass, .settings-group, .salah-prayer-card, .dhikr-preset-card, .nafl-card-modern, .goal-card {
+  position: relative;
+  overflow: hidden;
+}
+.card::after, .card-glass::after, .settings-group::after, .salah-prayer-card::after, .dhikr-preset-card::after, .nafl-card-modern::after, .goal-card::after {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 35%, rgba(255,255,255,0.04) 40%, rgba(255,255,255,0.07) 45%, rgba(255,255,255,0.04) 50%, transparent 55%);
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+.card:hover::after, .card-glass:hover::after, .settings-group:hover::after, .salah-prayer-card:hover::after, .dhikr-preset-card:hover::after, .nafl-card-modern:hover::after, .goal-card:hover::after {
+  transform: translateX(100%) translateY(100%) rotate(45deg);
+}
+
+/* Fluid gradient hero background */
+@keyframes fluidGradientBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.fluid-gradient-hero {
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.08), 
+    rgba(99, 102, 241, 0.05), 
+    rgba(139, 92, 246, 0.08), 
+    rgba(16, 185, 129, 0.03)
+  );
+  background-size: 300% 300%;
+  animation: fluidGradientBg 8s ease infinite;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--card-radius);
+}
+
+/* Skeleton shimmer */
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+.skeleton-text { height: 14px; margin-bottom: 8px; width: 60%; }
+.skeleton-text.short { width: 35%; }
+.skeleton-text.long { width: 85%; }
+.skeleton-block { height: 80px; margin-bottom: 12px; }
+
 /* Sparkle / Confetti fly */
 @keyframes sparkleFly {
   0% { transform: translate(0, 0) scale(1); opacity: 1; }

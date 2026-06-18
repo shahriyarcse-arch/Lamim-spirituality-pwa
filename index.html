@@ -473,7 +473,7 @@
           }
         </style>
         
-        <div style="display: flex; flex-direction: column; width: 100%;">
+        <div class="tilt-3d" style="display: flex; flex-direction: column; width: 100%;">
           <!-- 1. Next Prayer -->
           <div id="home-next-prayer" style="margin-bottom:var(--space-6)"></div>
           
@@ -493,7 +493,10 @@
           
           <!-- 3. AI Spiritual Insight -->
           <div id="home-ai-insight-container" class="anim-fade-in" style="margin-bottom:var(--space-6)"></div>
-          
+
+          <!-- 3b. Weekly AI Summary -->
+          <div id="home-weekly-summary" class="anim-fade-in" style="margin-bottom:var(--space-6)"></div>
+
           <!-- 4. Dua Request Board Card -->
           <div id="home-dua-card" class="anim-fade-in" style="margin-bottom:var(--space-8)"></div>
         </div>
@@ -599,6 +602,7 @@
 
       <!-- Horizontal Dhikr List -->
       <div class="dhikr-preset-scroll">
+        <div id="dhikr-suggestion" style="margin-bottom:8px;"></div>
         <div id="dhikr-grid" class="dhikr-preset-row"></div>
       </div>
 
@@ -697,11 +701,11 @@
     <!-- ===== PROFILE ===== -->
     <section class="section-panel" id="section-profile">
       <div id="profile-hero" class="profile-hero"></div>
-      <div class="settings-group"><div class="settings-group-title">Personal Information</div><div id="profile-personal-info"></div></div>
-      <div class="settings-group"><div class="settings-group-title">Prayer Settings</div><div id="profile-prayer-settings"></div></div>
-      <div class="settings-group"><div class="settings-group-title">App Settings</div><div id="profile-app-settings"></div></div>
-      <div class="settings-group"><div class="settings-group-title">About</div><div id="profile-about"></div></div>
-      <div class="settings-group" style="border-color:rgba(248,81,73,0.3)"><div class="settings-group-title" style="color:var(--color-accent-red)">Danger Zone</div><div id="profile-danger"></div></div>
+      <div class="settings-group glass-noise glass-deep"><div class="settings-group-title">Personal Information</div><div id="profile-personal-info"></div></div>
+      <div class="settings-group glass-noise glass-deep"><div class="settings-group-title">Prayer Settings</div><div id="profile-prayer-settings"></div></div>
+      <div class="settings-group glass-noise glass-deep"><div class="settings-group-title">App Settings</div><div id="profile-app-settings"></div></div>
+      <div class="settings-group glass-noise glass-deep"><div class="settings-group-title">About</div><div id="profile-about"></div></div>
+      <div class="settings-group glass-noise glass-deep" style="border-color:rgba(248,81,73,0.3)"><div class="settings-group-title" style="color:var(--color-accent-red)">Danger Zone</div><div id="profile-danger"></div></div>
     </section>
 
 

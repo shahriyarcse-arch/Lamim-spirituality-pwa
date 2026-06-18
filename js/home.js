@@ -59,7 +59,7 @@ const Home = {
 
     const el = document.getElementById('home-greeting');
     if (el) el.innerHTML = `
-      <div class="home-greeting-card" style="display: flex; flex-direction: column; gap: 2px;">
+      <div class="home-greeting-card fluid-gradient-hero" style="display: flex; flex-direction: column; gap: 2px; padding: 18px 20px;">
         <h2 style="font-size: 1.35rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--home-salam-color); letter-spacing: -0.3px;">
           ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
@@ -127,10 +127,13 @@ const Home = {
     // 4. AI Spiritual Insight (reveal class added inside renderAIInsight)
     this.renderAIInsight();
 
-    // 5. Dua Request Board Card
+    // 5. Weekly AI Summary
+    this.renderWeeklySummary();
+
+    // 6. Dua Request Board Card
     this.renderDuaCard();
 
-    // 6. Nur Particles (Subtle Animation)
+    // 7. Nur Particles (Subtle Animation)
     this.renderNurParticles();
   },
 
@@ -338,6 +341,68 @@ const Home = {
 
       }, 600); // 600ms matches the fade-out CSS transition time
     }, 10000); // 10 seconds per quote
+  },
+
+  renderWeeklySummary() {
+    const container = document.getElementById('home-weekly-summary');
+    if (!container) return;
+
+    const history = DB.getSalahHistory(7);
+    if (!history || history.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let totalPrayed = 0, totalMissed = 0, totalDhikr = 0, totalSunnah = 0, perfectDays = 0;
+    let bestDay = 0, bestDayLabel = '';
+    const today = Utils.todayStr();
+
+    history.forEach(day => {
+      const s = Utils.salahScore(day.data);
+      totalPrayed += s.done;
+      totalMissed += 5 - s.done;
+      if (s.done === 5) perfectDays++;
+      if (s.done > bestDay) { bestDay = s.done; bestDayLabel = day.date === today ? 'Today' : Utils.formatDate(new Date(day.date + 'T00:00:00'), { weekday: 'short' }); }
+
+      const dhikr = DB.getDhikr(day.date);
+      const dhikrTotal = Object.values(dhikr).reduce((a, b) => a + (parseInt(b) || 0), 0);
+      totalDhikr += dhikrTotal;
+
+      if (day.data.sunnah) {
+        Object.values(day.data.sunnah).forEach(v => { if (v === 'prayed' || v === true) totalSunnah++; });
+      }
+    });
+
+    const avgPrayed = (totalPrayed / history.length).toFixed(1);
+    const tip = perfectDays >= 5 ? '🔥 Exceptional week! You\'re in a spiritual flow.'
+      : totalMissed > totalPrayed ? '🌱 Start with one prayer at a time. Consistency over intensity.'
+      : totalDhikr > 1000 ? '📿 Your dhikr is high — keep your tongue moist with remembrance.'
+      : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
+      : '🤲 You\'re doing great. Small steps lead to big transformations.';
+
+    container.innerHTML = `
+      <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="ai-insight-icon-wrap" style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#6366f1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 16px rgba(16,185,129,0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;">Weekly Pulse</div>
+            <div style="font-size:12px;font-weight:600;color:var(--color-text-secondary);line-height:1.4;">
+              ${avgPrayed}/5 avg · ${perfectDays} perfect · ${totalDhikr > 999 ? (totalDhikr/1000).toFixed(1)+'k' : totalDhikr} dhikr
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+            <div style="font-size:9px;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;">Best</div>
+            <div style="font-size:16px;font-weight:900;color:var(--color-accent-gold);">${bestDay}/5</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border-muted);display:flex;align-items:center;gap:8px;">
+          <span style="font-size:14px;line-height:1;">💡</span>
+          <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${tip}</span>
+        </div>
+      </div>
+    `;
   },
 
   renderDuaCard() {
