@@ -34,6 +34,9 @@
   --color-accent-teal:    #14B8A6; /* Teal 500 */
   --color-accent-blue:    #3B82F6; /* Blue 500 */
 
+  /* SECTION ACCENT — dynamically set by JS per section, default gold */
+  --section-accent: #F59E0B;
+
   /* PRAYER STATUS COLORS */
   --color-jamaat:  #10B981; 
   --color-alone:   #3B82F6; 
