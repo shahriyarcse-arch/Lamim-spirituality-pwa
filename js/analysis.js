@@ -538,49 +538,39 @@ const Analysis = {
 
   exportMonthlyReport(monthStr) {
     if (this._isGeneratingPDF) {
-      Utils.toast('PDF is being generated, please wait...', 'warning');
+      Utils.toast('Report is already opening. Please wait...', 'warning');
       return;
     }
-
     this._isGeneratingPDF = true;
-    if (monthStr) this._pendingMonthStr = monthStr;
-    const resolvedMonth = this._pendingMonthStr;
 
     const todayOffset = Utils.getOffsetDate();
     let targetDate = todayOffset;
-    if (resolvedMonth) {
-      const [y, m] = resolvedMonth.split('-');
+    if (monthStr) {
+      const [y, m] = monthStr.split('-');
       targetDate = new Date(parseInt(y), parseInt(m), 1);
     }
-    
+
     const currentMonth = targetDate.getMonth();
     const currentYear = targetDate.getFullYear();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const monthName = targetDate.toLocaleDateString(undefined, { month: 'long' });
 
-    let totalSHS = 0;
-    let daysAnalyzed = 0;
-    let totalDhikr = 0;
+    let totalSHS = 0, daysAnalyzed = 0, totalDhikr = 0;
     let salahStats = { perfect: 0, consistent: 0 };
-    
     const dayData = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(currentYear, currentMonth, i);
-      // Ensure we only analyze up to the app's current offset date
-      if (date > todayOffset) break; 
-
+      if (date > todayOffset) break;
       const ds = Utils.dateStr(date);
       const shs = this.calculateSHS(ds);
       totalSHS += shs.total;
       totalDhikr += shs.level.dhikrCount;
-      
       const salah = DB.getSalah(ds);
       let done = 0;
       ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => { if (salah[p] && salah[p] !== 'missed') done++; });
       if (done === 5) salahStats.perfect++;
       if (done >= 4) salahStats.consistent++;
-
       dayData.push({ day: i, score: shs.total, rating: shs.rating.label });
       daysAnalyzed++;
     }
@@ -591,33 +581,9 @@ const Analysis = {
       return;
     }
 
-    if (typeof html2pdf === 'undefined') {
-      Utils.toast('Loading PDF library...', 'info');
-      Utils.loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
-        .then(() => {
-          this._isGeneratingPDF = false;
-          this.exportMonthlyReport();
-        })
-        .catch(err => {
-          console.error("Failed to load html2pdf", err);
-          Utils.toast('Failed to load PDF library. Check internet connection.', 'error');
-          this._isGeneratingPDF = false;
-        });
-      return;
-    }
-
     const avgSHS = (totalSHS / daysAnalyzed).toFixed(1);
-    const user = DB.getUser() || { name: 'User' };
-
-    const element = document.createElement('div');
-    element.style.width = '720px';
-    element.style.padding = '0';
-    element.style.fontFamily = "'Inter', 'Segoe UI', Roboto, sans-serif";
-    element.style.color = '#1e293b';
-    element.style.lineHeight = '1.6';
-    element.style.background = '#f8fafc';
-    element.style.position = 'relative';
-    element.style.overflow = 'hidden';
+    const user = DB.getUser() || { name: 'Anonymous Warrior' };
+    const generatedDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const getBadgeStyle = (rating) => {
       if (rating === 'Muttaqi') return 'background: rgba(251, 191, 36, 0.15); color: #b45309; border: 1px solid rgba(251, 191, 36, 0.3);';
@@ -626,210 +592,98 @@ const Analysis = {
       return 'background: rgba(248, 113, 113, 0.15); color: #b91c1c; border: 1px solid rgba(248, 113, 113, 0.3);';
     };
 
-    element.innerHTML = `
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        .pdf-wrapper { background: #f8fafc; width: 100%; min-height: 1122px; position: relative; }
-        
-        .header-banner { 
-          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); 
-          color: white; 
-          padding: 50px 40px; 
-          position: relative;
-          overflow: hidden;
-        }
-        .header-bg-shape {
-          position: absolute; right: -50px; top: -50px; width: 300px; height: 300px;
-          background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
-          border-radius: 50%;
-        }
-        .header-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 2; }
-        .brand { display: flex; align-items: center; gap: 12px; }
-        .brand-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .brand-text { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
-        
-        .report-meta { text-align: right; }
-        .report-meta-title { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.7); font-weight: 700; margin-bottom: 4px; }
-        .report-meta-date { font-size: 18px; font-weight: 600; }
-        
-        .user-info { margin-top: 40px; position: relative; z-index: 2; }
-        .user-name { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 4px; }
-        .user-subtitle { font-size: 14px; color: rgba(255,255,255,0.8); font-weight: 500; }
+    const bodyHTML = `
+      <div style="max-width:210mm;margin:0 auto;padding:28px 32px;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#0f172a;font-size:10px;line-height:1.4;background:#fff;">
 
-        .content { padding: 40px; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: -70px; position: relative; z-index: 10; padding-bottom: 10px; }
-
-        .radar-chart-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: rgba(255,255,255,0.03);
-          border-radius: 24px;
-          padding: 20px;
-          border: 1px solid rgba(255,255,255,0.05);
-          backdrop-filter: blur(10px);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .radar-chart-container::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 50%, rgba(129, 140, 248, 0.05) 0%, transparent 70%);
-          pointer-events: none;
-        }
-
-        .radar-chart-wrapper {
-          width: 100%;
-          max-width: 280px;
-        }
-
-        .stat-card { 
-          background: #ffffff; 
-          padding: 24px; 
-          border-radius: 16px; 
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-          border: 1px solid rgba(226, 232, 240, 0.8);
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .stat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .stat-val { font-size: 32px; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 4px; }
-        .stat-label { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .section-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-        .section-title::before { content: ''; display: block; width: 4px; height: 18px; background: #6366f1; border-radius: 2px; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
-        th { text-align: left; background: #f8fafc; padding: 14px 16px; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; border-bottom: 1px solid #e2e8f0; letter-spacing: 0.5px; }
-        td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; font-weight: 500; }
-        tr:last-child td { border-bottom: none; }
-        tr:nth-child(even) td { background: #fafafa; }
-        
-        .score-highlight { font-weight: 700; color: #0f172a; }
-        .rating-badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
-        
-        .footer { 
-          margin-top: 40px; 
-          padding-top: 20px; 
-          border-top: 1px solid #e2e8f0; 
-          display: flex; 
-          justify-content: space-between; 
-          align-items: center;
-        }
-        .footer-text { font-size: 11px; color: #94a3b8; font-weight: 500; }
-        .footer-logo { font-size: 14px; font-weight: 800; color: #cbd5e1; letter-spacing: 1px; }
-      </style>
-      
-      <div class="pdf-wrapper">
-        <div class="header-banner">
-          <div class="header-bg-shape"></div>
-          <div class="header-top">
-            <div class="brand">
-              <div class="brand-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 512 512"><path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" fill="#ffffff" opacity="0.95"/><path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" fill="#fcd34d"/><path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" fill="#fde68a" opacity="0.8"/></svg>
-              </div>
-              <div class="brand-text">LAMIM</div>
-            </div>
-            <div class="report-meta">
-              <div class="report-meta-title">Performance Audit</div>
-              <div class="report-meta-date">${monthName} ${currentYear}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:2px solid #e2e8f0;margin-bottom:22px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:42px;height:42px;background:linear-gradient(135deg,#6366f1,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;font-weight:900;letter-spacing:-1px;">LM</div>
+            <div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#0f172a;line-height:1.1;">LAMIM</div>
+              <div style="font-size:9px;color:#64748b;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;">Spiritual Score Report</div>
             </div>
           </div>
-          <div class="user-info">
-            <div class="user-name">${user.name || 'Anonymous Warrior'}</div>
-            <div class="user-subtitle">Spiritual Score Report</div>
+          <div style="text-align:right;">
+            <div style="font-size:8px;color:#94a3b8;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;">${monthName} ${currentYear}</div>
+            <div style="font-size:9px;color:#64748b;font-weight:500;">Generated ${generatedDate}</div>
           </div>
         </div>
 
-        <div class="content">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <div class="stat-val">${avgSHS}</div>
-              <div class="stat-label">Average LSS</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              </div>
-              <div class="stat-val">${salahStats.perfect}</div>
-              <div class="stat-label">Perfect Salah Days</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </div>
-              <div class="stat-val">${totalDhikr}</div>
-              <div class="stat-label">Total Dhikr Count</div>
-            </div>
+        <div style="background:linear-gradient(135deg,#eef2ff,#ede9fe);border-radius:16px;padding:24px 28px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Servant of Allah</div>
+            <div style="font-size:24px;font-weight:800;color:#0f172a;">${user.name || 'Anonymous Warrior'}</div>
           </div>
+          <div style="text-align:right;">
+            <div style="font-size:36px;font-weight:800;color:#4f46e5;line-height:1;">${avgSHS}</div>
+            <div style="font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Avg LSS</div>
+          </div>
+        </div>
 
-          <div class="section-title">Daily Performance Log</div>
-          
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 15%">Day</th>
-                <th style="width: 35%">Date</th>
-                <th style="width: 20%; text-align: center;">LSS Score</th>
-                <th style="width: 30%; text-align: center;">Spiritual Rating</th>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+          <div style="background:#fff;padding:18px 20px;border-radius:12px;border:1px solid #e2e8f0;">
+            <div style="font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">Perfect Days</div>
+            <div style="font-size:28px;font-weight:800;color:#059669;line-height:1;">${salahStats.perfect}</div>
+            <div style="font-size:9px;color:#94a3b8;margin-top:2px;">/ ${daysAnalyzed} days</div>
+          </div>
+          <div style="background:#fff;padding:18px 20px;border-radius:12px;border:1px solid #e2e8f0;">
+            <div style="font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">Consistent Days</div>
+            <div style="font-size:28px;font-weight:800;color:#0891b2;line-height:1;">${salahStats.consistent}</div>
+            <div style="font-size:9px;color:#94a3b8;margin-top:2px;">≥ 4 prayers</div>
+          </div>
+          <div style="background:#fff;padding:18px 20px;border-radius:12px;border:1px solid #e2e8f0;">
+            <div style="font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">Total Dhikr</div>
+            <div style="font-size:28px;font-weight:800;color:#d97706;line-height:1;">${totalDhikr}</div>
+            <div style="font-size:9px;color:#94a3b8;margin-top:2px;">count</div>
+          </div>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+          <span style="display:block;width:4px;height:14px;background:#6366f1;border-radius:2px;"></span>
+          Daily Performance Log
+        </div>
+
+        <table style="width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+          <thead>
+            <tr>
+              <th style="text-align:left;background:#f8fafc;padding:10px 14px;font-size:9px;text-transform:uppercase;color:#64748b;font-weight:700;border-bottom:1px solid #e2e8f0;letter-spacing:0.5px;">Day</th>
+              <th style="text-align:left;background:#f8fafc;padding:10px 14px;font-size:9px;text-transform:uppercase;color:#64748b;font-weight:700;border-bottom:1px solid #e2e8f0;letter-spacing:0.5px;">Date</th>
+              <th style="text-align:center;background:#f8fafc;padding:10px 14px;font-size:9px;text-transform:uppercase;color:#64748b;font-weight:700;border-bottom:1px solid #e2e8f0;letter-spacing:0.5px;">LSS Score</th>
+              <th style="text-align:center;background:#f8fafc;padding:10px 14px;font-size:9px;text-transform:uppercase;color:#64748b;font-weight:700;border-bottom:1px solid #e2e8f0;letter-spacing:0.5px;">Spiritual Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${dayData.map(d => `
+              <tr${d.day % 2 === 0 ? ' style="background:#fafafa;"' : ''}>
+                <td style="padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#64748b;font-weight:600;">${String(d.day).padStart(2, '0')}</td>
+                <td style="padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#334155;font-weight:500;">${monthName} ${d.day}, ${currentYear}</td>
+                <td style="padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:13px;text-align:center;font-weight:700;color:#0f172a;">${d.score}</td>
+                <td style="padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:11px;text-align:center;"><span style="padding:4px 10px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:inline-block;${getBadgeStyle(d.rating)}">${d.rating}</span></td>
               </tr>
-            </thead>
-            <tbody>
-              ${dayData.map(d => `
-                <tr>
-                  <td style="color: #64748b; font-weight: 600;">${String(d.day).padStart(2, '0')}</td>
-                  <td>${monthName} ${d.day}, ${currentYear}</td>
-                  <td style="text-align: center;" class="score-highlight">${d.score}</td>
-                  <td style="text-align: center;"><span class="rating-badge" style="${getBadgeStyle(d.rating)}">${d.rating}</span></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
+            `).join('')}
+          </tbody>
+        </table>
 
-          <div class="footer">
-            <div class="footer-text">
-              Generated securely by Lamim Intelligence • ${new Date().toLocaleDateString()}<br>
-              &copy; ${currentYear} Lamim. All rights reserved.
-            </div>
-            <div class="footer-logo">LAMIM</div>
-          </div>
+        <div style="margin-top:28px;padding-top:16px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:8px;color:#94a3b8;font-weight:500;">Securely generated by Lamim Intelligence</div>
+          <div style="font-size:11px;font-weight:800;color:#cbd5e1;letter-spacing:1px;">LAMIM</div>
         </div>
       </div>
     `;
 
-    const pdfTimeout = setTimeout(() => {
-      this._isGeneratingPDF = false;
-      Utils.toast('PDF generation timed out. Try again.', 'error');
-    }, 30000);
+    const fullHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LAMIM — ${monthName} ${currentYear} Spiritual Report</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>@page { size: A4; margin: 0; } * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; } body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #ffffff; color: #0f172a; font-size: 10px; line-height: 1.4; }</style><script>window.onload = () => { setTimeout(() => { window.print(); window.close(); }, 800); }<\/script></head><body>${bodyHTML}</body></html>`;
 
-    html2pdf()
-      .set({
-        margin: [10, 0, 10, 0],
-        filename: `Lamim_Spiritual_Report_${monthName}_${currentYear}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, windowWidth: 720, width: 720 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      })
-      .from(element)
-      .save()
-      .then(() => {
-        Utils.toast('Download complete!', 'success');
-      })
-      .catch((err) => {
-        console.error(err);
-        Utils.toast('Error generating PDF', 'error');
-      })
-      .finally(() => {
-        clearTimeout(pdfTimeout);
-        this._isGeneratingPDF = false;
-      });
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      Utils.toast('Popup blocked. Please allow popups and try again.', 'error');
+      this._isGeneratingPDF = false;
+      return;
+    }
+
+    printWindow.document.open();
+    printWindow.document.write(fullHTML);
+    printWindow.document.close();
+
+    this._isGeneratingPDF = false;
   }
 };
