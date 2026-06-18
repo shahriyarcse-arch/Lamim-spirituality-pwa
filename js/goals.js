@@ -34,30 +34,6 @@ const Goals = {
 
   init() {
     this.render(false);
-    this.bindNaflDelegation();
-  },
-
-  bindNaflDelegation() {
-    const panel = document.getElementById('section-nafl');
-    if (!panel) return;
-    panel.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-nafl]');
-      if (!btn) return;
-      const type = btn.dataset.nafl;
-      const action = btn.dataset.action;
-      const id = btn.dataset.id;
-      const rakat = btn.dataset.rakat;
-      if (type === 'sunnah' && id && action) {
-        this.selectSunnah(id, action);
-      } else if (type === 'tahajjud') {
-        if (rakat) this.setTahajjudRakat(Number(rakat));
-        else if (action === 'missed') this.setTahajjudMissed();
-        else if (action === 'custom') this.promptCustomTahajjud();
-      } else if (type === 'witr') {
-        if (action === 'prayed') this.toggleWitr();
-        else if (action === 'missed') this.toggleWitrMissed();
-      }
-    });
   },
 
   render(skipAnim = false) {
@@ -263,6 +239,14 @@ const Goals = {
         </div>
       `;
     }).join('');
+    container.querySelectorAll('[data-nafl="sunnah"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        if (id && action) this.selectSunnah(id, action);
+      });
+    });
   },
 
   selectSunnah(id, status) {
@@ -394,6 +378,16 @@ const Goals = {
     `;
 
     container.innerHTML = html;
+    container.querySelectorAll('[data-nafl="tahajjud"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const rakat = btn.dataset.rakat;
+        const action = btn.dataset.action;
+        if (rakat) this.setTahajjudRakat(Number(rakat));
+        else if (action === 'missed') this.setTahajjudMissed();
+        else if (action === 'custom') this.promptCustomTahajjud();
+      });
+    });
   },
 
   setTahajjudRakat(rakat) {
@@ -524,6 +518,14 @@ const Goals = {
     `;
 
     container.innerHTML = html;
+    container.querySelectorAll('[data-nafl="witr"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const action = btn.dataset.action;
+        if (action === 'prayed') this.toggleWitr();
+        else if (action === 'missed') this.toggleWitrMissed();
+      });
+    });
   },
 
   toggleWitr() {
