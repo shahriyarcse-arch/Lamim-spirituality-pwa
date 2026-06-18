@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="css/mobile-optimizations.css">
   <link rel="stylesheet" href="css/goals.css?v=143">
   <link rel="stylesheet" href="css/analysis.css">
+  <link rel="stylesheet" href="css/dua.css?v=1">
   <link rel="stylesheet" href="css/profile.css?v=143">
   <link rel="stylesheet" href="css/complete-cinematic-quote-effects.css">
 
@@ -491,7 +492,10 @@
           </div>
           
           <!-- 3. AI Spiritual Insight -->
-          <div id="home-ai-insight-container" class="anim-fade-in" style="margin-bottom:var(--space-8)"></div>
+          <div id="home-ai-insight-container" class="anim-fade-in" style="margin-bottom:var(--space-6)"></div>
+          
+          <!-- 4. Dua Request Board Card -->
+          <div id="home-dua-card" class="anim-fade-in" style="margin-bottom:var(--space-8)"></div>
         </div>
       </div>
     </section>
@@ -701,6 +705,21 @@
     </section>
 
 
+
+    <!-- Dua Request Board Modal -->
+    <div class="modal-overlay hidden" id="dua-modal">
+      <div class="modal dua-modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Dua Request Board</h3>
+          <button class="modal-close" onclick="DuaBoard.hideModal()">✕</button>
+        </div>
+        <div class="dua-input-row">
+          <input class="input" id="dua-input" type="text" placeholder="Write your dua..." style="flex:1; min-width:0;">
+          <button class="btn btn-primary" onclick="DuaBoard.handleAdd()" style="flex-shrink:0; padding:10px 16px;">🤲 Add</button>
+        </div>
+        <div id="dua-list" class="dua-list"></div>
+      </div>
+    </div>
 
     <!-- Profile Edit Modal -->
     <div class="modal-overlay hidden" id="profile-edit-modal">
@@ -1135,6 +1154,7 @@
   <script src="js/mujahid.js?v=137"></script>
   <script src="js/profile.js?v=142"></script>
   <script src="js/analysis.js?v=137"></script>
+  <script src="js/dua.js?v=137"></script>
 
 
   <script src="js/service-worker-register.js"></script>

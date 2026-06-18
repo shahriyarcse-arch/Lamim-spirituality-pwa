@@ -1421,6 +1421,8 @@ const Mujahid = {
 
     const today = Utils.todayStr();
     if (!habit.history) habit.history = [];
+
+    Utils.sparkle(document.querySelector('.mujahid-main-btn') || document.body);
     
     const existingToday = habit.history.find(h => h.date === today);
     if (existingToday) {
@@ -1433,6 +1435,15 @@ const Mujahid = {
 
     this.saveHabits();
     this.render(true);
+
+    // Celebrate 7-day streak
+    const streak = this.calcStreak(habit);
+    if (streak > 0 && streak % 7 === 0) {
+      setTimeout(() => {
+        Utils.confetti(30);
+        Utils.toast(`🎉 ${streak}-day streak! MashaAllah!`, 'success');
+      }, 400);
+    }
   },
 
   showHistoryModal(habitId) {

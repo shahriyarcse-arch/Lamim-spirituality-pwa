@@ -288,6 +288,12 @@
   100% { opacity: 0; transform: translateY(-8px); }
 }
 
+/* Sparkle / Confetti fly */
+@keyframes sparkleFly {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
 /* Modal transitions */
 @keyframes overlayIn {
   0% { opacity: 0; backdrop-filter: blur(0px); }
@@ -304,4 +310,27 @@
 @keyframes modalOut {
   0% { opacity: 1; transform: scale(1) translateY(0); }
   100% { opacity: 0; transform: scale(0.95) translateY(16px); }
+}
+
+/* Section accent color utility — applied via JS on navigate */
+.section-accent-border { border-color: var(--section-accent) !important; }
+.section-accent-bg { background: var(--section-accent) !important; }
+.section-accent-text { color: var(--section-accent) !important; }
+.section-accent-glow { box-shadow: 0 0 20px color-mix(in srgb, var(--section-accent) 40%, transparent) !important; }
+.section-accent-fill { fill: var(--section-accent) !important; }
+.section-accent-stroke { stroke: var(--section-accent) !important; }
+
+/* Per-section accent hover on cards */
+.section-panel .card,
+.section-panel .settings-item,
+.section-panel .salah-prayer-card,
+.section-panel .dhikr-preset-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.section-panel.active .salah-prayer-card:hover,
+.section-panel.active .dhikr-preset-card:hover,
+.section-panel.active .goal-card:hover,
+.section-panel.active .nafl-card-modern:hover {
+  border-color: color-mix(in srgb, var(--section-accent) 40%, transparent);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--section-accent) 15%, transparent);
 }

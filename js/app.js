@@ -323,6 +323,14 @@ const App = {
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     if (newPanel) newPanel.classList.add('active');
 
+    // Section accent color
+    const accents = {
+      home: '#10B981', salah: '#34D399', dhikr: '#A855F7',
+      nafl: '#6366F1', analysis: '#8B5CF6', mujahid: '#F59E0B',
+      finance: '#14B8A6', profile: '#6B7280'
+    };
+    document.documentElement.style.setProperty('--section-accent', accents[sectionId] || '#10B981');
+
     // Toggle topbars: logo topbar for home, section topbar for others
     const topbar = document.getElementById('topbar');
     const topbarSection = document.getElementById('topbar-section');

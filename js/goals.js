@@ -250,9 +250,18 @@ const Goals = {
     if (!data.sunnah) data.sunnah = {};
     const item = this.sunnahList.find(s => s.id === id);
 
+    Utils.sparkle(document.getElementById('sunnah-card-' + id) || document.body, 4);
+
     data.sunnah[id] = status;
     DB.setSalah(this.currentDate, data);
     this.render(true);
+
+    // Check if all sunnah, tahajjud, witr complete
+    const done = Object.values(data.sunnah || {}).filter(v => v === true || v === 'prayed').length;
+    const allSunnah = done === this.sunnahList.length;
+    if (allSunnah && (data.tahajjud_rakat > 0 || data.tahajjud === false) && (data.witr > 0 || data.witr === -1)) {
+      setTimeout(() => Utils.confetti(24), 400);
+    }
   },
 
   toggleSunnah(id) {
@@ -502,6 +511,7 @@ const Goals = {
     }
     data.witr = 3;
     DB.setSalah(this.currentDate, data);
+    Utils.sparkle(document.getElementById('witr-salah-card') || document.body, 4);
     this.render(true);
   },
 

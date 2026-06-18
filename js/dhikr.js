@@ -152,6 +152,10 @@ const Dhikr = {
     this.count++;
     this.saveInstantly();
 
+    // Sparkle
+    const btn = document.getElementById('dhikr-tap-btn');
+    if (btn) Utils.sparkle(btn, 4);
+
     // Haptic
     if (navigator.vibrate) navigator.vibrate(25);
 

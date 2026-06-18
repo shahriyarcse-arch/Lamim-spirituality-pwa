@@ -42,11 +42,12 @@ const Home = {
     const maghrib = Utils.timeToMin(times[3].time);
     const isha = Utils.timeToMin(times[4].time);
 
-    let greet = 'Good Night';
-    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Good Morning';
-    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Good Noon';
-    else if (nowTime >= asr && nowTime < maghrib) greet = 'Good Afternoon';
-    else if (nowTime >= maghrib && nowTime < isha) greet = 'Good Evening';
+    let greet = 'Good Night 🌙';
+    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak 🌅';
+    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon ☀️';
+    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah 🌤️';
+    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light 🌆';
+    else if (nowTime >= isha) greet = 'Isha Peace 🌙';
 
     // Get Last Name (with safety)
     const rawName = (user && typeof user.name === 'string') ? user.name : 'User';
@@ -126,7 +127,10 @@ const Home = {
     // 4. AI Spiritual Insight (reveal class added inside renderAIInsight)
     this.renderAIInsight();
 
-    // 5. Nur Particles (Subtle Animation)
+    // 5. Dua Request Board Card
+    this.renderDuaCard();
+
+    // 6. Nur Particles (Subtle Animation)
     this.renderNurParticles();
   },
 
@@ -334,6 +338,25 @@ const Home = {
 
       }, 600); // 600ms matches the fade-out CSS transition time
     }, 10000); // 10 seconds per quote
+  },
+
+  renderDuaCard() {
+    const container = document.getElementById('home-dua-card');
+    if (!container || typeof DuaBoard === 'undefined') return;
+    const active = DuaBoard.getActiveCount();
+    const answered = DuaBoard.getAnsweredCount();
+    container.innerHTML = `
+      <div class="home-dua-card home-reveal revealed home-reveal-delay-4" onclick="DuaBoard.showModal()">
+        <div class="home-dua-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        </div>
+        <div class="home-dua-info">
+          <div class="home-dua-label">Dua Board</div>
+          <div class="home-dua-desc">${active > 0 ? active + ' active dua' + (active > 1 ? 's' : '') : 'Add your prayer requests'}</div>
+        </div>
+        <div class="home-dua-count">${active}</div>
+      </div>
+    `;
   },
 
   renderNurParticles() {

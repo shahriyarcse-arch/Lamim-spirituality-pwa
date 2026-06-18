@@ -375,6 +375,52 @@ const UI = {
     if (modal) modal.classList.add('hidden');
   },
 
+  /** Create sparkle particles at a given element */
+  sparkle(el, count = 6) {
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      const angle = (Math.PI * 2 * i) / count;
+      const dist = 30 + Math.random() * 30;
+      const size = 3 + Math.random() * 4;
+      p.style.cssText = `
+        position:fixed; left:${cx}px; top:${cy}px; width:${size}px; height:${size}px;
+        background:${['#fbbf24','#a78bfa','#34d399','#f472b6','#38bdf8'][i % 5]};
+        border-radius:50%; pointer-events:none; z-index:99999;
+        animation:sparkleFly 0.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+        --tx:${Math.cos(angle) * dist}px; --ty:${Math.sin(angle) * dist}px;
+      `;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 650);
+    }
+  },
+
+  /** Trigger celebration confetti at center of screen */
+  confetti(count = 20) {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 3;
+    const colors = ['#fbbf24','#a78bfa','#34d399','#f472b6','#38bdf8','#fb923c','#34d399'];
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const dist = 80 + Math.random() * 120;
+      const size = 4 + Math.random() * 4;
+      const rot = Math.random() * 720;
+      p.style.cssText = `
+        position:fixed; left:${cx}px; top:${cy}px; width:${size}px; height:${size * 1.5}px;
+        background:${colors[i % colors.length]}; border-radius:2px; pointer-events:none; z-index:99999;
+        animation:sparkleFly 1s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+        --tx:${Math.cos(angle) * dist}px; --ty:${Math.sin(angle) * dist + 30}px;
+        transform:rotate(${rot}deg);
+      `;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1050);
+    }
+  },
+
   /** Animate modal close with exit animation before hiding */
   closeModal(el) {
     if (!el || el.classList.contains('hidden')) return;
