@@ -566,13 +566,8 @@ const Finance = {
   },
 
   getResolvedColor(hex) {
-    if (document.documentElement.getAttribute('data-theme') !== 'light') return hex;
-    const map = {
-      '#FF9500': '#B45309', '#007AFF': '#1D4ED8', '#5856D6': '#4338CA', '#AF52DE': '#6D28D9',
-      '#FFD60A': '#A16207', '#FF2D55': '#BE123C', '#FF3B30': '#B91C1C', '#5AC8FA': '#0369A1',
-      '#34C759': '#047857', '#FFCC00': '#A16207', '#8E8E93': '#4B5563', '#C7C7CC': '#6B7280'
-    };
-    return map[hex.toUpperCase()] || hex;
+    // Always return original color to ensure visibility in both light and dark modes.
+    return hex;
   },
 
   getCategory(id) {
