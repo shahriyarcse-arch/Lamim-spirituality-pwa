@@ -408,13 +408,11 @@ const Dhikr = {
   },
 
   showAddModal() {
-    const m = document.getElementById('dhikr-add-modal');
-    if (m) m.classList.remove('hidden');
+    Utils.openModal(document.getElementById('dhikr-add-modal'));
   },
 
   hideAddModal() {
-    const m = document.getElementById('dhikr-add-modal');
-    if (m) m.classList.add('hidden');
+    Utils.closeModal(document.getElementById('dhikr-add-modal'));
   },
 
   saveCustom() {

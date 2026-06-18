@@ -658,12 +658,11 @@ const Mujahid = {
     
     document.getElementById('mujahid-startdate-input').value = dateStr;
     document.getElementById('mujahid-startdate-habit-id').value = habitId;
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
   },
 
   hideStartDateModal() {
-    const modal = document.getElementById('mujahid-startdate-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-startdate-modal'));
   },
 
   saveStartDate() {
@@ -1044,7 +1043,7 @@ const Mujahid = {
     const defaultQuickBtn = document.querySelector('.quick-date-btn');
     if (defaultQuickBtn) defaultQuickBtn.classList.add('active');
 
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
   },
 
   selectCustomIcon(el, index) {
@@ -1052,8 +1051,7 @@ const Mujahid = {
   },
 
   hideAddModal() {
-    const modal = document.getElementById('mujahid-add-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-add-modal'));
   },
 
   selectDefaultHabit(habitId) {
@@ -1353,13 +1351,11 @@ const Mujahid = {
     if (!habit) return;
     document.getElementById('mujahid-relapse-habit-id').value = habitId;
     document.getElementById('mujahid-relapse-reason').value = '';
-    const modal = document.getElementById('mujahid-relapse-modal');
-    if (modal) modal.classList.remove('hidden');
+    Utils.openModal(document.getElementById('mujahid-relapse-modal'));
   },
 
   hideRelapseModal() {
-    const modal = document.getElementById('mujahid-relapse-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-relapse-modal'));
   },
 
   relapseHabit(id, reason) {
@@ -1492,12 +1488,11 @@ const Mujahid = {
     }
     list.innerHTML = html;
     
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
   },
 
   hideHistoryModal() {
-    const modal = document.getElementById('mujahid-history-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-history-modal'));
   },
 
   showToolsModal() {
@@ -1505,7 +1500,7 @@ const Mujahid = {
     const guide = document.getElementById('mujahid-badge-guide');
     if (modal) {
       if (guide) guide.innerHTML = this.renderBadgeGuide();
-      modal.classList.remove('hidden');
+      Utils.openModal(modal);
     }
   },
 
@@ -1524,8 +1519,7 @@ const Mujahid = {
   },
 
   hideToolsModal() {
-    const modal = document.getElementById('mujahid-tools-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-tools-modal'));
   },
 
   showConfirm(title, msg, onConfirm) {
@@ -1538,7 +1532,7 @@ const Mujahid = {
     
     titleEl.textContent = title;
     msgEl.textContent = msg;
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
     
     btn.onclick = () => {
       onConfirm();
@@ -1547,8 +1541,7 @@ const Mujahid = {
   },
 
   hideConfirm() {
-    const modal = document.getElementById('mujahid-confirm-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-confirm-modal'));
   },
 
   clearAllData() {
@@ -1631,13 +1624,12 @@ const Mujahid = {
   showBreathingExercise() {
     const modal = document.getElementById('mujahid-breathe-pro');
     if (!modal) return;
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
     this.startBreathingExercise();
   },
 
   hideBreathingExercise() {
-    const modal = document.getElementById('mujahid-breathe-pro');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('mujahid-breathe-pro'));
     if (this.breatheInterval) clearTimeout(this.breatheInterval);
     if (this.breatheTimerInterval) clearInterval(this.breatheTimerInterval);
     this.breatheInterval = null;

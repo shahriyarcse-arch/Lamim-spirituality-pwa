@@ -666,10 +666,10 @@ const Goals = {
       `;
     }).join('') || '<div class="empty-state">No history recorded yet.</div>';
 
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
   },
 
   hideHistory() {
-    document.getElementById('nafl-history-modal')?.classList.add('hidden');
+    Utils.closeModal(document.getElementById('nafl-history-modal'));
   }
 };

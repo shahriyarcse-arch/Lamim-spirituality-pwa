@@ -219,7 +219,7 @@ const Profile = {
       input.placeholder = 'Enter ' + (labels[field] || field).toLowerCase();
     }
     input.style.display = 'block';
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
     setTimeout(() => input.focus(), 100);
     
     // Usability: Press Enter to save, Escape to cancel
@@ -296,9 +296,8 @@ const Profile = {
   },
 
   closeEditModal() {
-    const modal = document.getElementById('profile-edit-modal');
     const input = document.getElementById('profile-edit-input');
-    modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('profile-edit-modal'));
     input.type = 'text';
     input.style.display = 'block';
     this._editingField = null;
@@ -410,7 +409,7 @@ const Profile = {
       </div>
     `;
     input.style.display = 'none';
-    modal.classList.remove('hidden');
+    Utils.openModal(modal);
     this._editingField = '__info__';
   },
 

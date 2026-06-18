@@ -62,15 +62,13 @@ const DuaBoard = {
   },
 
   showModal() {
-    const modal = document.getElementById('dua-modal');
-    if (!modal) return;
-    modal.classList.remove('hidden');
+    if (!document.getElementById('dua-modal')) return;
+    Utils.openModal(document.getElementById('dua-modal'));
     this.renderList();
   },
 
   hideModal() {
-    const modal = document.getElementById('dua-modal');
-    if (modal) modal.classList.add('hidden');
+    Utils.closeModal(document.getElementById('dua-modal'));
   },
 
   renderList() {

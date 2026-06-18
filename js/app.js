@@ -228,7 +228,7 @@ const App = {
       // Close any open modal first
       const openModal = document.querySelector('.modal-overlay:not(.hidden)');
       if (openModal) {
-        openModal.classList.add('hidden');
+        Utils.closeModal(openModal);
         history.pushState({ section: this.currentSection }, '', '');
         return;
       }

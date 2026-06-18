@@ -538,14 +538,18 @@ const Analysis = {
 
   exportMonthlyReport(monthStr) {
     if (this._isGeneratingPDF) {
-      Utils.toast('Generating PDF... Please wait.', 'warning');
+      Utils.toast('PDF is being generated, please wait...', 'warning');
       return;
     }
-    
+
+    this._isGeneratingPDF = true;
+    if (monthStr) this._pendingMonthStr = monthStr;
+    const resolvedMonth = this._pendingMonthStr;
+
     const todayOffset = Utils.getOffsetDate();
     let targetDate = todayOffset;
-    if (monthStr) {
-      const [y, m] = monthStr.split('-');
+    if (resolvedMonth) {
+      const [y, m] = resolvedMonth.split('-');
       targetDate = new Date(parseInt(y), parseInt(m), 1);
     }
     
@@ -583,18 +587,21 @@ const Analysis = {
 
     if (daysAnalyzed === 0) {
       Utils.toast('No data available for this month yet.', 'error');
+      this._isGeneratingPDF = false;
       return;
     }
 
     if (typeof html2pdf === 'undefined') {
-      Utils.toast('Loading PDF generator, please wait...', 'info');
+      Utils.toast('Loading PDF library...', 'info');
       Utils.loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
         .then(() => {
+          this._isGeneratingPDF = false;
           this.exportMonthlyReport();
         })
         .catch(err => {
           console.error("Failed to load html2pdf", err);
-          Utils.toast('Failed to load PDF library.', 'error');
+          Utils.toast('Failed to load PDF library. Check internet connection.', 'error');
+          this._isGeneratingPDF = false;
         });
       return;
     }
@@ -798,12 +805,14 @@ const Analysis = {
       </div>
     `;
 
-    this._isGeneratingPDF = true;
-    Utils.toast('Generating PDF...', 'info');
+    const pdfTimeout = setTimeout(() => {
+      this._isGeneratingPDF = false;
+      Utils.toast('PDF generation timed out. Try again.', 'error');
+    }, 30000);
 
     html2pdf()
       .set({
-        margin: [10, 0, 10, 0], // top, left, bottom, right
+        margin: [10, 0, 10, 0],
         filename: `Lamim_Spiritual_Report_${monthName}_${currentYear}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, windowWidth: 720, width: 720 },
@@ -819,6 +828,7 @@ const Analysis = {
         Utils.toast('Error generating PDF', 'error');
       })
       .finally(() => {
+        clearTimeout(pdfTimeout);
         this._isGeneratingPDF = false;
       });
   }

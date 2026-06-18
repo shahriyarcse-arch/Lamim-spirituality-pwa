@@ -301,7 +301,7 @@ const Utils = {
     }
     btn.style.background = config.btn;
 
-    modal.classList.remove('hidden');
+    this.openModal(modal);
 
     btn.onclick = () => {
       this.closeConfirm();
@@ -310,8 +310,7 @@ const Utils = {
   },
 
   closeConfirm() {
-    const modal = document.getElementById('confirm-modal');
-    if (modal) modal.classList.add('hidden');
+    this.closeModal(document.getElementById('confirm-modal'));
   },
 
   timeAgo(d) {
@@ -367,12 +366,11 @@ const UI = {
       this.hideSettingsModal();
     };
 
-    modal.classList.remove('hidden');
+    this.openModal(modal);
   },
 
   hideSettingsModal() {
-    const modal = document.getElementById('section-settings-modal');
-    if (modal) modal.classList.add('hidden');
+    this.closeModal(document.getElementById('section-settings-modal'));
   },
 
   /** Create sparkle particles at a given element */
