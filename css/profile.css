@@ -134,7 +134,6 @@
 .settings-group {
   background: var(--color-glass);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   overflow: hidden;

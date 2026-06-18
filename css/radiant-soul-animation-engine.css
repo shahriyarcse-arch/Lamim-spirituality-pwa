@@ -425,7 +425,6 @@
   justify-content: space-between;
   background: var(--fin-surface);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   padding: 8px 16px;
   border-radius: 16px;
   border: 1px solid var(--color-border-muted);
@@ -999,7 +998,6 @@
   font-size: 13px;
   font-weight: 800;
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--color-divider-strong);
   display: inline-flex;
   align-items: center;
@@ -1086,7 +1084,6 @@
   padding: 6px 12px;
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Force Trend Colors on Main Card */
@@ -1372,7 +1369,6 @@
   padding: 14px 18px;
   background: var(--color-surface-nested);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--color-divider-subtle);
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1577,7 +1573,6 @@
   display: flex;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
   padding: 3px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1709,7 +1704,7 @@
 
 [data-theme="light"] .vault-name {
   color: #0F172A !important;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 [data-theme="light"] .vault-status {
@@ -2109,7 +2104,7 @@
 
 .stat-val {
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 950;
   color: #fff;
 }
 
@@ -2131,7 +2126,6 @@
 .analysis-card {
   background: rgba(22, 27, 40, 0.7);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
   padding: 24px;
@@ -2193,7 +2187,6 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2453,7 +2446,6 @@
 .fin-stat-card {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-divider-subtle);
   border-radius: 24px;
   padding: 16px;
@@ -2482,7 +2474,7 @@
 
 .fin-stat-value {
   font-size: 20px;
-  font-weight: 900;
+  font-weight: 950;
   letter-spacing: -0.5px;
 }
 
@@ -2534,7 +2526,6 @@
 .fin-btn-secondary {
   background: var(--color-surface-nested);
   backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
   border: 1px solid var(--color-divider-strong);
   color: #fff;
 }
@@ -2928,7 +2919,6 @@
   margin-top: 24px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   padding: 24px;
@@ -3013,7 +3003,6 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
@@ -3224,7 +3213,6 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
@@ -4676,7 +4664,6 @@
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 .celestial-moon-wrap {
@@ -4732,7 +4719,7 @@
 
 .nafl-hero-title {
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 950;
   color: white;
   margin: 0 0 6px;
   letter-spacing: -0.5px;
@@ -4801,7 +4788,7 @@
 
 #nafl-date-label {
   font-size: 20px;
-  font-weight: 900;
+  font-weight: 950;
   letter-spacing: -0.5px;
   color: white;
   min-width: 100px;
@@ -4906,7 +4893,7 @@
 
 .nafl-name {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 850;
   color: white;
   letter-spacing: -0.2px;
 }

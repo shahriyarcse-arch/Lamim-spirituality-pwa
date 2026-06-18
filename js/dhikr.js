@@ -413,10 +413,6 @@ const Dhikr = {
     el.classList.remove('hidden');
   },
 
-  hideHistoryModal() {
-    Utils.closeModal(document.getElementById('dhikr-history-modal'));
-  },
-
   showAddModal() {
     Utils.openModal(document.getElementById('dhikr-add-modal'));
   },

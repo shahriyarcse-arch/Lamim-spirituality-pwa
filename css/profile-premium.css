@@ -39,7 +39,7 @@
 
 [data-theme="light"] .profile-name {
   color: var(--color-text-primary) !important;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 [data-theme="light"] .profile-bio {
@@ -229,7 +229,6 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   transition: box-shadow 0.3s ease;
   backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 .settings-group:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -332,7 +331,7 @@
 
 [data-theme="light"] .settings-item-label {
   color: var(--color-text-primary) !important;
-  font-weight: 700;
+  font-weight: 750;
 }
 
 [data-theme="light"] .settings-item-value {

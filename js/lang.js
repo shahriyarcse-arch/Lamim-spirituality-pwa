@@ -238,22 +238,21 @@ const Translations = {
   'Saving...': 'সেভ হচ্ছে...'
 };
 
-const Lang = {
-  translate(key) {
-    const lang = localStorage.getItem('lamim_lang') || 'en';
-    return lang === 'bn' && Translations[key] ? Translations[key] : key;
-  },
-  formatNumber(num) {
-    const lang = localStorage.getItem('lamim_lang') || 'en';
-    if (lang !== 'bn') return num;
-    const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-    return String(num).replace(/\d/g, d => bnNums[d]);
+window.t = function(key) {
+  const lang = localStorage.getItem('lamim_lang') || 'en';
+  if (lang === 'bn' && Translations[key]) {
+    return Translations[key];
   }
+  return key;
 };
 
-// Backward-compatible global aliases (used extensively in template strings)
-window.t = Lang.translate;
-window.n = Lang.formatNumber;
+// Translate numbers to Bengali numerals
+window.n = function(num) {
+  const lang = localStorage.getItem('lamim_lang') || 'en';
+  if (lang !== 'bn') return num;
+  const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  return String(num).replace(/\d/g, d => bnNums[d]);
+};
 // Auto-Translator MutationObserver
 const autoTranslateObserver = new MutationObserver((mutations) => {
   const isBn = (localStorage.getItem('lamim_lang') || 'en') === 'bn';

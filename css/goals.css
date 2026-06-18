@@ -5,7 +5,6 @@
   margin-bottom: var(--space-4);
   background: var(--color-glass);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   transition: all var(--transition-fast);
 }
@@ -224,7 +223,6 @@ div#nafl-night-grid .salah-options-grid {
   padding: 16px 12px !important;
   text-align: center !important;
   backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   display: flex !important;
   flex-direction: column !important;

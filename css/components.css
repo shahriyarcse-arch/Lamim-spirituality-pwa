@@ -111,29 +111,6 @@
 .btn-icon-sm { width: 32px; height: 32px; padding: 0; border-radius: var(--radius-sm); }
 .btn-full { width: 100%; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-.btn-xs { padding: var(--space-1) var(--space-2); font-size: var(--text-xs); border-radius: var(--radius-sm); }
-.btn-next { padding: var(--space-3) var(--space-6); font-size: var(--text-base); font-weight: var(--fw-semibold); border-radius: var(--radius-md); }
-
-/* === TYPOGRAPHY UTILITIES === */
-.text-sm { font-size: var(--text-sm); }
-.text-xl { font-size: var(--text-xl); }
-.font-bold { font-weight: var(--fw-bold); }
-
-/* === HOME LAYOUT === */
-.home-salah-desktop-flex { display: flex; gap: var(--space-4); align-items: flex-start; }
-.home-salah-ring-part { flex: 0 0 auto; }
-.home-salah-widgets-part { flex: 1; min-width: 0; }
-
-/* === AUTH === */
-.auth-logo { display: flex; align-items: center; gap: var(--space-3); }
-
-/* === TOPBAR === */
-.topbar-section { display: flex; align-items: center; gap: var(--space-3); }
-
-/* === INSIGHT TEXT ANIMATIONS (home.js) === */
-.fade-in-prep { opacity: 0; transform: translateY(8px); }
-.fade-out { opacity: 0; transform: translateY(-8px); transition: opacity 0.2s, transform 0.2s; }
-.pulse { animation: pulse 2s ease-in-out infinite; }
 
 /* === BADGES === */
 .badge {
@@ -618,7 +595,6 @@ select.input option:disabled { color: var(--color-text-muted); }
   display: none; position: fixed; inset: 0;
   background: var(--color-overlay); z-index: calc(var(--z-sidebar) - 1);
   backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
 }
 .sidebar-overlay.show { display: block; animation: fadeIn 0.12s ease; }
 
