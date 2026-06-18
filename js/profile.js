@@ -91,7 +91,7 @@ const Profile = {
     if (pi) pi.innerHTML = `
       <div class="settings-item" onclick="Profile.editField('name')">
         <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.user}</div><div><div class="settings-item-label" data-i18n="Name">Name</div><div class="settings-item-value">${Utils.escapeHTML(user?.name || '—')}</div></div></div>
-        <div class="settings-item-right"><span>›</span></div>
+        <div class="settings-item-right"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
       </div>
       <div class="settings-item" style="cursor:default">
         <div class="settings-item-left"><div class="settings-item-icon ic-violet">${icons.users}</div><div><div class="settings-item-label" data-i18n="Gender">Gender</div></div></div>
@@ -104,7 +104,7 @@ const Profile = {
       </div>
       <div class="settings-item" onclick="Profile.editField('bio')">
         <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.pen}</div><div><div class="settings-item-label">Bio / Status</div><div class="settings-item-value">${Utils.escapeHTML(user?.bio || 'Not set')}</div></div></div>
-        <div class="settings-item-right"><span>›</span></div>
+        <div class="settings-item-right"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
       </div>
       <div class="settings-item" onclick="Profile.editField('dob')">
         <div class="settings-item-left"><div class="settings-item-icon ic-orange">${icons.calendar}</div><div><div class="settings-item-label">Date of Birth</div><div class="settings-item-value">${(() => {

@@ -229,3 +229,115 @@
   box-shadow: 0 2px 8px rgba(240, 196, 86, 0.3);
 }
 
+/* ===== PREMIUM PROFILE ENHANCEMENTS ===== */
+
+/* Settings group header with icon area */
+.settings-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: var(--space-5) var(--space-5) var(--space-2);
+}
+
+/* Settings item left icon hover */
+.settings-item-icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.settings-item:hover .settings-item-icon {
+  transform: scale(1.05);
+}
+
+/* Danger zone subtle glow */
+.settings-group[style*="border-color:rgba(248,81,73"] {
+  box-shadow: 0 0 20px rgba(248, 81, 73, 0.05);
+}
+
+/* Profile stats premium */
+.profile-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.streak-badge.active {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.streak-badge.active:hover {
+  transform: translateY(-1px);
+}
+
+/* Profile joined date */
+.profile-joined {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Settings nav arrow */
+.settings-item-right svg {
+  transition: transform 0.2s ease;
+}
+.settings-item:hover .settings-item-right svg {
+  transform: translateX(2px);
+}
+
+/* DOB pill premium */
+.dob-pill {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--color-surface-nested);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dob-seg {
+  color: var(--color-text-primary);
+}
+.dob-sep {
+  color: var(--color-text-muted);
+  margin: 0 1px;
+}
+.dob-placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* Avatar edit button premium */
+.avatar-edit-btn {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.avatar-edit-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+.avatar-remove-btn {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border: 2px solid var(--color-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 3;
+}
+.avatar-remove-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+}
+

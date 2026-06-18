@@ -93,11 +93,14 @@ const Dhikr = {
 
     grid.innerHTML = presets.map(p => `
       <div class="dhikr-preset-card ${p.id === this.currentId ? 'active' : ''}" onclick="Dhikr.selectDhikr('${p.id}')">
+        <div class="dhikr-preset-icon">${p.icon || ''}</div>
+        ${p.arabic ? `<div class="dhikr-preset-arabic">${p.arabic}</div>` : ''}
         <div class="dhikr-preset-name">${p.latin}</div>
       </div>
     `).join('') + `
       <div class="dhikr-preset-card" onclick="Dhikr.showAddModal()" style="border-style:dashed">
-        <div class="dhikr-preset-name" style="font-size:16px">+</div>
+        <div class="dhikr-preset-icon" style="font-size:18px; color:var(--color-text-muted)">+</div>
+        <div class="dhikr-preset-name" style="font-size:10px; -webkit-text-fill-color:var(--color-text-muted); color:var(--color-text-muted)">Custom</div>
       </div>
     `;
   },
