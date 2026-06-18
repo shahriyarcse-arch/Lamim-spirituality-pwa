@@ -311,10 +311,17 @@ const App = {
       el.classList.toggle('active', el.dataset.section === sectionId);
     });
 
-    // Show panel
+    // Show panel with smooth transition
+    const oldPanel = document.querySelector('.section-panel.active');
+    const newPanel = document.getElementById('section-' + sectionId);
+    if (oldPanel && oldPanel !== newPanel) {
+      oldPanel.classList.add('leaving');
+      setTimeout(() => {
+        oldPanel.classList.remove('leaving', 'active');
+      }, 250);
+    }
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-    const panel = document.getElementById('section-' + sectionId);
-    if (panel) panel.classList.add('active');
+    if (newPanel) newPanel.classList.add('active');
 
     // Toggle topbars: logo topbar for home, section topbar for others
     const topbar = document.getElementById('topbar');

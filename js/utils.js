@@ -375,6 +375,22 @@ const UI = {
     if (modal) modal.classList.add('hidden');
   },
 
+  /** Animate modal close with exit animation before hiding */
+  closeModal(el) {
+    if (!el || el.classList.contains('hidden')) return;
+    el.classList.add('closing');
+    setTimeout(() => {
+      el.classList.remove('closing');
+      el.classList.add('hidden');
+    }, 200);
+  },
+
+  /** Open modal (remove hidden with animation) */
+  openModal(el) {
+    if (!el) return;
+    el.classList.remove('hidden', 'closing');
+  },
+
   loadScript(url) {
     return new Promise((resolve, reject) => {
       const existing = document.querySelector(`script[src="${url}"]`);

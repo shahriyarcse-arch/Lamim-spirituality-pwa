@@ -230,18 +230,23 @@ select.input option:disabled { color: var(--color-text-muted); }
   position: fixed; inset: 0; background: var(--color-overlay);
   z-index: var(--z-modal); display: flex; align-items: center; justify-content: center;
   padding: max(var(--space-4), env(safe-area-inset-top, 16px)) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom, 16px)) var(--space-4);
-  animation: fadeIn 0.2s ease;
-  backdrop-filter: blur(4px);
+  animation: overlayIn 0.25s ease both;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .modal-overlay.hidden { display: none; }
+.modal-overlay.closing {
+  animation: overlayOut 0.2s ease both;
+  pointer-events: none;
+}
 .modal {
   background: var(--color-surface-card);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   border: 1px solid var(--color-divider-strong);
-  border-radius: var(--radius-xl); padding: var(--space-6);
+  border-radius: 24px; padding: var(--space-6);
   width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
-  animation: scaleIn 0.3s var(--transition-bounce) both;
+  animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--color-surface-nested) inset;
 }
 
@@ -251,9 +256,9 @@ select.input option:disabled { color: var(--color-text-muted); }
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.15);
 }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); }
-.modal-title { font-size: var(--text-xl); font-weight: var(--fw-bold); }
-.modal-close { font-size: var(--text-xl); color: var(--color-text-muted); cursor: pointer; background: none; border: none; padding: var(--space-1); border-radius: var(--radius-sm); transition: color var(--transition-fast); }
-.modal-close:hover { color: var(--color-text-primary); }
+.modal-title { font-size: var(--text-xl); font-weight: var(--fw-bold); letter-spacing: -0.3px; }
+.modal-close { font-size: var(--text-xl); color: var(--color-text-muted); cursor: pointer; background: none; border: none; padding: var(--space-1); border-radius: 8px; transition: all var(--transition-fast); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { color: var(--color-text-primary); background: var(--color-surface-nested); }
 .modal-footer { display: flex; gap: var(--space-3); justify-content: flex-end; margin-top: var(--space-6); }
 
 /* === SIDEBAR === */
