@@ -133,14 +133,11 @@ const Analysis = {
   },
 
   getMonthDailyTrend(year, month) {
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const days = [];
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(year, month, d);
-      if (date > todayStart) break;
       const shs = this.calculateSHS(Utils.dateStr(date));
       days.push({
         dateNum: d.toString(),
@@ -172,7 +169,13 @@ const Analysis = {
 
     let activeDateStr = this.selectedDateStr;
     if (!activeDateStr && trend.length > 0) {
-      activeDateStr = trend[trend.length - 1].fullDateStr;
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const available = trend.filter(d => {
+        const [y, m, day] = d.fullDateStr.split('-').map(Number);
+        return new Date(y, m - 1, day) <= todayStart;
+      });
+      activeDateStr = available.length > 0 ? available[available.length - 1].fullDateStr : trend[trend.length - 1].fullDateStr;
     }
 
     let shs = this.calculateSHS(activeDateStr || Utils.dateStr(today));
