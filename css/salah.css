@@ -2630,3 +2630,157 @@
     filter: drop-shadow(0 0 2px rgba(239,68,68,0.3));
   }
 }
+
+/* ===== PREMIUM SALAH ENHANCEMENTS ===== */
+
+/* Premium stat cards — bento grid */
+.salah-stat-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.salah-stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.15;
+}
+.salah-stat-card:hover {
+  transform: translateY(-2px);
+}
+.stat-prayed::after { background: radial-gradient(circle, var(--color-accent-green), transparent); }
+.stat-perfect::after { background: radial-gradient(circle, var(--color-accent-orange), transparent); }
+.stat-consistent::after { background: radial-gradient(circle, var(--color-accent-green), transparent); }
+.stat-points::after { background: radial-gradient(circle, var(--color-accent-gold), transparent); }
+
+/* Premium stat icons */
+.salah-stat-icon {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.salah-stat-card:hover .salah-stat-icon {
+  transform: scale(1.1);
+}
+
+/* Premium prayer time pills */
+.prayer-time-pill {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.prayer-time-pill:hover {
+  transform: translateY(-1px);
+}
+.prayer-time-pill.next {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+/* Premium calendar */
+.salah-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 8px 4px;
+  transition: all 0.3s ease;
+}
+.salah-cal-cell {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  min-height: 36px;
+}
+.salah-cal-cell:hover:not(.empty) {
+  transform: scale(1.15);
+  z-index: 2;
+}
+.salah-cal-cell.today {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
+}
+.salah-cal-day {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Calendar weekday headers */
+.salah-calendar > div[style*="font-size:10px"] {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Calendar header (month/year) */
+.salah-month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0 12px;
+}
+.salah-month-header .month-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.salah-month-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-muted);
+  background: var(--color-glass);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.salah-month-nav-btn:hover {
+  background: var(--color-surface-nested);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+/* Premium stat counter animation */
+.salah-stat-val {
+  transition: color 0.3s ease;
+}
+
+/* Stats grid responsive */
+.salah-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* Calendar legend premium */
+.salah-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 0 4px;
+}
+.salah-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
