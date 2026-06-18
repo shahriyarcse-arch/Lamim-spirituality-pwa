@@ -211,6 +211,9 @@ const App = {
       this._bootComplete = true;
     }, 8000);
 
+    // Event delegation for all interactive elements (replaces inline onclick)
+    this.setupDelegation();
+
     // Nav bindings
     this.bindNav();
     this.bindSidebarToggle();
@@ -248,6 +251,44 @@ const App = {
         this.navigateTo(e.state.section, true);
       } else if (this.currentSection !== 'home') {
         this.navigateTo('home', true);
+      }
+    });
+  },
+
+  setupDelegation() {
+    // data-on="Module.method" — calls Module.method with args
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-on]');
+      if (!el) return;
+      const expr = el.dataset.on;
+      const dot = expr.lastIndexOf('.');
+      const mod = window[expr.slice(0, dot)];
+      const fn = mod?.[expr.slice(dot + 1)];
+      if (typeof fn !== 'function') return;
+      const args = [];
+      if ('onArg' in el.dataset) {
+        try { args.push(JSON.parse(el.dataset.onArg)); }
+        catch { args.push(el.dataset.onArg); }
+      }
+      if ('onArgs' in el.dataset) {
+        try { args.push(...JSON.parse(el.dataset.onArgs)); }
+        catch {}
+      }
+      if ('onSelf' in el.dataset) args.push(el);
+      if ('onEvent' in el.dataset) args.push(e);
+      fn.apply(null, args);
+    });
+
+    // data-dismiss="overlay" — click-outside close for modal overlays
+    document.addEventListener('click', (e) => {
+      const overlay = e.target.closest('[data-dismiss="overlay"]');
+      if (!overlay || e.target !== overlay) return;
+      const fnName = overlay.dataset.dismissFn;
+      if (fnName) {
+        const dot = fnName.lastIndexOf('.');
+        const mod = window[fnName.slice(0, dot)];
+        const fn = mod?.[fnName.slice(dot + 1)];
+        if (typeof fn === 'function') fn();
       }
     });
   },
