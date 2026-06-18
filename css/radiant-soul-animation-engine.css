@@ -1152,26 +1152,26 @@
   gap: 16px;
 }
 
-/* --- Chart View Toggle --- */
+/* --- Chart View Toggle Premium --- */
 .fin-chart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-  margin-bottom: 12px;
-  padding: 0 4px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  padding: 0 2px;
 }
 
 .fin-chart-tabs {
   display: flex;
   background: var(--color-surface-nested);
-  padding: 4px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px;
+  border-radius: 10px;
+  gap: 2px;
 }
 
 .fin-chart-tab {
-  padding: 6px 12px;
+  padding: 7px 16px;
   border-radius: 8px;
   border: none;
   background: transparent;
@@ -1179,21 +1179,24 @@
   font-size: 11px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  position: relative;
+}
+
+.fin-chart-tab:hover {
+  color: var(--color-text-primary);
 }
 
 .fin-chart-tab.active {
-  background: var(--color-text-primary);
-  color: var(--color-bg-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  box-shadow: 0 2px 8px var(--color-shadow);
 }
 
-/* Theme overrides handled by variables */
-
 .fin-chart-tab:active {
-  transform: scale(0.95);
+  transform: scale(0.93);
 }
 
 .fin-stat-card {
@@ -1223,12 +1226,6 @@
 
 .fin-stat-value.expense {
   color: var(--fin-red);
-}
-
-/* Chart Section */
-.fin-chart-container {
-  height: 200px;
-  margin-top: 16px;
 }
 
 /* Transaction List Redesign */
@@ -2562,21 +2559,62 @@
   background: #e4e4e7;
 }
 
-/* --- Spending Analytics Chart --- */
+/* --- Spending Analytics Chart Premium --- */
 .fin-chart-container {
   width: 100%;
-  height: 240px;
+  height: 280px;
   position: relative;
-  margin-top: 24px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.01);
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  margin-top: 20px;
+  padding: 16px 16px 20px;
+  background: var(--fin-surface);
+  border-radius: 24px;
+  border: 1px solid var(--fin-border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
 #finance-main-chart {
   width: 100%;
   height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Chart Tooltip */
+.fin-chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-muted);
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-shadow: 0 8px 30px var(--color-shadow);
+  min-width: 80px;
+  text-align: center;
+}
+
+.fin-chart-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fin-chart-tooltip .tooltip-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.fin-chart-tooltip .tooltip-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
 }
 
 /* --- Ultra-Glossy Living UI --- */

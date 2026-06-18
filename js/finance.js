@@ -304,8 +304,12 @@ const Finance = {
             <button class="fin-chart-tab ${this.chartView === 'monthly' ? 'active' : ''}" onclick="Finance.setChartView('monthly')">Monthly</button>
           </div>
         </div>
-        <div class="fin-chart-container">
+        <div class="fin-chart-container" id="fin-chart-container">
           <canvas id="finance-main-chart"></canvas>
+          <div class="fin-chart-tooltip" id="fin-chart-tooltip">
+            <div class="tooltip-label" id="fin-tt-label"></div>
+            <div class="tooltip-value" id="fin-tt-value"></div>
+          </div>
         </div>
 
         <div class="finance-premium-card">${this.renderExpensesList(this.currentViewDate)}</div>
@@ -1487,7 +1491,7 @@ const Finance = {
           rawData[d.getDate() - 1] += e.amount;
         }
       });
-      labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+      labels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`);
     } else {
       labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       rawData = new Array(12).fill(0);
@@ -1499,10 +1503,9 @@ const Finance = {
     const displayData = rawData.map(v => v * currencyMult);
     const maxVal = Math.max(...displayData, 1);
     const accentColor = isDaily ? (isDark ? '#3b82f6' : '#2563eb') : (isDark ? '#a855f7' : '#9333ea');
+    const accentColorRgb = isDaily ? (isDark ? '59,130,246' : '37,99,235') : (isDark ? '168,85,247' : '147,51,234');
     const tickColor = isDark ? '#94a3b8' : '#64748b';
-    const gridColor = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(71,85,105,0.15)';
-    const areaAlpha = isDark ? '15' : '20';
-    const bgColor = isDark ? '#0f172a' : '#ffffff';
+    const gridColor = isDark ? 'rgba(148,163,184,0.07)' : 'rgba(71,85,105,0.10)';
 
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
@@ -1512,42 +1515,41 @@ const Finance = {
     canvas.height = H * dpr;
     ctx.scale(dpr, dpr);
 
-    const pad = { top: 20, bottom: 28, left: 50, right: 12 };
+    const fontFamily = "'Outfit','Plus Jakarta Sans',system-ui,sans-serif";
+    const pad = { top: 16, bottom: 28, left: 52, right: 16 };
     const chartW = W - pad.left - pad.right;
     const chartH = H - pad.top - pad.bottom;
 
     ctx.clearRect(0, 0, W, H);
 
-    // Background
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, W, H);
-
-    // Grid lines & Y-axis labels
+    // --- Dashed Grid Lines & Y-axis Labels ---
     const gridCount = 4;
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    ctx.font = '10px system-ui, sans-serif';
+    ctx.font = `600 10px ${fontFamily}`;
     for (let i = 0; i <= gridCount; i++) {
       const yPct = i / gridCount;
       const yPos = pad.top + chartH * (1 - yPct);
-      
+
+      ctx.save();
       ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(pad.left, yPos);
       ctx.lineTo(pad.left + chartW, yPos);
       ctx.stroke();
+      ctx.restore();
 
       const val = maxVal * yPct;
       ctx.fillStyle = tickColor;
-      ctx.fillText(sym + Math.round(val).toLocaleString(), pad.left - 8, yPos);
+      const formatted = val >= 1000 ? (val / 1000).toFixed(val >= 10000 ? 0 : 1) + 'k' : Math.round(val).toLocaleString();
+      ctx.fillText(sym + formatted, pad.left - 8, yPos);
     }
 
-    // Line Chart (Trending)
+    // --- Calculate Points ---
     const pointCount = displayData.length;
-    const pointGap = chartW / (pointCount > 1 ? pointCount - 1 : 1);
-    
-    // Calculate points
+    const pointGap = chartW / Math.max(pointCount - 1, 1);
     const points = displayData.map((val, i) => {
       const x = pad.left + i * pointGap;
       const barH = (val / maxVal) * chartH;
@@ -1555,74 +1557,225 @@ const Finance = {
       return { x, y, val };
     });
 
-    // Draw area under line
-    ctx.fillStyle = accentColor + areaAlpha;
+    if (pointCount < 2) return;
+
+    // --- Monotone X-Spline Interpolation ---
+    function getControlPoints(pts) {
+      const cps = [];
+      for (let i = 0; i < pts.length; i++) {
+        if (i === 0) {
+          const dx = pts[1].x - pts[0].x;
+          cps.push({ x1: pts[0].x + dx * 0.15, y1: pts[0].y, x2: pts[1].x - dx * 0.15, y2: pts[1].y });
+        } else if (i === pts.length - 1) {
+          const dx = pts[i].x - pts[i - 1].x;
+          cps.push({ x1: pts[i - 1].x + dx * 0.15, y1: pts[i - 1].y, x2: pts[i].x - dx * 0.15, y2: pts[i].y });
+        } else {
+          const dx = pts[i + 1].x - pts[i - 1].x;
+          const mx = (pts[i + 1].y - pts[i - 1].y) / dx * 0.3;
+          cps.push({
+            x1: pts[i].x - (pts[i].x - pts[i - 1].x) * 0.25,
+            y1: pts[i].y - mx * (pts[i].x - pts[i - 1].x),
+            x2: pts[i].x + (pts[i + 1].x - pts[i].x) * 0.25,
+            y2: pts[i].y + mx * (pts[i + 1].x - pts[i].x)
+          });
+        }
+      }
+      return cps;
+    }
+
+    const cps = getControlPoints(points);
+
+    // --- Gradient Area Fill ---
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
+    grad.addColorStop(0, `rgba(${accentColorRgb},0.35)`);
+    grad.addColorStop(0.5, `rgba(${accentColorRgb},0.12)`);
+    grad.addColorStop(1, `rgba(${accentColorRgb},0.02)`);
+    ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.moveTo(points[0].x, pad.top + chartH);
-    
     for (let i = 0; i < points.length; i++) {
-      ctx.lineTo(points[i].x, points[i].y);
+      const cp = cps[i];
+      if (i === 0) {
+        ctx.lineTo(points[i].x, points[i].y);
+      } else {
+        ctx.bezierCurveTo(cps[i - 1].x2, cps[i - 1].y2, cp.x1, cp.y1, points[i].x, points[i].y);
+      }
     }
-    
-    ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
+    ctx.lineTo(points[pointCount - 1].x, pad.top + chartH);
     ctx.closePath();
     ctx.fill();
 
-    // Draw line
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 2.5;
+    // --- Gradient Line ---
+    const lineGrad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
+    lineGrad.addColorStop(0, `rgba(${accentColorRgb},1)`);
+    lineGrad.addColorStop(0.7, `rgba(${accentColorRgb},0.9)`);
+    lineGrad.addColorStop(1, `rgba(${accentColorRgb},0.4)`);
+    ctx.strokeStyle = lineGrad;
+    ctx.lineWidth = 3;
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
-    
     for (let i = 1; i < points.length; i++) {
-      ctx.lineTo(points[i].x, points[i].y);
+      const cp = cps[i - 1];
+      ctx.bezierCurveTo(cp.x2, cp.y2, cps[i].x1, cps[i].y1, points[i].x, points[i].y);
     }
     ctx.stroke();
 
-    // Draw points with glow
-    for (let i = 0; i < points.length; i++) {
-      if (points[i].val > 0) {
-        // Glow
-        const gradient = ctx.createRadialGradient(points[i].x, points[i].y, 0, points[i].x, points[i].y, 6);
-        gradient.addColorStop(0, accentColor + '40');
-        gradient.addColorStop(1, accentColor + '00');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(points[i].x, points[i].y, 6, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Dot
-        ctx.fillStyle = accentColor;
-        ctx.beginPath();
-        ctx.arc(points[i].x, points[i].y, 3.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // X-axis labels
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.font = '9px system-ui, sans-serif';
-    ctx.fillStyle = tickColor;
-
-    const maxLabels = isDaily ? Math.min(pointCount, 10) : pointCount;
-    const step = Math.max(1, Math.floor(pointCount / maxLabels));
-    for (let i = 0; i < pointCount; i += step) {
-      const x = pad.left + i * pointGap;
-      const y = pad.top + chartH + 8;
-      const label = labels[i];
-      ctx.fillText(String(label), x, y);
-    }
-
-    // Bottom line
+    // --- Zero Baseline ---
     ctx.strokeStyle = gridColor;
     ctx.lineWidth = 1;
+    ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(pad.left, pad.top + chartH);
     ctx.lineTo(pad.left + chartW, pad.top + chartH);
     ctx.stroke();
+
+    // --- Data Points ---
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].val <= 0) continue;
+      const px = points[i].x, py = points[i].y;
+
+      // Glow ring
+      const glow = ctx.createRadialGradient(px, py, 0, px, py, 10);
+      glow.addColorStop(0, `rgba(${accentColorRgb},0.25)`);
+      glow.addColorStop(1, `rgba(${accentColorRgb},0)`);
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(px, py, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Outer dot
+      ctx.fillStyle = `rgba(${accentColorRgb},1)`;
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner dot (white)
+      ctx.fillStyle = isDark ? '#0f172a' : '#ffffff';
+      ctx.beginPath();
+      ctx.arc(px, py, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // --- Peak Annotation ---
+    let maxIdx = 0;
+    for (let i = 1; i < displayData.length; i++) {
+      if (displayData[i] > displayData[maxIdx]) maxIdx = i;
+    }
+    if (displayData[maxIdx] > 0) {
+      const peak = points[maxIdx];
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.font = `700 11px ${fontFamily}`;
+      ctx.fillStyle = accentColor;
+      const peakLabel = sym + (displayData[maxIdx] >= 1000 ? (displayData[maxIdx] / 1000).toFixed(1) + 'k' : Math.round(displayData[maxIdx]).toLocaleString());
+      const peakY = peak.y - 14;
+      ctx.fillText(peakLabel, peak.x, peakY);
+
+      // Peak mini-line
+      ctx.strokeStyle = `rgba(${accentColorRgb},0.3)`;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath();
+      ctx.moveTo(peak.x, peakY + 2);
+      ctx.lineTo(peak.x, peak.y - 6);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // --- X-axis Labels ---
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.font = `500 10px ${fontFamily}`;
+    ctx.fillStyle = tickColor;
+
+    let labelStep = 1;
+    if (isDaily) {
+      if (pointCount <= 14) labelStep = 2;
+      else if (pointCount <= 20) labelStep = 3;
+      else labelStep = 4;
+    }
+    for (let i = 0; i < pointCount; i += labelStep) {
+      const x = pad.left + i * pointGap;
+      const y = pad.top + chartH + 10;
+      ctx.fillText(String(labels[i]), x, y);
+    }
+    // Always show last label
+    if ((pointCount - 1) % labelStep !== 0) {
+      ctx.fillText(String(labels[pointCount - 1]), pad.left + (pointCount - 1) * pointGap, pad.top + chartH + 10);
+    }
+
+    // --- Hover Tooltip ---
+    this._chartPoints = points;
+    this._chartLabels = labels;
+    this._chartAccentColor = accentColor;
+    this._chartAccentRgb = accentColorRgb;
+    this._chartSym = sym;
+    this._chartPad = pad;
+    this._chartW = chartW;
+    this._chartH = chartH;
+    this._chartCanvas = canvas;
+    this._chartContainer = document.getElementById('fin-chart-container');
+    this._tooltipEl = document.getElementById('fin-chart-tooltip');
+    this._chartPointGap = pointGap;
+    this._setupChartHover();
+  },
+
+  _setupChartHover() {
+    if (!this._chartCanvas) return;
+    const canvas = this._chartCanvas;
+    const tooltip = this._tooltipEl;
+    if (!tooltip) return;
+
+    const handler = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const padL = this._chartPad.left;
+      const inside = mx >= padL && mx <= padL + this._chartW;
+
+      if (!inside || !this._chartPoints || this._chartPointGap <= 0) {
+        tooltip.classList.remove('visible');
+        this._hoveredIdx = -1;
+        return;
+      }
+
+      const idx = Math.round((mx - padL) / this._chartPointGap);
+      const clamped = Math.max(0, Math.min(idx, this._chartPoints.length - 1));
+      const pt = this._chartPoints[clamped];
+
+      if (pt.val <= 0) {
+        tooltip.classList.remove('visible');
+        this._hoveredIdx = -1;
+        return;
+      }
+
+      document.getElementById('fin-tt-label').textContent = this._chartLabels[clamped] + (this.chartView === 'daily' ? '' : '');
+      document.getElementById('fin-tt-value').textContent = this._chartSym + Math.round(pt.val).toLocaleString();
+
+      const ttW = tooltip.offsetWidth;
+      const ttH = tooltip.offsetHeight;
+      let left = pt.x - ttW / 2;
+      let top = pt.y - ttH - 18;
+      if (left < 4) left = 4;
+      if (left + ttW > rect.width - 4) left = rect.width - ttW - 4;
+      if (top < 4) top = pt.y + 12;
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+      tooltip.classList.add('visible');
+      this._hoveredIdx = clamped;
+    };
+
+    canvas.removeEventListener('mousemove', this._chartHoverHandler);
+    canvas.removeEventListener('mouseleave', this._chartHoverHandler);
+
+    const moveHandler = (e) => handler(e);
+    const leaveHandler = () => { if (tooltip) tooltip.classList.remove('visible'); this._hoveredIdx = -1; };
+
+    canvas.addEventListener('mousemove', moveHandler);
+    canvas.addEventListener('mouseleave', leaveHandler);
+    this._chartHoverHandler = moveHandler;
   },
 
   getStats(v) {
