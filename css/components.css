@@ -337,7 +337,7 @@ select.input option:disabled { color: var(--color-text-muted); }
 .bottom-nav {
   display: none; 
   position: fixed; 
-  bottom: 12px; 
+  bottom: 24px; 
   left: 12px; 
   right: 12px;
   height: 64px;
