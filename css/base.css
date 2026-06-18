@@ -163,7 +163,7 @@ p { color: var(--color-text-secondary); }
   padding: var(--space-6);
   padding-bottom: calc(var(--space-6) + var(--bottomnav-height) + env(safe-area-inset-bottom, 0px));
   min-height: 100vh;
-  transition: margin-left var(--transition-base);
+  transition: margin-left var(--transition-fast);
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -199,11 +199,10 @@ p { color: var(--color-text-secondary); }
 }
 .section-panel.active {
   display: block;
-  animation: sectionIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: sectionIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.section-panel.leaving {
-  display: block;
-  animation: sectionOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+.section-panel.out {
+  animation: sectionOut 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
   pointer-events: none;
 }
 

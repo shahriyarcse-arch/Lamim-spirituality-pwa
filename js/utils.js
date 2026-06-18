@@ -426,7 +426,7 @@ const UI = {
     setTimeout(() => {
       el.classList.remove('closing');
       el.classList.add('hidden');
-    }, 200);
+    }, 120);
   },
 
   /** Open modal (remove hidden with animation) */
