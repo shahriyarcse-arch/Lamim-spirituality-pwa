@@ -166,7 +166,7 @@ const Goals = {
 
     container.innerHTML = this.sunnahList.map((item, idx) => {
       const status = sunnahData[item.id];
-      const isLocked = status !== undefined;
+      const isLocked = status === 'prayed' || status === 'missed';
       const isPrayed = status === true || status === 'prayed';
       const isMissed = status === 'missed';
       const pts = 2;
@@ -296,7 +296,7 @@ const Goals = {
     if (!container) return;
 
     const isFuture = this.currentDate > Utils.todayStr();
-    const isLocked = rakat !== 0 && rakat !== undefined;
+    const isLocked = rakat > 0 || rakat === -1;
     const isPrayed = rakat > 0;
     const isMissed = rakat === -1;
 
@@ -427,7 +427,7 @@ const Goals = {
     if (!container) return;
 
     const isFuture = this.currentDate > Utils.todayStr();
-    const isLocked = rakat !== 0 && rakat !== undefined;
+    const isLocked = rakat > 0 || rakat === -1;
     const isPrayed = rakat > 0;
     const isMissed = rakat === -1;
 
@@ -675,3 +675,4 @@ const Goals = {
     Utils.closeModal(document.getElementById('nafl-history-modal'));
   }
 };
+window.Goals = Goals;
