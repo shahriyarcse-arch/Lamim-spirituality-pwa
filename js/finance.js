@@ -1684,26 +1684,25 @@ const Finance = {
       ctx.setLineDash([]);
     }
 
-    // --- X-axis Labels ---
+    // --- X-axis Labels (Evenly Distributed) ---
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.font = `500 10px ${fontFamily}`;
     ctx.fillStyle = tickColor;
 
-    let labelStep = 1;
+    const labelMinGap = 36; // minimum px between labels to avoid overlap
+    const maxLabels = Math.max(1, Math.floor(chartW / labelMinGap));
+    const labelCount = Math.min(pointCount, maxLabels);
     if (isDaily) {
-      if (pointCount <= 14) labelStep = 2;
-      else if (pointCount <= 20) labelStep = 3;
-      else labelStep = 4;
-    }
-    for (let i = 0; i < pointCount; i += labelStep) {
-      const x = pad.left + i * pointGap;
-      const y = pad.top + chartH + 10;
-      ctx.fillText(String(labels[i]), x, y);
-    }
-    // Always show last label
-    if ((pointCount - 1) % labelStep !== 0) {
-      ctx.fillText(String(labels[pointCount - 1]), pad.left + (pointCount - 1) * pointGap, pad.top + chartH + 10);
+      for (let k = 0; k < labelCount; k++) {
+        const i = Math.round((k / Math.max(labelCount - 1, 1)) * (pointCount - 1));
+        const x = pad.left + i * pointGap;
+        ctx.fillText(String(labels[i]), x, pad.top + chartH + 10);
+      }
+    } else {
+      for (let i = 0; i < pointCount; i++) {
+        ctx.fillText(String(labels[i]), pad.left + i * pointGap, pad.top + chartH + 10);
+      }
     }
 
     // --- Hover Tooltip ---
