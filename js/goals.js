@@ -240,12 +240,14 @@ const Goals = {
       `;
     }).join('');
     container.querySelectorAll('[data-nafl="sunnah"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      console.log('[Goals] bind sunnah btn', btn.dataset.id, btn.dataset.action);
+      btn.onclick = (e) => {
         e.preventDefault();
+        console.log('[Goals] sunnah clicked', btn.dataset.id, btn.dataset.action);
         const id = btn.dataset.id;
         const action = btn.dataset.action;
         if (id && action) this.selectSunnah(id, action);
-      });
+      };
     });
   },
 
@@ -379,14 +381,16 @@ const Goals = {
 
     container.innerHTML = html;
     container.querySelectorAll('[data-nafl="tahajjud"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      console.log('[Goals] bind tahajjud btn', btn.dataset.rakat || btn.dataset.action);
+      btn.onclick = (e) => {
         e.preventDefault();
+        console.log('[Goals] tahajjud clicked', btn.dataset.rakat || btn.dataset.action);
         const rakat = btn.dataset.rakat;
         const action = btn.dataset.action;
         if (rakat) this.setTahajjudRakat(Number(rakat));
         else if (action === 'missed') this.setTahajjudMissed();
         else if (action === 'custom') this.promptCustomTahajjud();
-      });
+      };
     });
   },
 
@@ -519,12 +523,14 @@ const Goals = {
 
     container.innerHTML = html;
     container.querySelectorAll('[data-nafl="witr"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      console.log('[Goals] bind witr btn', btn.dataset.action);
+      btn.onclick = (e) => {
         e.preventDefault();
+        console.log('[Goals] witr clicked', btn.dataset.action);
         const action = btn.dataset.action;
         if (action === 'prayed') this.toggleWitr();
         else if (action === 'missed') this.toggleWitrMissed();
-      });
+      };
     });
   },
 
