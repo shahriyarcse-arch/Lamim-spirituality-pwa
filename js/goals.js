@@ -1,6 +1,10 @@
 /* =============================================
    LAMIM — NAFL SALAH MODULE
    ============================================= */
+// Cache migration: ensure sparkle/confetti exist even if stale utils.js served
+if (!Utils.sparkle) Utils.sparkle = function() {};
+if (!Utils.confetti) Utils.confetti = function() {};
+
 const Goals = {
   currentDate: Utils.todayStr(),
 

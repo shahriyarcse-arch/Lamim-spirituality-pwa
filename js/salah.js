@@ -3,6 +3,10 @@
    Only 5 waqt farz namaz. No sunnah/nafl/tahajjud here.
    Once selected, cannot be changed.
    ============================================= */
+
+// Cache migration: ensure sparkle/confetti exist even if stale utils.js served
+if (!Utils.sparkle) Utils.sparkle = function() {};
+if (!Utils.confetti) Utils.confetti = function() {};
 const Salah = {
   prayers: ['fajr','dhuhr','asr','maghrib','isha'],
   prayerMeta: {

@@ -2,6 +2,10 @@
    LAMIM — MUJAHID MODULE
    Quit Bad Habits Tracker
    ============================================= */
+// Cache migration: ensure sparkle/confetti exist even if stale utils.js served
+if (!Utils.sparkle) Utils.sparkle = function() {};
+if (!Utils.confetti) Utils.confetti = function() {};
+
 const Mujahid = {
   habits: [],
   selectedIcon: null,
