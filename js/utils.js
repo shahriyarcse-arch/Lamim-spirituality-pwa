@@ -404,22 +404,11 @@ const UI = {
 
   /* ============ LIVELY MICRO-ANIMATIONS ============ */
   Lively: {
-    initStagger(container, selector = '.card, .salah-prayer-card, .dhikr-preset-card, .nafl-card-modern, .goal-card, .settings-item, .finance-expense-item, .analysis-stat-card, .mujahid-history-item') {
+    initStagger(container) {
       if (!container) return;
-      const items = container.querySelectorAll(selector);
-      if (items.length < 2) return;
-      items.forEach(el => {
-        if (!el.classList.contains('stagger-ready')) {
-          el.style.opacity = '0';
-          el.classList.add('stagger-ready');
-        }
-      });
-      requestAnimationFrame(() => {
-        items.forEach((el, i) => {
-          el.style.setProperty('--i', i);
-          setTimeout(() => { el.style.opacity = ''; }, 10);
-        });
-      });
+      setTimeout(() => {
+        container.classList.add('stagger-in');
+      }, 100);
     },
 
     bounceCount(el) {

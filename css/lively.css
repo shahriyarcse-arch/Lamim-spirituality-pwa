@@ -1,666 +1,649 @@
 /* ============================================
-   LAMIM — LIVELY MICRO-ANIMATIONS ENGINE
-   Every section, every element, alive.
+   LAMIM — LIVELY MICRO-ANIMATIONS ENGINE v2
+   Every section, every element — VISIBLY alive.
+   Big amplitudes, perpetual motion, stagger entrance.
    GPU-accelerated, zero-layout-thrash.
-   Only NEW keyframes defined — all existing
-   keyframes from animations.css reused.
    ============================================ */
 
-/* GPU acceleration for all animated elements */
+/* === GPU ACCEL === */
 .card, .card-glass, .nav-icon svg, .bnav-icon svg,
 .badge, .salah-status-chip, .salah-stat-icon,
 .quick-action-btn .qa-icon, .spirit-score-val,
 .empty-state .empty-icon, .avatar,
 .finance-expense-item, .transaction-item,
-.finance-savings-item {
+.finance-savings-item, .salah-prayer-card {
   will-change: transform, opacity;
 }
 
 /* ============================================
-   1. UNIVERSAL CARD BREATHE
-   Subtle shadow-pulse on all glass cards.
-   No scale — uses box-shadow only.
+   1. BACKGROUND SHIMMER — perpetual alive feel
+   A slow organic light-drift across the entire
+   section background. Most visible effect.
+   ============================================ */
+#section-home, #section-salah, #section-dhikr,
+#section-nafl, #section-analysis, #section-mujahid,
+#section-finance, #section-profile {
+  position: relative;
+}
+#section-home::before, #section-salah::before, #section-dhikr::before,
+#section-nafl::before, #section-analysis::before, #section-mujahid::before,
+#section-finance::before, #section-profile::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(16,185,129,0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(99,102,241,0.03) 0%, transparent 50%);
+  animation: bgDrift 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes bgDrift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(2%, -1%) rotate(1deg); }
+  50% { transform: translate(-1%, 2%) rotate(-0.5deg); }
+  75% { transform: translate(1%, 1%) rotate(0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* ============================================
+   2. UNIVERSAL CARD BREATHE — VISIBLE
+   Border & shadow pulse so you can actually
+   see it breathing.
    ============================================ */
 @keyframes cardBreathe {
-  0%, 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), var(--shadow-sm); }
-  50% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), var(--shadow-md), 0 0 20px color-mix(in srgb, var(--section-accent, var(--color-accent-primary)) 8%, transparent); }
+  0%, 100% { border-color: var(--color-border); box-shadow: var(--shadow-sm); }
+  50% { border-color: color-mix(in srgb, var(--section-accent, var(--color-accent-primary)) 25%, var(--color-border)); box-shadow: 0 0 20px color-mix(in srgb, var(--section-accent, var(--color-accent-primary)) 10%, transparent), var(--shadow-md); }
 }
 .card, .card-glass, .settings-group, .dhikr-preset-card,
 .nafl-card-modern, .goal-card, .salah-prayer-card,
 .analysis-stat-card, .finance-summary-card, .finance-section,
 .iron-will-widget, .dhikr-history-card, .mujahid-history-item,
 .analysis-chart-section, .journey-today-card {
-  animation: cardBreathe 6s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * 0.4s);
+  animation: cardBreathe 5s ease-in-out infinite;
 }
-.salah-prayer-card:nth-child(1),
-.dhikr-preset-card:nth-child(1),
-.goal-card:nth-child(1) { --i: 0; }
-.salah-prayer-card:nth-child(2),
-.dhikr-preset-card:nth-child(2),
-.goal-card:nth-child(2) { --i: 1; }
-.salah-prayer-card:nth-child(3),
-.dhikr-preset-card:nth-child(3),
-.goal-card:nth-child(3) { --i: 2; }
-.salah-prayer-card:nth-child(4),
-.dhikr-preset-card:nth-child(4),
-.goal-card:nth-child(4) { --i: 3; }
-.salah-prayer-card:nth-child(5),
-.dhikr-preset-card:nth-child(5),
-.goal-card:nth-child(5) { --i: 4; }
 
 /* ============================================
-   2. ICON GENTLE FLOAT
-   All nav & section icons drift slowly.
-   Uses existing iconFloat keyframe from dhikr.css.
+   3. ICON FLOAT — NOTICEABLE
+   Nav icons bob up and down.
    ============================================ */
+@keyframes iconFloatBig {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
 .bnav-icon svg, .nav-icon svg,
 .section-icon svg, .quick-action-btn .qa-icon {
-  animation: iconFloat 4s ease-in-out infinite;
+  animation: iconFloatBig 3s ease-in-out infinite;
 }
 .bnav-icon svg { animation-delay: 0s; }
 .nav-item:nth-child(1) .nav-icon svg,
 .bottom-nav-item:nth-child(1) .bnav-icon svg { animation-delay: 0s; }
 .nav-item:nth-child(2) .nav-icon svg,
-.bottom-nav-item:nth-child(2) .bnav-icon svg { animation-delay: 0.5s; }
+.bottom-nav-item:nth-child(2) .bnav-icon svg { animation-delay: 0.3s; }
 .nav-item:nth-child(3) .nav-icon svg,
-.bottom-nav-item:nth-child(3) .bnav-icon svg { animation-delay: 1s; }
+.bottom-nav-item:nth-child(3) .bnav-icon svg { animation-delay: 0.6s; }
 .nav-item:nth-child(4) .nav-icon svg,
-.bottom-nav-item:nth-child(4) .bnav-icon svg { animation-delay: 1.5s; }
+.bottom-nav-item:nth-child(4) .bnav-icon svg { animation-delay: 0.9s; }
 .nav-item:nth-child(5) .nav-icon svg,
-.bottom-nav-item:nth-child(5) .bnav-icon svg { animation-delay: 2s; }
+.bottom-nav-item:nth-child(5) .bnav-icon svg { animation-delay: 1.2s; }
 .nav-item:nth-child(6) .nav-icon svg,
-.bottom-nav-item:nth-child(6) .bnav-icon svg { animation-delay: 2.5s; }
+.bottom-nav-item:nth-child(6) .bnav-icon svg { animation-delay: 1.5s; }
 .nav-item:nth-child(7) .nav-icon svg,
-.bottom-nav-item:nth-child(7) .bnav-icon svg { animation-delay: 3s; }
+.bottom-nav-item:nth-child(7) .bnav-icon svg { animation-delay: 1.8s; }
 .nav-item:nth-child(8) .nav-icon svg,
-.bottom-nav-item:nth-child(8) .bnav-icon svg { animation-delay: 3.5s; }
+.bottom-nav-item:nth-child(8) .bnav-icon svg { animation-delay: 2.1s; }
 
 /* ============================================
-   3. ACTIVE NAV GLOW
-   Active nav item pulses gently.
+   4. ACTIVE NAV GLOW — PULSING AURA
    ============================================ */
 @keyframes activeGlow {
-  0%, 100% { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-accent-primary) 30%, transparent)); }
-  50% { filter: drop-shadow(0 0 14px color-mix(in srgb, var(--color-accent-primary) 50%, transparent)); }
+  0%, 100% { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent-primary) 35%, transparent)); }
+  50% { filter: drop-shadow(0 0 18px color-mix(in srgb, var(--color-accent-primary) 60%, transparent)); }
 }
 .nav-item.active .nav-icon svg,
 .bottom-nav-item.active .bnav-icon svg {
-  animation: activeGlow 3s ease-in-out infinite;
+  animation: activeGlow 2.5s ease-in-out infinite;
 }
 
 /* ============================================
-   4. STATUS DOT PULSE
-   Live indicator dots, prayer status, etc.
-   (Existing pulse keyframe is opacity-only; this adds scale)
+   5. BOTTOM NAV ITEM — ICON BOUNCE
+   Non-active items gently wait, active has glow.
    ============================================ */
-@keyframes statusPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.7; }
+.bottom-nav-item .bnav-icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.tt-status-dot,
-.fin-pulse-dot,
-.nav-notification-badge {
-  animation: statusPulse 2s ease-in-out infinite;
+.bottom-nav-item.active .bnav-icon {
+  transform: scale(1.15) translateY(-2px);
 }
 
 /* ============================================
-   5. COUNTER NUMBER BOUNCE
-   Applied via JS class `count-bounce`.
+   6. TOPBAR LOGO ORB — ENHANCED GLOW
+   ============================================ */
+.topbar-logo-orb {
+  animation: orbGlowStrong 2.5s ease-in-out infinite;
+}
+@keyframes orbGlowStrong {
+  0%, 100% { box-shadow: 0 0 16px rgba(139,92,246,0.35), 0 0 4px rgba(139,92,246,0.2); transform: scale(1); }
+  50% { box-shadow: 0 0 28px rgba(139,92,246,0.6), 0 0 10px rgba(56,189,248,0.4); transform: scale(1.05); }
+}
+
+/* ============================================
+   7. TOPBAR BRAND NAME — SHIMMER
+   ============================================ */
+.topbar-brand-name {
+  background-size: 200% auto !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+}
+
+/* ============================================
+   8. STATUS DOT PULSE — FAST
+   ============================================ */
+@keyframes statusPulseFast {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.6; }
+}
+.tt-status-dot, .fin-pulse-dot,
+.nav-notification-badge, .salah-cal-cell.today::after {
+  animation: statusPulseFast 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   9. COUNTER BOUNCE (via JS)
    ============================================ */
 .count-bounce {
   animation: countBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ============================================
-   6. PROGRESS BAR LIFE
-   Animated gradient sweep on all progress fills.
+   10. PROGRESS BAR — ANIMATED GRADIENT
    ============================================ */
 @keyframes progressLife {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-.progress-fill,
-.finance-budget-fill,
-.finance-savings-fill,
-.spirit-bar-fill,
-.analysis-bar-fill,
-.analysis-type-fill {
+.progress-fill, .finance-budget-fill,
+.finance-savings-fill, .spirit-bar-fill,
+.analysis-bar-fill, .analysis-type-fill {
   background-size: 200% 100% !important;
-  animation: progressLife 3s ease-in-out infinite !important;
-}
-.progress-fill-green { background: linear-gradient(90deg, #10B981, #34D399, #10B981); background-size: 200% 100%; }
-.progress-fill-gold { background: linear-gradient(90deg, #F59E0B, #FBBF24, #F59E0B); background-size: 200% 100%; }
-.progress-fill-blue { background: linear-gradient(90deg, #3B82F6, #60A5FA, #3B82F6); background-size: 200% 100%; }
-
-/* ============================================
-   7. INPUT LIFE
-   Gentle pulse on focus.
-   ============================================ */
-@keyframes inputPulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 0%, transparent); }
-  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-primary) 12%, transparent); }
-}
-.input:focus {
-  animation: inputPulse 2s ease-in-out infinite;
+  animation: progressLife 2.5s ease-in-out infinite !important;
 }
 
 /* ============================================
-   8. STAGGERED ENTRANCE
-   Apply `.stagger-in` to container for sequential
-   child reveals on section mount.
+   11. STAGGERED ENTRANCE
    ============================================ */
 @keyframes staggerSlideIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .stagger-in > * {
   opacity: 0;
-  animation: staggerSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: staggerSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .stagger-in > *:nth-child(1) { animation-delay: 0s; }
-.stagger-in > *:nth-child(2) { animation-delay: 0.06s; }
-.stagger-in > *:nth-child(3) { animation-delay: 0.12s; }
-.stagger-in > *:nth-child(4) { animation-delay: 0.18s; }
-.stagger-in > *:nth-child(5) { animation-delay: 0.24s; }
-.stagger-in > *:nth-child(6) { animation-delay: 0.30s; }
-.stagger-in > *:nth-child(7) { animation-delay: 0.36s; }
-.stagger-in > *:nth-child(8) { animation-delay: 0.42s; }
-.stagger-in > *:nth-child(9) { animation-delay: 0.48s; }
-.stagger-in > *:nth-child(10) { animation-delay: 0.54s; }
-.stagger-in > *:nth-child(11) { animation-delay: 0.60s; }
-.stagger-in > *:nth-child(12) { animation-delay: 0.66s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.24s; }
+.stagger-in > *:nth-child(5) { animation-delay: 0.32s; }
+.stagger-in > *:nth-child(6) { animation-delay: 0.40s; }
+.stagger-in > *:nth-child(7) { animation-delay: 0.48s; }
+.stagger-in > *:nth-child(8) { animation-delay: 0.56s; }
+.stagger-in > *:nth-child(9) { animation-delay: 0.64s; }
+.stagger-in > *:nth-child(10) { animation-delay: 0.72s; }
+.stagger-in > *:nth-child(11) { animation-delay: 0.80s; }
+.stagger-in > *:nth-child(12) { animation-delay: 0.88s; }
 
 /* ============================================
-   9. BUTTON MICRO-LIFE
-   Gentle hover glow.
+   12. BUTTON HOVER GLOW
    ============================================ */
 @keyframes btnGlow {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 0%, transparent); }
-  50% { box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent-primary) 15%, transparent); }
+  50% { box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent-primary) 18%, transparent); }
 }
 .btn:not(:active):hover {
-  animation: btnGlow 1.5s ease-in-out infinite;
+  animation: btnGlow 1.2s ease-in-out infinite;
 }
 
 /* ============================================
-   10. BADGE DYNAMIC LIFE
-   Badges pulse softly.
+   13. BADGE PULSE
    ============================================ */
 @keyframes badgePulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+  50% { transform: scale(1.08); }
 }
 .badge, .salah-status-chip {
-  animation: badgePulse 4s ease-in-out infinite;
-}
-.badge-gold {
   animation: badgePulse 3s ease-in-out infinite;
-  background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(251,191,36,0.12));
 }
 
 /* ============================================
-   11. HOME — GREETING WORD BREATHE
+   14. HOME — GREETING WAVE
    ============================================ */
-@keyframes greetingBreathe {
+@keyframes greetingWave {
   0%, 100% { letter-spacing: normal; }
-  50% { letter-spacing: 0.02em; }
+  50% { letter-spacing: 0.03em; }
 }
 .greeting-text {
-  animation: greetingBreathe 5s ease-in-out infinite;
+  animation: greetingWave 4s ease-in-out infinite;
 }
 
 /* ============================================
-   12. HOME — LIVE CLOCK COLON BLINK
+   15. HOME — CLOCK COLON BLINK
    ============================================ */
-@keyframes colonBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
 .live-time-text .colon {
   animation: colonBlink 1s step-end infinite;
 }
+@keyframes colonBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
 
 /* ============================================
-   14. SALAH — STAT CARD ICON LIFE
+   16. HOME — GREETING CARD RADIAL
+   ============================================ */
+@keyframes greetingRadial {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+.home-greeting-card::before {
+  animation: greetingRadial 4s ease-in-out infinite;
+}
+
+/* ============================================
+   17. HOME — QUICK ACTION ICONS PULSE
+   ============================================ */
+@keyframes quickIconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.quick-action-btn .qa-icon {
+  animation: quickIconPulse 3s ease-in-out infinite;
+}
+
+/* ============================================
+   18. HOME — HEATMAP TODAY GLOW
+   ============================================ */
+@keyframes todayGlow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 25%, transparent); }
+  50% { box-shadow: 0 0 14px 3px color-mix(in srgb, var(--color-accent-primary) 25%, transparent); }
+}
+.heatmap-cell.today {
+  animation: todayGlow 1.8s ease-in-out infinite;
+}
+
+/* ============================================
+   19. HOME — DATE CHIP BORDER
+   ============================================ */
+@keyframes dateChipGlow {
+  0%, 100% { border-color: var(--color-border); }
+  50% { border-color: color-mix(in srgb, var(--color-accent-primary) 35%, var(--color-border)); }
+}
+.date-chip {
+  animation: dateChipGlow 4s ease-in-out infinite;
+}
+
+/* ============================================
+   20. HOME — QUOTE ARABIC GLOW
+   ============================================ */
+@keyframes arabicGlow {
+  0%, 100% { text-shadow: 0 0 12px rgba(240,196,86,0.3); }
+  50% { text-shadow: 0 0 28px rgba(240,196,86,0.55); }
+}
+.quote-arabic {
+  animation: arabicGlow 3.5s ease-in-out infinite;
+}
+
+/* ============================================
+   21. SALAH — STAT ICON LIFE
    ============================================ */
 @keyframes statIconLife {
   0%, 100% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.05) rotate(-3deg); }
-  75% { transform: scale(1.05) rotate(3deg); }
+  25% { transform: scale(1.1) rotate(-4deg); }
+  75% { transform: scale(1.1) rotate(4deg); }
 }
 .salah-stat-icon {
-  animation: statIconLife 5s ease-in-out infinite;
+  animation: statIconLife 4s ease-in-out infinite;
 }
 
 /* ============================================
-   15. SALAH — OPTION ACTIVE PULSE
+   22. SALAH — OPTION BTN ACTIVE GLOW
    ============================================ */
-@keyframes optionActivePulse {
+@keyframes optionActiveGlow {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 0%, transparent); }
-  50% { box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent-primary) 20%, transparent); }
+  50% { box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent-primary) 22%, transparent); }
 }
 .salah-option-btn.active {
-  animation: optionActivePulse 2s ease-in-out infinite;
+  animation: optionActiveGlow 1.8s ease-in-out infinite;
 }
 
 /* ============================================
-   16. DHIKR — TAP COUNT PRESS
+   23. SALAH — PRAYER EMOJI BOUNCE
+   ============================================ */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.salah-prayer-emoji {
+  display: inline-block;
+  animation: emojiBounce 3s ease-in-out infinite;
+}
+
+/* ============================================
+   24. SALAH — PRAYER PILL NEXT GLOW
+   ============================================ */
+@keyframes nextPillLife {
+  0%, 100% { box-shadow: 0 8px 24px rgba(167,139,250,0.15), inset 0 0 0 1.5px var(--color-border-active); }
+  50% { box-shadow: 0 8px 36px rgba(167,139,250,0.35), inset 0 0 0 1.5px var(--color-border-active); }
+}
+.prayer-time-pill.next {
+  animation: nextPillLife 2.5s ease-in-out infinite;
+}
+
+/* ============================================
+   25. SALAH — CALENDAR TODAY OUTLINE
+   ============================================ */
+@keyframes todayOutlinePulse {
+  0%, 100% { outline-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent); }
+  50% { outline-color: var(--color-accent-primary); }
+}
+.salah-cal-cell.today {
+  animation: todayOutlinePulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   26. DHIKR — TAP COUNT PRESS FEEDBACK
    ============================================ */
 .dhikr-tap-count {
-  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.08s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .dhikr-tap-count:active {
-  transform: scale(0.92);
+  transform: scale(0.9);
 }
 
 /* ============================================
-   17. NAFLA — MOON ICON SLOW SPIN
+   27. DHIKR — BEAD POP
    ============================================ */
+.dhikr-beads-container .bead.lit {
+  animation: beadPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   28. DHIKR — GOLD BTN GLOW
+   ============================================ */
+@keyframes goldGlow {
+  0%, 100% { box-shadow: 0 4px 12px rgba(251,191,36,0.2); }
+  50% { box-shadow: 0 4px 24px rgba(251,191,36,0.45); }
+}
+#dhikr-add-modal .btn-gold {
+  animation: goldGlow 2.5s ease-in-out infinite;
+}
+
+/* ============================================
+   29. NAFLA — MOON/STAR SLOW SPIN
+   ============================================ */
+.nafl-hero-icon svg,
+.night-icon-orb svg {
+  animation: slowSpin 15s linear infinite;
+}
 @keyframes slowSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-.nafl-hero-icon svg,
-.night-icon-orb svg {
-  animation: slowSpin 20s linear infinite;
-}
 
 /* ============================================
-   18. NAFLA — CHIP ENTRANCE STAGGER
+   30. NAFLA — CHIP STAGGER ENTRANCE
    ============================================ */
 @keyframes naflChipIn {
-  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  from { opacity: 0; transform: translateY(12px) scale(0.92); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .nafl-card-modern {
   opacity: 0;
-  animation: naflChipIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: naflChipIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .nafl-card-modern:nth-child(1) { animation-delay: 0s; }
-.nafl-card-modern:nth-child(2) { animation-delay: 0.05s; }
-.nafl-card-modern:nth-child(3) { animation-delay: 0.1s; }
-.nafl-card-modern:nth-child(4) { animation-delay: 0.15s; }
-.nafl-card-modern:nth-child(5) { animation-delay: 0.2s; }
-.nafl-card-modern:nth-child(6) { animation-delay: 0.25s; }
-.nafl-card-modern:nth-child(7) { animation-delay: 0.3s; }
-.nafl-card-modern:nth-child(8) { animation-delay: 0.35s; }
-.nafl-card-modern:nth-child(9) { animation-delay: 0.4s; }
-.nafl-card-modern:nth-child(10) { animation-delay: 0.45s; }
-.nafl-card-modern:nth-child(11) { animation-delay: 0.5s; }
-.nafl-card-modern:nth-child(12) { animation-delay: 0.55s; }
+.nafl-card-modern:nth-child(2) { animation-delay: 0.06s; }
+.nafl-card-modern:nth-child(3) { animation-delay: 0.12s; }
+.nafl-card-modern:nth-child(4) { animation-delay: 0.18s; }
+.nafl-card-modern:nth-child(5) { animation-delay: 0.24s; }
+.nafl-card-modern:nth-child(6) { animation-delay: 0.30s; }
+.nafl-card-modern:nth-child(7) { animation-delay: 0.36s; }
+.nafl-card-modern:nth-child(8) { animation-delay: 0.42s; }
+.nafl-card-modern:nth-child(9) { animation-delay: 0.48s; }
+.nafl-card-modern:nth-child(10) { animation-delay: 0.54s; }
+.nafl-card-modern:nth-child(11) { animation-delay: 0.60s; }
+.nafl-card-modern:nth-child(12) { animation-delay: 0.66s; }
 
 /* ============================================
-   19. MUJAHID — STREAK FLAME DANCE
+   31. NAFLA — RAKAT DIAL GLOW
+   ============================================ */
+@keyframes rakatGlow {
+  0%, 100% { box-shadow: 0 4px 15px rgba(99,102,241,0.4), 0 0 15px rgba(99,102,241,0.3); }
+  50% { box-shadow: 0 4px 28px rgba(99,102,241,0.65), 0 0 40px rgba(99,102,241,0.5); }
+}
+.rakat-dial-btn.active {
+  animation: rakatGlow 1.8s ease-in-out infinite;
+}
+
+/* ============================================
+   32. NAFLA — WITR TOGGLE GLOW
+   ============================================ */
+@keyframes witrGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.4); }
+  50% { box-shadow: 0 0 25px rgba(251,191,36,0.7); }
+}
+.witr-toggle-circle.active {
+  animation: witrGlow 1.8s ease-in-out infinite;
+}
+
+/* ============================================
+   33. MUJAHID — STREAK FLAME DANCE
    ============================================ */
 @keyframes flameDance {
-  0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(239,68,68,0.5)); }
-  25% { transform: scale(1.08) rotate(2deg); filter: drop-shadow(0 0 12px rgba(239,68,68,0.7)); }
-  50% { transform: scale(0.95) rotate(-1deg); filter: drop-shadow(0 0 8px rgba(239,68,68,0.4)); }
-  75% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 14px rgba(239,68,68,0.6)); }
+  0%, 100% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 6px rgba(239,68,68,0.5)); }
+  25% { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 14px rgba(239,68,68,0.8)); }
+  50% { transform: scale(0.92) rotate(-2deg); filter: drop-shadow(0 0 8px rgba(239,68,68,0.4)); }
+  75% { transform: scale(1.08) rotate(2deg); filter: drop-shadow(0 0 16px rgba(239,68,68,0.7)); }
 }
 .streak-badge .badge-icon-animated svg {
-  animation: flameDance 2s ease-in-out infinite;
+  animation: flameDance 1.5s ease-in-out infinite;
 }
 
 /* ============================================
-   20. MUJAHID — SPIRIT SCORE BREATHE
+   34. MUJAHID — SPIRIT SCORE BREATHE
    ============================================ */
 @keyframes scoreBreathe {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  50% { transform: scale(1.05); }
 }
 .spirit-score-val {
-  animation: scoreBreathe 4s ease-in-out infinite;
+  animation: scoreBreathe 3.5s ease-in-out infinite;
 }
 
 /* ============================================
-   21. MUJAHID — TIMER COLON
+   35. MUJAHID — TIMER COLON BLINK
    ============================================ */
 .mujahid-time-sep {
   animation: colonBlink 1s step-end infinite;
 }
 
 /* ============================================
-   22. FINANCE — LIVE BADGE ENHANCED
+   36. MUJAHID — FORGE BTN SHIMMER
+   ============================================ */
+@keyframes forgeShimmer {
+  0% { transform: translateX(-100%); }
+  50%, 100% { transform: translateX(100%); }
+}
+.forge-action-btn::before {
+  animation: forgeShimmer 2.5s ease-in-out infinite;
+}
+
+/* ============================================
+   37. MUJAHID — ACTIVE INDICATOR
+   ============================================ */
+@keyframes indicatorPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.nav-item.active::before {
+  animation: indicatorPulse 2.5s ease-in-out infinite;
+}
+
+/* ============================================
+   38. FINANCE — LIVE BADGE
    ============================================ */
 @keyframes finPulseEnhanced {
   0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(52,199,89,0.7); }
-  50% { transform: scale(1.3); opacity: 0.8; box-shadow: 0 0 0 6px rgba(52,199,89,0); }
+  50% { transform: scale(1.5); opacity: 0.7; box-shadow: 0 0 0 8px rgba(52,199,89,0); }
 }
 .fin-live-badge .fin-pulse-dot {
-  width: 6px; height: 6px;
+  width: 7px; height: 7px;
   background: #34c759;
   border-radius: 50%;
-  animation: finPulseEnhanced 2s ease-in-out infinite;
+  animation: finPulseEnhanced 1.5s ease-in-out infinite;
 }
 
 /* ============================================
-   23. FINANCE — AMOUNT TEXT
-   Income green / expense red gently pulse.
+   39. FINANCE — AMOUNT PULSE
    ============================================ */
 @keyframes amountPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+  50% { opacity: 0.8; }
 }
-.finance-sum-value,
-.finance-expense-amount,
-.transaction-amount {
-  animation: amountPulse 3s ease-in-out infinite;
+.finance-sum-value, .finance-expense-amount, .transaction-amount {
+  animation: amountPulse 2.5s ease-in-out infinite;
 }
 
 /* ============================================
-   24. ANALYSIS — STAT NUMBERS
-   Gradient text shimmers.
+   40. FINANCE — TRANSACTION SLIDE-IN
+   ============================================ */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.finance-expense-item, .transaction-item {
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.finance-expense-item:nth-child(1), .transaction-item:nth-child(1) { animation-delay: 0s; }
+.finance-expense-item:nth-child(2), .transaction-item:nth-child(2) { animation-delay: 0.06s; }
+.finance-expense-item:nth-child(3), .transaction-item:nth-child(3) { animation-delay: 0.12s; }
+.finance-expense-item:nth-child(4), .transaction-item:nth-child(4) { animation-delay: 0.18s; }
+.finance-expense-item:nth-child(5), .transaction-item:nth-child(5) { animation-delay: 0.24s; }
+
+/* ============================================
+   41. FINANCE — SAVINGS SLIDE-IN
+   ============================================ */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.finance-savings-item {
+  animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================
+   42. ANALYSIS — STAT NUMBERS SHIMMER
    ============================================ */
 .analysis-stat-num {
   background: linear-gradient(135deg, #a855f7, #3b82f6, #14b8a6, #a855f7);
   background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: fluidGradientBg 6s ease infinite;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: fluidGradientBg 5s ease infinite;
 }
 
 /* ============================================
-   25. ANALYSIS — BAR CHART RISE
+   43. ANALYSIS — BAR CHART RISE
    ============================================ */
 @keyframes barRise {
   from { height: 0% !important; }
 }
 .analysis-bar-fill {
-  animation: barRise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both, progressLife 3s ease-in-out infinite;
+  animation: barRise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both, progressLife 2.5s ease-in-out infinite;
 }
 
 /* ============================================
-   26. ANALYSIS — HEATMAP CELL HOVER
+   44. ANALYSIS — HEATMAP CELL
    ============================================ */
 .analysis-heatmap-cell {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .analysis-heatmap-cell:hover {
-  transform: scale(1.5);
+  transform: scale(1.6);
   z-index: 2;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 /* ============================================
-   27. HOME — HEATMAP TODAY GLOW
+   45. ANALYSIS — DONUT LEGEND DOTS
    ============================================ */
-@keyframes todayGlow {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 30%, transparent); }
-  50% { box-shadow: 0 0 12px 2px color-mix(in srgb, var(--color-accent-primary) 30%, transparent); }
-}
-.heatmap-cell.today {
-  animation: todayGlow 2s ease-in-out infinite;
-}
-
-/* ============================================
-   28. HOME — QUICK ACTION ICONS
-   ============================================ */
-@keyframes quickIconLife {
+@keyframes legendDotPulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.3); }
 }
-.quick-action-btn .qa-icon {
-  animation: quickIconLife 4s ease-in-out infinite;
-}
-
-/* ============================================
-   29. SIDEBAR — ACTIVE INDICATOR PULSE
-   ============================================ */
-@keyframes indicatorPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-.nav-item.active::before {
-  animation: indicatorPulse 3s ease-in-out infinite;
+.analysis-legend-dot {
+  animation: legendDotPulse 2.5s ease-in-out infinite;
 }
 
 /* ============================================
-   30. GLASS NOISE DRIFT
-   ============================================ */
-@keyframes noiseDrift {
-  from { background-position: 0 0; }
-  to { background-position: 128px 128px; }
-}
-.glass-noise::before {
-  animation: noiseDrift 30s linear infinite;
-}
-
-/* ============================================
-   31. PROFILE — AVATAR HOVER SPIN
-   ============================================ */
-@keyframes avatarSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.avatar:hover {
-  animation: avatarSpin 3s linear infinite;
-}
-
-/* ============================================
-   32. EMPTY STATE ICON
-   ============================================ */
-@keyframes emptyBreathe {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 0.7; }
-}
-.empty-state .empty-icon {
-  animation: emptyBreathe 3s ease-in-out infinite;
-}
-
-/* ============================================
-   33. SETTINGS ITEM SLIDE
+   46. SETTINGS — HOVER SLIDE
    ============================================ */
 .settings-item {
-  transition: transform 0.2s ease, padding-left 0.2s ease;
+  transition: transform 0.2s ease, padding-left 0.2s ease, background 0.2s ease;
 }
 .settings-item:hover {
-  transform: translateX(4px);
+  transform: translateX(6px);
+  background: var(--color-glass-hover);
 }
 
 /* ============================================
-   34. SCROLLBAR GLOW
-   ============================================ */
-::-webkit-scrollbar-thumb {
-  transition: background 0.3s ease;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--color-accent-primary) 40%, transparent) !important;
-}
-
-/* ============================================
-   35. RAKAT DIAL GLOW
-   ============================================ */
-@keyframes rakatGlow {
-  0%, 100% { box-shadow: 0 4px 15px rgba(99,102,241,0.4), 0 0 15px rgba(99,102,241,0.3); }
-  50% { box-shadow: 0 4px 25px rgba(99,102,241,0.6), 0 0 35px rgba(99,102,241,0.5); }
-}
-.rakat-dial-btn.active {
-  animation: rakatGlow 2s ease-in-out infinite;
-}
-
-/* ============================================
-   36. WITR TOGGLE GLOW
-   ============================================ */
-@keyframes witrGlow {
-  0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.4); }
-  50% { box-shadow: 0 0 20px rgba(251,191,36,0.7); }
-}
-.witr-toggle-circle.active {
-  animation: witrGlow 2s ease-in-out infinite;
-}
-
-/* ============================================
-   37. BOTTOM NAV ACTIVE DOT
-   ============================================ */
-@keyframes activeDotPulse {
-  0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
-  50% { transform: translateX(-50%) scale(1.5); opacity: 0.6; }
-}
-.bottom-nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-accent-primary);
-  animation: activeDotPulse 2s ease-in-out infinite;
-}
-
-/* ============================================
-   38. PRAYER TIME PILL — NEXT PULSE
-   ============================================ */
-@keyframes nextPillLife {
-  0%, 100% { box-shadow: 0 8px 24px rgba(167,139,250,0.15), inset 0 0 0 1.5px var(--color-border-active); }
-  50% { box-shadow: 0 8px 32px rgba(167,139,250,0.3), inset 0 0 0 1.5px var(--color-border-active); }
-}
-.prayer-time-pill.next {
-  animation: nextPillLife 3s ease-in-out infinite;
-}
-
-/* ============================================
-   39. HOME GREETING CARD RADIAL
-   ============================================ */
-@keyframes greetingRadial {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.2); opacity: 1; }
-}
-.home-greeting-card::before {
-  animation: greetingRadial 5s ease-in-out infinite;
-}
-
-/* ============================================
-   40. FORGE ACTION BTN SHIMMER
-   ============================================ */
-@keyframes forgeShimmer {
-  0% { transform: translateX(-100%); }
-  60%, 100% { transform: translateX(100%); }
-}
-.forge-action-btn::before {
-  animation: forgeShimmer 3s ease-in-out infinite;
-}
-
-/* ============================================
-   41. FINANCE TRANSACTION SLIDE-IN
-   ============================================ */
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(16px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-.finance-expense-item,
-.transaction-item {
-  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.finance-expense-item:nth-child(1),
-.transaction-item:nth-child(1) { animation-delay: 0s; }
-.finance-expense-item:nth-child(2),
-.transaction-item:nth-child(2) { animation-delay: 0.05s; }
-.finance-expense-item:nth-child(3),
-.transaction-item:nth-child(3) { animation-delay: 0.1s; }
-.finance-expense-item:nth-child(4),
-.transaction-item:nth-child(4) { animation-delay: 0.15s; }
-.finance-expense-item:nth-child(5),
-.transaction-item:nth-child(5) { animation-delay: 0.2s; }
-
-/* ============================================
-   42. DHIKR GOLD BTN GLOW
-   ============================================ */
-@keyframes goldGlow {
-  0%, 100% { box-shadow: 0 4px 12px rgba(251,191,36,0.2); }
-  50% { box-shadow: 0 4px 20px rgba(251,191,36,0.4); }
-}
-#dhikr-add-modal .btn-gold {
-  animation: goldGlow 3s ease-in-out infinite;
-}
-
-/* ============================================
-   43. HOME QUOTE ARABIC GLOW
-   ============================================ */
-@keyframes arabicGlow {
-  0%, 100% { text-shadow: 0 0 12px rgba(240,196,86,0.3); }
-  50% { text-shadow: 0 0 24px rgba(240,196,86,0.5); }
-}
-.quote-arabic {
-  animation: arabicGlow 4s ease-in-out infinite;
-}
-
-/* ============================================
-   44. DATE CHIP GLOW
-   ============================================ */
-@keyframes dateChipGlow {
-  0%, 100% { border-color: var(--color-border); }
-  50% { border-color: color-mix(in srgb, var(--color-accent-primary) 30%, var(--color-border)); }
-}
-.date-chip {
-  animation: dateChipGlow 5s ease-in-out infinite;
-}
-
-/* ============================================
-   45. SETTINGS GROUP BORDER
+   47. SETTINGS GROUP — BORDER HOVER
    ============================================ */
 .settings-group {
   border-left: 2px solid transparent;
   transition: border-left-color 0.3s ease;
 }
 .settings-group:hover {
-  border-left-color: color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-left-color: color-mix(in srgb, var(--color-accent-primary) 35%, transparent);
 }
 
 /* ============================================
-   46. PRAYER EMOJI BOUNCE
+   48. PROFILE — AVATAR HOVER SPIN
    ============================================ */
-@keyframes emojiBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+@keyframes avatarSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
-.salah-prayer-emoji {
-  display: inline-block;
-  animation: emojiBounce 4s ease-in-out infinite;
+.avatar:hover {
+  animation: avatarSpin 2.5s linear infinite;
 }
 
 /* ============================================
-   47. FINANCE SAVINGS SLIDE-IN
+   49. EMPTY STATE ICON
    ============================================ */
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
+@keyframes emptyBreathe {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.08); opacity: 0.75; }
 }
-.finance-savings-item {
-  animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+.empty-state .empty-icon {
+  animation: emptyBreathe 2.5s ease-in-out infinite;
 }
 
 /* ============================================
-   48. ANALYSIS LEGEND DOT PULSE
+   50. SCROLLBAR GLOW
    ============================================ */
-@keyframes legendDotPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+::-webkit-scrollbar-thumb {
+  transition: background 0.3s ease;
 }
-.analysis-legend-dot {
-  animation: legendDotPulse 3s ease-in-out infinite;
-}
-
-/* ============================================
-   49. SALAH CALENDAR TODAY PULSE
-   ============================================ */
-@keyframes todayOutlinePulse {
-  0%, 100% { outline-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent); }
-  50% { outline-color: var(--color-accent-primary); }
-}
-.salah-cal-cell.today {
-  animation: todayOutlinePulse 2s ease-in-out infinite;
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-accent-primary) 45%, transparent) !important;
 }
 
 /* ============================================
-   50. REDUCED MOTION GUARD
+   51. REDUCED MOTION GUARD
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
+  #section-home::before, #section-salah::before, #section-dhikr::before,
+  #section-nafl::before, #section-analysis::before, #section-mujahid::before,
+  #section-finance::before, #section-profile::before,
   .card, .card-glass, .settings-group, .dhikr-preset-card,
   .nafl-card-modern, .goal-card, .salah-prayer-card,
   .analysis-stat-card, .finance-summary-card, .finance-section,
@@ -669,13 +652,16 @@
   .bnav-icon svg, .nav-icon svg,
   .section-icon svg, .quick-action-btn .qa-icon,
   .btn, .badge, .salah-stat-icon,
-  .empty-state .empty-icon,
-  .spirit-score-val,
-  .analysis-stat-num,
-  .quote-arabic,
-  .date-chip,
-  .avatar:hover {
+  .empty-state .empty-icon, .spirit-score-val,
+  .analysis-stat-num, .quote-arabic,
+  .date-chip, .avatar:hover,
+  .topbar-logo-orb, .topbar-brand-name {
     animation: none !important;
     transition-duration: 0.01ms !important;
+  }
+  #section-home::before, #section-salah::before, #section-dhikr::before,
+  #section-nafl::before, #section-analysis::before, #section-mujahid::before,
+  #section-finance::before, #section-profile::before {
+    display: none;
   }
 }
