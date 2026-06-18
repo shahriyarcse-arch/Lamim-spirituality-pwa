@@ -328,7 +328,7 @@ const Salah = {
     if (score.done === 5) {
       setTimeout(() => {
         Utils.toast('🎉 MashaAllah! All 5 farz prayers logged!', 'success');
-        Utils.Lively.confetti();
+        Utils.confetti();
       }, 500);
     }
   },

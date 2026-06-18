@@ -402,50 +402,34 @@ const UI = {
     });
   },
 
-  /* ============ LIVELY MICRO-ANIMATIONS ============ */
-  Lively: {
-    initStagger(container) {
-      if (!container) return;
-      setTimeout(() => {
-        container.classList.add('stagger-in');
-      }, 100);
-    },
+  /* ============ SPARKLE / CONFETTI ============ */
+  sparkle(el, count = 8) {
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('div');
+      dot.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:30000;background:${['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c'][i%6]};`;
+      const angle = (i / count) * 360;
+      const dist = 40 + Math.random() * 30;
+      dot.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+      dot.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+      dot.style.animation = `sparkleFly 0.6s cubic-bezier(.25,.46,.45,.94) forwards`;
+      dot.style.animationDelay = `${i * 0.03}s`;
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 800);
+    }
+  },
 
-    bounceCount(el) {
-      if (!el) return;
-      el.classList.remove('count-bounce');
-      void el.offsetWidth;
-      el.classList.add('count-bounce');
-    },
-
-    sparkle(el, count = 8) {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      for (let i = 0; i < count; i++) {
-        const dot = document.createElement('div');
-        dot.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:30000;background:${['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c'][i%6]};`;
-        const angle = (i / count) * 360;
-        const dist = 40 + Math.random() * 30;
-        dot.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
-        dot.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-        dot.style.animation = `sparkleFly 0.6s cubic-bezier(.25,.46,.45,.94) forwards`;
-        dot.style.animationDelay = `${i * 0.03}s`;
-        document.body.appendChild(dot);
-        setTimeout(() => dot.remove(), 800);
-      }
-    },
-
-    confetti(count = 30) {
-      const colors = ['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c','#f87171','#34d399'];
-      for (let i = 0; i < count; i++) {
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-        piece.style.cssText = `left:${Math.random() * 100}vw;background:${colors[i%colors.length]};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;border-radius:${Math.random()>0.5?'50%':'2px'};animation-delay:${Math.random()*0.5}s;animation-duration:${1.5+Math.random()*1.5}s;`;
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 3000);
-      }
+  confetti(count = 30) {
+    const colors = ['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c','#f87171','#34d399'];
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `left:${Math.random() * 100}vw;background:${colors[i%colors.length]};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;border-radius:${Math.random()>0.5?'50%':'2px'};animation-delay:${Math.random()*0.5}s;animation-duration:${1.5+Math.random()*1.5}s;`;
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 3000);
     }
   }
 };

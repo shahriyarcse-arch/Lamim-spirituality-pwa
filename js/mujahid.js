@@ -1418,7 +1418,7 @@ const Mujahid = {
     const today = Utils.todayStr();
     if (!habit.history) habit.history = [];
 
-    Utils.Lively.sparkle(document.querySelector('.mujahid-main-btn') || document.body);
+    Utils.sparkle(document.querySelector('.mujahid-main-btn') || document.body);
     
     const existingToday = habit.history.find(h => h.date === today);
     if (existingToday) {
@@ -1436,7 +1436,7 @@ const Mujahid = {
     const streak = this.calcStreak(habit);
     if (streak > 0 && streak % 7 === 0) {
       setTimeout(() => {
-        Utils.Lively.confetti(30);
+        Utils.confetti(30);
         Utils.toast(`🎉 ${streak}-day streak! MashaAllah!`, 'success');
       }, 400);
     }
