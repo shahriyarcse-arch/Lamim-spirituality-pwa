@@ -58,12 +58,12 @@ const Home = {
 
     const el = document.getElementById('home-greeting');
     if (el) el.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 2px;">
-        <h2 style="font-size: 1.3rem; font-weight: 700; line-height: 1.2; margin: 0; color: var(--home-salam-color);">
+      <div class="home-greeting-card" style="display: flex; flex-direction: column; gap: 2px;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--home-salam-color); letter-spacing: -0.3px;">
           ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px; opacity:0.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
         </h2>
-        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--color-accent-primary); opacity:0.8;">
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--color-accent-primary);">
           ${window.t ? window.t(greet) : greet}
         </div>
       </div>
@@ -105,21 +105,26 @@ const Home = {
     }
 
     // Next prayer banner
+    // Wrap in reveal container
+    const npContainer = document.getElementById('home-next-prayer');
+    if (npContainer) npContainer.classList.add('home-reveal', 'revealed');
+
     this.startNextPrayerCountdown();
 
-    // Salah ring
+    // Salah ring (inside the card - add reveal to the parent)
     this.renderSalahRing();
 
     // 1. Path to Ihsan (Level Progress Bar)
+    const lvlContainer = document.getElementById('home-level-progress-container');
+    if (lvlContainer) lvlContainer.classList.add('home-reveal', 'revealed', 'home-reveal-delay-2');
+
     this.renderIhsanLevel();
 
     // 3. Spiritual Pulse (Micro-Graph)
     this.renderSpiritualPulse();
 
-    // 4. AI Spiritual Insight
+    // 4. AI Spiritual Insight (reveal class added inside renderAIInsight)
     this.renderAIInsight();
-
-
 
     // 5. Nur Particles (Subtle Animation)
     this.renderNurParticles();
@@ -153,20 +158,28 @@ const Home = {
     const prog = diff > 0 ? ((shs.total - current.min) / diff) * 100 : 100;
 
     container.innerHTML = `
-      <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:flex-end">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:flex-end">
         <div style="display:flex; flex-direction:column">
-          <span style="font-size:9px; font-weight:800; opacity:0.5; text-transform:uppercase; letter-spacing:1px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
-          <span style="font-size:15px; font-weight:900; color:${shs.rating.color}">${window.t ? window.t(current.label) : current.label}</span>
+          <span style="font-size:8px; font-weight:800; opacity:0.45; text-transform:uppercase; letter-spacing:1.2px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
+          <span style="font-size:16px; font-weight:900; color:${shs.rating.color}; letter-spacing:-0.3px;">${window.t ? window.t(current.label) : current.label}</span>
         </div>
         <div style="text-align:right; display:flex; flex-direction:column">
-          <span style="font-size:9px; font-weight:800; color:var(--color-text-muted); text-transform:uppercase; opacity:0.8">${window.t ? window.t('Next') : 'Next'}: ${window.t ? window.t(next.label) : next.label}</span>
-          <span style="font-size:11px; font-weight:700; color:var(--color-text-secondary)">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
+          <span style="font-size:9px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.5px">${window.t ? window.t('Next') : 'Next'}: <span style="color:var(--color-accent-gold);">${window.t ? window.t(next.label) : next.label}</span></span>
+          <span style="font-size:12px; font-weight:800; color:${shs.rating.color}; margin-top:2px;">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
         </div>
       </div>
-      <div style="height:6px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible">
-        <div style="width:${prog}%; height:100%; background:linear-gradient(90deg, ${shs.rating.color}, var(--color-accent-gold)); border-radius:10px; position:relative; box-shadow:0 0 12px ${shs.rating.color}50">
-          <div style="position:absolute; right:-5px; top:-4px; width:14px; height:14px; background:var(--color-bg-elevated); border-radius:50%; border:3px solid ${shs.rating.color}; box-shadow:0 0 10px ${shs.rating.color}"></div>
+      <div style="height:8px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible; margin-top:4px;">
+        <div style="width:${prog}%; height:100%; background:linear-gradient(90deg, ${shs.rating.color}, var(--color-accent-gold)); border-radius:10px; position:relative; box-shadow:0 0 16px ${shs.rating.color}40; transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);">
+          <div style="position:absolute; right:-6px; top:-5px; width:18px; height:18px; background:var(--color-bg-elevated); border-radius:50%; border:3px solid ${shs.rating.color}; box-shadow:0 0 14px ${shs.rating.color};"></div>
         </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:8px; padding:0 2px;">
+        ${ranks.map((r, idx) => `
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+            <div style="width:8px; height:8px; border-radius:50%; background:${idx <= curIdx ? shs.rating.color : 'var(--color-divider-subtle)'}; border:2px solid ${idx <= curIdx ? shs.rating.color : 'var(--color-border)'}; box-shadow:${idx <= curIdx ? `0 0 8px ${shs.rating.color}60` : 'none'}; transition:all 0.5s ease;"></div>
+            <span style="font-size:6px; font-weight:700; color:${idx === curIdx ? shs.rating.color : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.3px; opacity:${idx <= curIdx ? 1 : 0.4};">${window.t ? window.t(r.label.substring(0, 4)) : r.label.substring(0, 4)}</span>
+          </div>
+        `).join('')}
       </div>
     `;
   },
@@ -247,24 +260,24 @@ const Home = {
            opacity: 0;
            filter: blur(5px);
            transform: translateY(5px);
-           transition: none; /* Disable transition instantly to snap to start position */
+           transition: none;
         }
         .ai-insight-icon-wrap {
            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease;
         }
         .ai-insight-icon-wrap.pulse {
-           transform: scale(1.1);
+           transform: scale(1.1) rotate(5deg);
            box-shadow: 0 0 25px rgba(167,139,250,0.6) !important;
         }
       </style>
-      <div class="card" style="background:linear-gradient(135deg, rgba(167,139,250,0.1) 0%, rgba(192,132,252,0.05) 100%); border:1px solid rgba(167,139,250,0.15); padding:16px; display:flex; align-items:center; gap:16px; backdrop-filter:blur(10px)">
-        <div id="home-insight-icon" class="ai-insight-icon-wrap" style="width:36px; height:36px; background:var(--color-accent-primary); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 15px rgba(167,139,250,0.3)">
+      <div class="card ai-insight-premium home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(192,132,252,0.03) 100%); padding:18px 20px; display:flex; align-items:center; gap:16px;">
+        <div id="home-insight-icon" class="ai-insight-icon-wrap" style="width:38px; height:38px; background:linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-teal)); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 20px rgba(167,139,250,0.25);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg-primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         </div>
-        <div style="display:flex; flex-direction:column; gap:2px; flex: 1;">
+        <div style="display:flex; flex-direction:column; gap:3px; flex: 1;">
           <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-accent-primary)">${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</span>
           <div style="min-height: 34px; display: flex; align-items: center;">
-            <p id="home-insight-text" class="ai-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.4; color:var(--color-text-secondary)">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
+            <p id="home-insight-text" class="ai-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.45; color:var(--color-text-secondary)">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
           </div>
         </div>
       </div>
@@ -416,17 +429,30 @@ const Home = {
 
     // Ensure structure is always fresh and premium
     el.innerHTML = `
-      <div class="card" style="margin-bottom:var(--space-6); padding: 18px 20px;">
-        <div style="font-size:10px; font-weight:700; opacity:0.35; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
-        <div style="display:grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;">
+      <div class="card next-prayer-premium home-reveal revealed" style="margin-bottom:var(--space-6); padding: 20px 22px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
+          <div style="display:flex; align-items:center; gap:4px; font-size:9px; font-weight:700; color:var(--color-accent-gold);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>${window.t ? window.t('Tracked') : 'Tracked'}</span>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px;">
           <div>
-            <div id="home-next-name" style="font-size:1.6rem; font-weight:800; color:var(--home-time-color); line-height:1; margin-bottom:4px; text-transform:capitalize;">${window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-            <div id="home-next-time" style="font-size:13px; font-weight:600; opacity:0.55;">${window.n ? window.n(next.timeStr) : next.timeStr}</div>
+            <div id="home-next-name" class="next-prayer-glow" style="font-size:1.7rem; font-weight:900; color:var(--home-time-color); line-height:1.1; margin-bottom:6px; text-transform:capitalize; letter-spacing:-0.5px;">${window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+            <div id="home-next-time" style="font-size:13px; font-weight:600; color:var(--color-text-muted); display:flex; align-items:center; gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${window.n ? window.n(next.timeStr) : next.timeStr}
+            </div>
           </div>
           <div style="display: flex; flex-direction: column; align-items: center;">
-            <div id="home-countdown" style="font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
-            <div style="font-size: 10px; font-weight: 600; color: var(--color-text-muted); margin-top: 5px; opacity: 0.8;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
+            <div id="home-countdown" class="countdown-premium" style="font-size: 2rem; font-weight: 900; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
+            <div style="font-size: 9px; font-weight: 700; color: var(--color-text-muted); margin-top: 6px; text-transform:uppercase; letter-spacing:0.8px;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
           </div>
+        </div>
+        <!-- Countdown progress bar -->
+        <div style="margin-top:14px; height:3px; background:var(--color-divider-subtle); border-radius:10px; overflow:hidden;">
+          <div id="home-countdown-bar" style="width:100%; height:100%; background:linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-gold)); border-radius:10px; transition:width 1s linear;"></div>
         </div>
       </div>
     `;
@@ -442,6 +468,7 @@ const Home = {
     if (this.countdownRAF) cancelAnimationFrame(this.countdownRAF);
 
     let lastCountdown = '';
+    let lastPct = -1;
     const tickCountdown = () => {
       // FIX #3: Fully stop when Home is not active (will restart via init)
       if (!document.getElementById('section-home')?.classList.contains('active')) {
@@ -467,6 +494,21 @@ const Home = {
         const cdEl = document.getElementById('home-countdown');
         if (cdEl) cdEl.textContent = window.n ? window.n(cd) : cd;
       }
+
+      // Countdown progress bar: elapsed time between previous and next prayer
+      const nowMs = Date.now();
+      const nIdx = t.findIndex(p => p.time.getTime() === n.time.getTime());
+      const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : n.time.getTime() - 86400000);
+      const totalGap = n.time.getTime() - prevTime;
+      if (totalGap > 0 && totalGap < 86400000) {
+        const elapsed = nowMs - prevTime;
+        const pct = Math.max(0, Math.min(100, (elapsed / totalGap) * 100));
+        if (Math.abs(pct - lastPct) > 0.5) {
+          lastPct = pct;
+          const bar = document.getElementById('home-countdown-bar');
+          if (bar) bar.style.width = pct + '%';
+        }
+      }
       this.countdownRAF = requestAnimationFrame(tickCountdown);
     };
     this.countdownRAF = requestAnimationFrame(tickCountdown);
@@ -483,22 +525,24 @@ const Home = {
     const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
     // Ensure structure is always fresh
     el.innerHTML = `
-      <div class="ring-chart" style="width:140px;height:140px">
-        <svg width="140" height="140" viewBox="0 0 140 140">
-          <circle class="ring-chart-bg" cx="70" cy="70" r="54" stroke-width="12"/>
-          <circle class="ring-chart-fill" id="salah-ring-fill" cx="70" cy="70" r="54" stroke-width="12"
-            stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1s ease"/>
-        </svg>
-        <div class="ring-chart-label">
-          <div id="salah-ring-count" style="font-size:2rem;font-weight:800">0</div>
-          <div style="font-size:0.7rem;color:var(--color-text-muted)">${window.t ? window.t('of 5') : 'of 5'}</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div class="salah-ring-premium ring-chart" style="width:160px;height:160px">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="ring-chart-bg" cx="80" cy="80" r="62" stroke-width="14"/>
+            <circle class="ring-chart-fill" id="salah-ring-fill" cx="80" cy="80" r="62" stroke-width="14"
+              stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)"/>
+          </svg>
+          <div class="ring-chart-label">
+            <div id="salah-ring-count" style="font-size:2.4rem;font-weight:900;line-height:1">0</div>
+            <div style="font-size:0.7rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
+          </div>
         </div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:var(--text-lg);font-weight:700">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
-        <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px">${window.n ? window.n('0/5') : '0/5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
-        <div class="progress-bar mt-2" style="width:140px">
-          <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>
+        <div style="text-align:center;width:100%;">
+          <div style="font-size:var(--text-md);font-weight:800;letter-spacing:-0.3px;">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
+          <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px;font-weight:500;">${window.n ? window.n('0/5') : '0/5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
+          <div class="progress-bar mt-2" style="width:140px;margin:10px auto 0;">
+            <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>
+          </div>
         </div>
       </div>
     `;
