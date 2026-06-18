@@ -29,7 +29,7 @@ const DuaBoard = {
       dua.answered = true;
       dua.answeredDate = Utils.todayStr();
       this.save(duas);
-      Utils.confetti(16);
+      Utils.Lively.confetti(16);
       window.dispatchEvent(new CustomEvent('lamim:data-updated'));
       Utils.toast('Dua answered! Alhamdulillah! 🤲✨', 'success');
     }

@@ -217,25 +217,7 @@ const Utils = {
     setTimeout(() => { el.classList.add('hiding'); setTimeout(() => el.remove(), 350); }, duration);
   },
 
-  // Confetti
-  confetti() {
-    const colors = ['#d4a843','#f0c456','#3fb950','#58a6ff','#bc8cff','#f85149'];
-    for (let i = 0; i < 60; i++) {
-      setTimeout(() => {
-        const el = document.createElement('div');
-        el.className = 'confetti-piece';
-        const size = Math.random() * 10 + 6;
-        el.style.cssText = `
-          left:${Math.random()*100}vw; width:${size}px; height:${size}px;
-          background:${colors[Math.floor(Math.random()*colors.length)]};
-          animation-delay:${Math.random()*1}s;
-          animation-duration:${2 + Math.random()*1.5}s;
-        `;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 4000);
-      }, i * 30);
-    }
-  },
+
 
   // Date display
   getDayName(dateStr) {
@@ -373,52 +355,6 @@ const UI = {
     this.closeModal(document.getElementById('section-settings-modal'));
   },
 
-  /** Create sparkle particles at a given element */
-  sparkle(el, count = 6) {
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      const angle = (Math.PI * 2 * i) / count;
-      const dist = 30 + Math.random() * 30;
-      const size = 3 + Math.random() * 4;
-      p.style.cssText = `
-        position:fixed; left:${cx}px; top:${cy}px; width:${size}px; height:${size}px;
-        background:${['#fbbf24','#a78bfa','#34d399','#f472b6','#38bdf8'][i % 5]};
-        border-radius:50%; pointer-events:none; z-index:99999;
-        animation:sparkleFly 0.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
-        --tx:${Math.cos(angle) * dist}px; --ty:${Math.sin(angle) * dist}px;
-      `;
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 650);
-    }
-  },
-
-  /** Trigger celebration confetti at center of screen */
-  confetti(count = 20) {
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 3;
-    const colors = ['#fbbf24','#a78bfa','#34d399','#f472b6','#38bdf8','#fb923c','#34d399'];
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
-      const dist = 80 + Math.random() * 120;
-      const size = 4 + Math.random() * 4;
-      const rot = Math.random() * 720;
-      p.style.cssText = `
-        position:fixed; left:${cx}px; top:${cy}px; width:${size}px; height:${size * 1.5}px;
-        background:${colors[i % colors.length]}; border-radius:2px; pointer-events:none; z-index:99999;
-        animation:sparkleFly 1s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
-        --tx:${Math.cos(angle) * dist}px; --ty:${Math.sin(angle) * dist + 30}px;
-        transform:rotate(${rot}deg);
-      `;
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 1050);
-    }
-  },
-
   /** Animate modal close with exit animation before hiding */
   closeModal(el) {
     if (!el || el.classList.contains('hidden')) return;
@@ -464,5 +400,63 @@ const UI = {
 
       document.head.appendChild(script);
     });
+  },
+
+  /* ============ LIVELY MICRO-ANIMATIONS ============ */
+  Lively: {
+    initStagger(container, selector = '.card, .salah-prayer-card, .dhikr-preset-card, .nafl-card-modern, .goal-card, .settings-item, .finance-expense-item, .analysis-stat-card, .mujahid-history-item') {
+      if (!container) return;
+      const items = container.querySelectorAll(selector);
+      if (items.length < 2) return;
+      items.forEach(el => {
+        if (!el.classList.contains('stagger-ready')) {
+          el.style.opacity = '0';
+          el.classList.add('stagger-ready');
+        }
+      });
+      requestAnimationFrame(() => {
+        items.forEach((el, i) => {
+          el.style.setProperty('--i', i);
+          setTimeout(() => { el.style.opacity = ''; }, 10);
+        });
+      });
+    },
+
+    bounceCount(el) {
+      if (!el) return;
+      el.classList.remove('count-bounce');
+      void el.offsetWidth;
+      el.classList.add('count-bounce');
+    },
+
+    sparkle(el, count = 8) {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:30000;background:${['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c'][i%6]};`;
+        const angle = (i / count) * 360;
+        const dist = 40 + Math.random() * 30;
+        dot.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        dot.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+        dot.style.animation = `sparkleFly 0.6s cubic-bezier(.25,.46,.45,.94) forwards`;
+        dot.style.animationDelay = `${i * 0.03}s`;
+        document.body.appendChild(dot);
+        setTimeout(() => dot.remove(), 800);
+      }
+    },
+
+    confetti(count = 30) {
+      const colors = ['#fbbf24','#a78bfa','#34d399','#f472b6','#60a5fa','#fb923c','#f87171','#34d399'];
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.cssText = `left:${Math.random() * 100}vw;background:${colors[i%colors.length]};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;border-radius:${Math.random()>0.5?'50%':'2px'};animation-delay:${Math.random()*0.5}s;animation-duration:${1.5+Math.random()*1.5}s;`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3000);
+      }
+    }
   }
 };

@@ -187,7 +187,7 @@ const Dhikr = {
 
     // Sparkle
     const btn = document.getElementById('dhikr-tap-btn');
-    if (btn) Utils.sparkle(btn, 4);
+    if (btn) Utils.Lively.sparkle(btn, 4);
 
     // Haptic
     if (navigator.vibrate) navigator.vibrate(25);

@@ -353,6 +353,9 @@ const App = {
     const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, profile: Profile, mujahid: Mujahid, finance: Finance };
     inits[sectionId]?.init();
 
+    // Stagger entrance for new section content
+    if (newPanel) Utils.Lively.initStagger(newPanel);
+
     // Close sidebar on mobile
     if (window.innerWidth <= 1024) this.closeSidebar();
 
