@@ -214,6 +214,7 @@ const App = {
     this.bindNav();
     this.bindSidebarToggle();
     this.bindInstallPrompt();
+    this.bindConnectivity();
 
     // Ensure setup form is always bound
     if (typeof Auth !== 'undefined') Auth.init();
@@ -462,6 +463,15 @@ const App = {
     const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, profile: Profile, mujahid: Mujahid, finance: Finance };
     if (inits[s]) inits[s].init();
     this.updateAvatars();
+  },
+
+  bindConnectivity() {
+    const showToast = (msg, type) => {
+      if (typeof Utils !== 'undefined' && Utils.toast) Utils.toast(msg, type);
+    };
+    window.addEventListener('offline', () => showToast('You are offline', 'error'));
+    window.addEventListener('online', () => showToast('Back online', 'success'));
+    if (!navigator.onLine) showToast('You are offline', 'error');
   }
 };
 
