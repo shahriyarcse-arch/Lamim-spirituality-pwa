@@ -181,24 +181,7 @@
   50%      { box-shadow: 0 0 70px var(--aura-color, #a78bfa), 0 0 120px color-mix(in srgb, var(--aura-color, #a78bfa) 40%, transparent); }
 }
 
-/* Shimmer on countdown bar */
-#home-countdown-bar {
-  background-size: 200% 100%;
-  animation: barShimmer 3s linear infinite !important;
-}
 
-@keyframes barShimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* Shimmer on progress bars */
-.progress-fill,
-.nafl-progress-bar,
-.vault-progress-fill {
-  background-size: 200% 100%;
-  animation: barShimmer 4s linear infinite !important;
-}
 
 /* Ambient glow on nav active items */
 .nav-item.active .nav-icon svg,

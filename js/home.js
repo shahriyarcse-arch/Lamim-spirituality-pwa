@@ -534,7 +534,7 @@ const Home = {
         </div>
         <!-- Countdown progress bar -->
         <div style="margin-top:14px; height:3px; background:var(--color-divider-subtle); border-radius:10px; overflow:hidden;">
-          <div id="home-countdown-bar" style="width:100%; height:100%; background:linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-gold)); border-radius:10px; transition:width 1s linear;"></div>
+          <div id="home-countdown-bar" style="width:0%; height:100%; background:linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-gold)); border-radius:10px;"></div>
         </div>
       </div>
     `;
