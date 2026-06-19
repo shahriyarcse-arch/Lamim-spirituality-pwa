@@ -183,9 +183,8 @@
 
 
 
-/* Ambient glow on nav active items */
-.nav-item.active .nav-icon svg,
-.bottom-nav-item.active .bnav-icon svg {
+/* Ambient glow on sidebar nav active items */
+.nav-item.active .nav-icon svg {
   filter: drop-shadow(0 0 8px var(--section-accent, #10B981));
   transition: filter 0.4s var(--cb-smooth);
 }
@@ -406,7 +405,33 @@
   to   { height: 24px; opacity: 1; }
 }
 
-/* ---- BOTTOM NAV ---- */
+/* ---- BOTTOM NAV — LIVELY PER-SECTION COLORS ---- */
+.bottom-nav-item {
+  transition: transform 0.35s var(--cb-spring),
+              color 0.3s var(--cb-smooth),
+              background 0.3s var(--cb-smooth) !important;
+}
+
+.bottom-nav-item.active {
+  animation: bnavActivePop 0.4s var(--cb-bounce) both;
+}
+
+@keyframes bnavActivePop {
+  0%   { transform: scale(0.95); }
+  50%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.bottom-nav-item.active .bnav-icon {
+  animation: bnavIconSpring 0.45s var(--cb-bounce) both;
+}
+
+@keyframes bnavIconSpring {
+  0%   { transform: scale(1) translateY(0); }
+  40%  { transform: scale(1.3) translateY(-4px); }
+  100% { transform: scale(1.2) translateY(-2px); }
+}
+
 .bottom-nav-item.active::after {
   content: '';
   position: absolute;
@@ -417,12 +442,39 @@
   height: 3px;
   border-radius: 4px;
   background: var(--section-accent, #10B981);
-  animation: bottomNavIndicate 0.3s var(--cb-spring) both;
+  animation: bottomNavIndicate 0.35s var(--cb-spring) both;
 }
 
 @keyframes bottomNavIndicate {
   from { width: 0; opacity: 0; }
   to   { width: 20px; opacity: 1; }
+}
+
+@media (hover: hover) {
+  .bottom-nav-item:not(.active):hover {
+    transform: translateY(-2px);
+  }
+  .bottom-nav-item:not(.active):hover .bnav-icon {
+    transform: scale(1.1);
+  }
+  .bottom-nav-item:not(.active):active .bnav-icon {
+    transform: scale(0.9);
+    transition-duration: 0.08s;
+  }
+  .bottom-nav-item.active:active .bnav-icon {
+    transform: scale(1.05) translateY(-1px);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Fallback for browsers without color-mix */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .bottom-nav-item.active {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  [data-theme="light"] .bottom-nav-item.active {
+    background: rgba(99, 102, 241, 0.06);
+  }
 }
 
 /* ---- STREAK COUNTER BOUNCE ---- */
