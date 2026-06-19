@@ -138,7 +138,7 @@ const DB = {
     if (!this._db) return;
     try {
       const transaction = this._db.transaction(['keyvalue'], 'readwrite');
-      const store = transaction.objectStore(['keyvalue']);
+      const store = transaction.objectStore('keyvalue');
       const req = store.put(val, key);
       
       req.onerror = (e) => {
@@ -159,7 +159,7 @@ const DB = {
     if (!this._db) return;
     try {
       const transaction = this._db.transaction(['keyvalue'], 'readwrite');
-      const store = transaction.objectStore(['keyvalue']);
+      const store = transaction.objectStore('keyvalue');
       store.delete(key);
     } catch (e) {
       console.error(`[DB] Async delete failed for key: ${key}`, e);
@@ -170,7 +170,7 @@ const DB = {
     if (!this._db) return;
     try {
       const transaction = this._db.transaction(['keyvalue'], 'readwrite');
-      const store = transaction.objectStore(['keyvalue']);
+      const store = transaction.objectStore('keyvalue');
       store.clear();
     } catch (e) {
       console.error('[DB] Async clear failed:', e);
