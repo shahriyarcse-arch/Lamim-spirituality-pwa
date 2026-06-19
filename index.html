@@ -1275,24 +1275,6 @@
   <script src="js/prayer-notifier.js?v=2" defer></script>
   <script src="js/app.js?v=137" defer></script>
 
-  <!-- Service Worker Registration handled in app.js -->
-  <script>
-
-    function forceClearCache() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-          }
-          alert('Cache Destroyed! The app will now reload.');
-          window.location.reload(true);
-        });
-      } else {
-        window.location.reload(true);
-      }
-    }
-  </script>
-
 </div>
 <div id="salah-print-report"></div>
 
