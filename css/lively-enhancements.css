@@ -596,7 +596,7 @@
   }
 }
 
-/* ---- HOME — LIVELY MICRO-ANIMATIONS ---- */
+/* ---- HOME — NATURAL (NO AUTO-GLOW) ---- */
 
 /* FIXED home-reveal staggered delays (already in HTML, ensure CSS works) */
 .home-reveal-delay-1 { animation-delay: 0.05s !important; }
@@ -607,55 +607,6 @@
 /* Countdown number gentle morph on update */
 #home-countdown {
   transition: transform 0.12s var(--cb-bounce), color 0.3s var(--cb-smooth) !important;
-}
-
-/* Next prayer card — ambient breathing glow */
-.next-prayer-premium {
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.5s var(--cb-smooth) !important;
-}
-.next-prayer-premium::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--home-time-color, #10B981), var(--home-name-color, #a78bfa));
-  opacity: 0.08;
-  z-index: -1;
-  animation: npAmbient 4s var(--cb-smooth) infinite;
-  pointer-events: none;
-}
-@keyframes npAmbient {
-  0%, 100% { opacity: 0.06; }
-  50%      { opacity: 0.12; }
-}
-
-/* Ring container — subtle float only (no glow) */
-.salah-ring-premium {
-  animation: ringFloat 5s var(--cb-smooth) infinite;
-}
-@keyframes ringFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-2px); }
-}
-
-/* Level progress knob glow */
-#home-level-progress-container > div > div > div[style*="border:3px solid"] {
-  animation: progKnobPulse 2.5s ease-in-out infinite;
-}
-@keyframes progKnobPulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.15); }
-}
-
-/* Streak badge — gentle shimmer */
-.streak-badge {
-  animation: streakBreathe 4s var(--cb-smooth) infinite;
-}
-@keyframes streakBreathe {
-  0%, 100% { box-shadow: 0 0 0 rgba(212,168,67,0); }
-  50%      { box-shadow: 0 0 16px rgba(212,168,67,0.15); }
 }
 
 /* Weekly pulse graph — already animated via SVG <animate> */
