@@ -123,7 +123,7 @@ const Profile = {
     `;
 
     // Prayer settings
-    const METHOD_LABELS = { mwl: 'Muslim World League', isna: 'ISNA', umm_al_qurra: 'Umm al-Qura', egypt: 'Egypt', karachi: 'Karachi', tehran: 'Tehran' };
+    const METHOD_LABELS = { mwl: 'Muslim World League', isna: 'ISNA', umm_al_qurra: 'Umm al-Qura', egypt: 'Egypt', karachi: 'Karachi' };
     const ps = document.getElementById('profile-prayer-settings');
     if (ps) ps.innerHTML = `
       <div class="settings-item" onclick="Profile.toggleJumuahMode()">
@@ -140,15 +140,6 @@ const Profile = {
           <select class="input" onchange="Profile.saveSetting('calcMethod',this.value)">
             ${Object.entries(METHOD_LABELS).map(([k,v]) => `<option value="${k}" ${settings.calcMethod===k?'selected':''}>${v}</option>`).join('')}
           </select>
-        </div>
-      </div>
-      <div class="settings-item" style="cursor:default">
-        <div class="settings-item-left"><div class="settings-item-icon ic-amber">${icons.sun}</div><div><div class="settings-item-label">Asr Method</div></div></div>
-        <div class="settings-item-right">
-          <div class="lang-toggle-pill">
-            <button class="${settings.asrMethod==='hanafi'?'active':''}" onclick="Profile.saveSetting('asrMethod','hanafi')">Hanafi</button>
-            <button class="${settings.asrMethod==='shafi'?'active':''}" onclick="Profile.saveSetting('asrMethod','shafi')">Shafi\u02BEi</button>
-          </div>
         </div>
       </div>
     `;
@@ -348,7 +339,7 @@ const Profile = {
     const s = DB.getSettings();
     s[key] = val;
     DB.setSettings(s);
-    if (key === 'calcMethod' || key === 'asrMethod') {
+    if (key === 'calcMethod') {
       Utils._cachedTimesAt = 0;
       if (typeof Home !== 'undefined') Home.render();
     }

@@ -149,7 +149,6 @@ const Utils = {
       umm_al_qurra: { fajr: 18.5, isha: null, ishaMin: 90, label: 'Umm al-Qura' },
       egypt:        { fajr: 19.5, isha: 17.5, label: 'Egypt' },
       karachi:      { fajr: 18,   isha: 18,   label: 'Karachi' },
-      tehran:       { fajr: 17.7, isha: 14,   label: 'Tehran' },
     };
     const method = METHODS[settings.calcMethod] || METHODS.mwl;
 
@@ -172,9 +171,8 @@ const Utils = {
       isha = dhuhr + 0;
     }
 
-    // Asr
-    const asrShadow = settings.asrMethod === 'shafi' ? 1 : 2;
-    const asrAngle = Math.atan(1 / (asrShadow + Math.tan(Math.abs(latRad - decl)))) * 180 / Math.PI;
+    // Asr (Hanafi: shadow = 2x object + noon shadow)
+    const asrAngle = Math.atan(1 / (2 + Math.tan(Math.abs(latRad - decl)))) * 180 / Math.PI;
     const asrHA = hourAngle(asrAngle);
     const asr = dhuhr + asrHA;
 

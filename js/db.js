@@ -257,7 +257,7 @@ const DB = {
   },
 
   // Settings
-  getSettings()  { return this.get('lamim_settings') || { theme: 'light', notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125, calcMethod: 'mwl', asrMethod: 'hanafi' }; },
+  getSettings()  { return this.get('lamim_settings') || { theme: 'light', notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125, calcMethod: 'mwl' }; },
   setSettings(s) { return this.set('lamim_settings', s); },
 
   // Salah — keyed by date YYYY-MM-DD
