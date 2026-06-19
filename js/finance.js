@@ -1504,22 +1504,6 @@ const Finance = {
     }
 
     const displayData = rawData.map(v => v * currencyMult);
-    const hasData = displayData.some(v => v > 0);
-    if (!hasData) {
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = tickColor;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = `500 13px ${fontFamily}`;
-      ctx.fillText('No spending data', W / 2, H / 2);
-      return;
-    }
-    const maxVal = Math.max(...displayData);
-    const accentColor = isDaily ? (isDark ? '#3b82f6' : '#2563eb') : (isDark ? '#a855f7' : '#9333ea');
-    const accentColorRgb = isDaily ? (isDark ? '59,130,246' : '37,99,235') : (isDark ? '168,85,247' : '147,51,234');
-    const tickColor = isDark ? '#94a3b8' : '#64748b';
-    const gridColor = isDark ? 'rgba(148,163,184,0.07)' : 'rgba(71,85,105,0.10)';
-
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     const W = rect.width;
@@ -1532,8 +1516,24 @@ const Finance = {
     const pad = { top: 16, bottom: 28, left: 52, right: 16 };
     const chartW = W - pad.left - pad.right;
     const chartH = H - pad.top - pad.bottom;
+    const tickColor = isDark ? '#94a3b8' : '#64748b';
 
     ctx.clearRect(0, 0, W, H);
+
+    const hasData = displayData.some(v => v > 0);
+    if (!hasData) {
+      ctx.fillStyle = tickColor;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `500 13px ${fontFamily}`;
+      ctx.fillText('No spending data this period', W / 2, H / 2);
+      return;
+    }
+
+    const maxVal = Math.max(...displayData);
+    const accentColor = isDaily ? (isDark ? '#3b82f6' : '#2563eb') : (isDark ? '#a855f7' : '#9333ea');
+    const accentColorRgb = isDaily ? (isDark ? '59,130,246' : '37,99,235') : (isDark ? '168,85,247' : '147,51,234');
+    const gridColor = isDark ? 'rgba(148,163,184,0.07)' : 'rgba(71,85,105,0.10)';
 
     // --- Dashed Grid Lines & Y-axis Labels ---
     const gridCount = 4;
