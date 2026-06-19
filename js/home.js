@@ -394,7 +394,6 @@ const Home = {
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border-muted);display:flex;align-items:center;gap:8px;">
           <span style="font-size:14px;line-height:1;">💡</span>
           <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${tip}</span>
-          <button onclick="Salah.clearWeekHistory()" style="margin-left:auto;flex-shrink:0;background:none;border:none;color:var(--color-text-muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s;" onmouseover="this.style.color='var(--color-accent-primary)'" onmouseout="this.style.color='var(--color-text-muted)'">Clear</button>
         </div>
       </div>
     `;
