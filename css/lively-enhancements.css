@@ -182,9 +182,8 @@
 
 
 
-/* Ambient glow on nav active items */
-.nav-item.active .nav-icon svg,
-.bottom-nav-item.active .bnav-icon svg {
+/* Ambient glow on sidebar nav active items */
+.nav-item.active .nav-icon svg {
   filter: drop-shadow(0 0 8px var(--section-accent, #10B981));
   transition: filter 0.4s var(--cb-smooth);
 }
@@ -405,7 +404,7 @@
   to   { height: 24px; opacity: 1; }
 }
 
-/* ---- BOTTOM NAV — DOCK-STYLE FLOAT ---- */
+/* ---- BOTTOM NAV — IGNITE FLOAT ---- */
 .bottom-nav {
   animation: bnavEnter 0.6s var(--cb-spring) both;
 }
@@ -415,134 +414,182 @@
   to   { transform: scale(0.96) translateY(0); opacity: 1; }
 }
 
-/* Each item — smooth transform base */
+/* === BASE STATE === */
 .bottom-nav-item {
-  transition: transform 0.45s var(--cb-spring),
-              color 0.35s var(--cb-smooth) !important;
+  transition: transform 0.5s var(--cb-spring),
+              color 0.4s var(--cb-smooth) !important;
 }
 
-/* Icon — relative for aura layering */
 .bottom-nav-item .bnav-icon {
   position: relative;
   z-index: 2;
   transition: transform 0.5s var(--cb-spring),
-              filter 0.4s var(--cb-smooth) !important;
+              filter 0.45s var(--cb-smooth),
+              opacity 0.45s var(--cb-smooth) !important;
 }
 
-/* ---- AURA RING: glowing radial gradient behind active icon ---- */
+/* Inactive items — dim, sit low, no pointer effects */
+.bottom-nav-item:not(.active) .bnav-icon {
+  opacity: 0.35;
+}
+.bottom-nav-item:not(.active) > span:last-child {
+  opacity: 0.3;
+  transform: translateY(5px);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* All labels default transition */
+.bottom-nav-item > span:last-child {
+  display: block;
+  font-size: 9px;
+  transition: opacity 0.45s var(--cb-smooth),
+              transform 0.45s var(--cb-spring),
+              color 0.35s var(--cb-smooth),
+              font-weight 0.35s var(--cb-smooth),
+              letter-spacing 0.35s var(--cb-smooth);
+}
+
+/* === ACTIVE — IGNITE === */
+
+/* 1. Vertical light beam rises from bottom edge */
 .bottom-nav-item.active::before {
   content: '';
   position: absolute;
-  top: -2px;
+  bottom: 0;
   left: 50%;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, var(--color-accent-primary, #a78bfa) 0%, transparent 70%);
-  opacity: 0;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 0;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top,
+    var(--color-accent-primary, #a78bfa) 0%,
+    color-mix(in srgb, var(--color-accent-primary, #a78bfa) 25%, transparent) 70%,
+    transparent 100%
+  );
   pointer-events: none;
   z-index: 0;
-  animation: bnavAuraIn 0.5s var(--cb-smooth) forwards;
+  animation: bnavBeamRise 0.5s var(--cb-spring) forwards;
 }
 
-@keyframes bnavAuraIn {
-  from { opacity: 0; transform: translateX(-50%) scale(0.3); }
-  to   { opacity: 0.3; transform: translateX(-50%) scale(1); }
+@keyframes bnavBeamRise {
+  from { height: 0; opacity: 0; }
+  to   { height: 54px; opacity: 1; }
 }
 
-/* ---- DOCK FLOAT: active item rises above bar ---- */
+/* Fallback for browsers without color-mix */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .bottom-nav-item.active::before {
+    background: linear-gradient(to top,
+      var(--color-accent-primary, #a78bfa) 0%,
+      rgba(167,139,250,0.2) 70%,
+      transparent 100%
+    );
+  }
+}
+
+/* 2. Expanding aura ring behind icon */
+.bottom-nav-item.active::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--color-accent-primary, #a78bfa) 35%, transparent) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: bnavAuraBreathe 2.5s ease-in-out infinite;
+}
+
+@keyframes bnavAuraBreathe {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+  50%      { transform: translateX(-50%) scale(1.25); opacity: 0.2; }
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .bottom-nav-item.active::after {
+    background: radial-gradient(circle at center,
+      rgba(167,139,250,0.3) 0%,
+      transparent 70%
+    );
+  }
+}
+
+/* 3. Active item dramatically floats up */
 .bottom-nav-item.active {
-  transform: translateY(-6px);
+  transform: translateY(-12px);
 }
 
-/* Active icon spring-up */
+/* 4. Icon blooms — big scale, strong glow */
 .bottom-nav-item.active .bnav-icon {
-  transform: scale(1.2) translateY(-2px);
-  filter: brightness(1.25) drop-shadow(0 0 18px var(--color-accent-primary, #a78bfa));
-  animation: bnavIconFloat 0.55s var(--cb-bounce) both;
+  transform: scale(1.35) translateY(-3px);
+  filter: brightness(1.4) drop-shadow(0 0 24px var(--color-accent-primary, #a78bfa));
+  opacity: 1;
 }
 
-@keyframes bnavIconFloat {
-  0%   { transform: scale(1) translateY(0); }
-  40%  { transform: scale(1.28) translateY(-5px); }
-  100% { transform: scale(1.2) translateY(-2px); }
+@keyframes bnavBloomIn {
+  0%   { transform: scale(1) translateY(0); filter: brightness(1) drop-shadow(0 0 0 transparent); opacity: 0.35; }
+  40%  { transform: scale(1.5) translateY(-7px); filter: brightness(1.6) drop-shadow(0 0 36px var(--color-accent-primary, #a78bfa)); opacity: 1; }
+  100% { transform: scale(1.35) translateY(-3px); filter: brightness(1.4) drop-shadow(0 0 24px var(--color-accent-primary, #a78bfa)); opacity: 1; }
 }
 
-/* ---- LABEL REVEAL: dim + slide down when inactive, bright + lift when active ---- */
-.bottom-nav-item > span:last-child {
-  display: block;
-  opacity: 0.45;
-  transform: translateY(3px);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: opacity 0.4s var(--cb-smooth),
-              transform 0.4s var(--cb-spring),
-              color 0.3s var(--cb-smooth);
+/* 5. Continuous icon glow pulse (on the .bnav-icon filter) */
+.bottom-nav-item.active .bnav-icon {
+  animation: bnavBloomIn 0.5s var(--cb-bounce) both,
+             bnavIconGlow 2.5s ease-in-out 0.5s infinite;
 }
 
+@keyframes bnavIconGlow {
+  0%, 100% { filter: brightness(1.3) drop-shadow(0 0 12px var(--color-accent-primary, #a78bfa)); }
+  50%      { filter: brightness(1.5) drop-shadow(0 0 28px var(--color-accent-primary, #a78bfa)); }
+}
+
+/* 6. Active label — bold, bright, lifted */
 .bottom-nav-item.active > span:last-child {
   opacity: 1;
   transform: translateY(0);
   color: var(--color-accent-primary, #a78bfa);
-  font-weight: 600;
+  font-weight: 800;
+  letter-spacing: 0.06em;
 }
 
-/* ---- GLOW PILL INDICATOR ---- */
-.bottom-nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28px;
-  height: 4px;
-  border-radius: 6px;
-  background: var(--color-accent-primary, #a78bfa);
-  box-shadow: 0 0 14px var(--color-accent-primary, #a78bfa);
-  box-shadow: 0 0 14px var(--color-accent-primary, #a78bfa),
-              0 0 40px color-mix(in srgb, var(--color-accent-primary, #a78bfa) 35%, transparent);
-  animation: bnavPillGrow 0.45s var(--cb-spring) both;
-}
-
-@keyframes bnavPillGrow {
-  from { width: 0; opacity: 0; box-shadow: none; }
-  to   { width: 28px; opacity: 1; }
-}
-
-/* ---- INACTIVE AMBIENT BREATHE ---- */
-.bottom-nav-item:not(.active) .bnav-icon {
-  opacity: 0.7;
-  transition: opacity 0.5s var(--cb-smooth),
-              transform 0.5s var(--cb-spring),
-              filter 0.4s var(--cb-smooth) !important;
-}
-
-/* ---- HOVER / TAP (desktop) ---- */
+/* === HOVER / TAP (desktop) === */
 @media (hover: hover) {
-  .bottom-nav-item:hover {
-    transform: translateY(-2px);
+  .bottom-nav-item:not(.active):hover {
+    transform: translateY(-3px);
   }
-  .bottom-nav-item:hover .bnav-icon {
-    transform: scale(1.12);
-    filter: drop-shadow(0 0 10px var(--color-accent-primary, #a78bfa));
+  .bottom-nav-item:not(.active):hover .bnav-icon {
+    opacity: 0.7;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary, #a78bfa));
   }
   .bottom-nav-item.active:hover {
-    transform: translateY(-7px);
+    transform: translateY(-13px);
   }
   .bottom-nav-item.active:hover .bnav-icon {
-    transform: scale(1.22) translateY(-2px);
+    transform: scale(1.4) translateY(-3px);
+    filter: brightness(1.5) drop-shadow(0 0 32px var(--color-accent-primary, #a78bfa));
   }
+  /* Tap squash */
   .bottom-nav-item:not(.active):active {
-    transform: translateY(1px);
+    transform: translateY(2px);
     transition-duration: 0.08s;
   }
   .bottom-nav-item:not(.active):active .bnav-icon {
-    transform: scale(0.88);
+    transform: scale(0.85);
+    opacity: 0.25;
     transition-duration: 0.08s;
   }
   .bottom-nav-item.active:active .bnav-icon {
-    transform: scale(1.05) translateY(-1px);
+    transform: scale(1.1) translateY(-1px);
     transition-duration: 0.08s;
+    filter: brightness(1) drop-shadow(0 0 8px var(--color-accent-primary, #a78bfa));
   }
 }
 
