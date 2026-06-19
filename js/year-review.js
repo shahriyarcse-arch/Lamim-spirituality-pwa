@@ -193,14 +193,28 @@ const YearReview = {
     if (!container) return;
 
     const data = this.calcYear(this.year);
+
+    const navHtml = `
+      <div class="yr-nav">
+        <button class="yr-nav-btn" onclick="YearReview.changeYear(-1)" id="yr-prev-btn" aria-label="Previous year">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <span class="yr-nav-year" id="yr-year-label">${this.year}</span>
+        <button class="yr-nav-btn" onclick="YearReview.changeYear(1)" id="yr-next-btn" aria-label="Next year">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    `;
+
     if (!data || data.trackedDays === 0) {
-      container.innerHTML = `
+      container.innerHTML = navHtml + `
         <div style="text-align:center;padding:60px 20px;opacity:0.6">
           <div style="font-size:3rem;margin-bottom:16px">📊</div>
           <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">No data for ${this.year}</div>
           <div style="font-size:0.85rem">Start tracking your spiritual journey and come back at year's end.</div>
         </div>
       `;
+      this._disableNextBtn();
       return;
     }
 
@@ -232,16 +246,7 @@ const YearReview = {
 
     const monthBars = data.months.filter(m => m.daysTracked > 0);
 
-    container.innerHTML = `
-      <div class="yr-nav">
-        <button class="yr-nav-btn" onclick="YearReview.changeYear(-1)" id="yr-prev-btn" aria-label="Previous year">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
-        </button>
-        <span class="yr-nav-year" id="yr-year-label">${this.year}</span>
-        <button class="yr-nav-btn" onclick="YearReview.changeYear(1)" id="yr-next-btn" aria-label="Next year">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-        </button>
-      </div>
+    container.innerHTML = navHtml + `
 
       <div class="yr-hero yr-anim yr-anim-d1">
         <div class="yr-hero-year">Year ${data.year === new Date().getFullYear() ? 'So Far' : 'In Review'}</div>
@@ -339,7 +344,10 @@ const YearReview = {
       <div style="height:60px"></div>
     `;
 
-    // Disable next year if it's the current year or future
+    this._disableNextBtn();
+  },
+
+  _disableNextBtn() {
     const now = new Date();
     const nextBtn = document.getElementById('yr-next-btn');
     if (nextBtn && this.year >= now.getFullYear()) {
