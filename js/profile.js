@@ -341,7 +341,7 @@ const Profile = {
     DB.setSettings(s);
     if (key === 'calcMethod') {
       Utils._cachedTimesAt = 0;
-      if (typeof Home !== 'undefined') Home.render();
+      return; // select value already updated by browser, no re-render needed
     }
     Profile.renderSettings();
   },
