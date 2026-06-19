@@ -104,7 +104,7 @@ self.addEventListener('fetch', (e) => {
       fetch(e.request, { cache: 'no-cache' })
         .then((res) => {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
           return res;
         })
         .catch(() => caches.match(e.request, { ignoreSearch: true }).then((cached) => cached || caches.match('./index.html', { ignoreSearch: true }))) // Fallback to cache or index.html if offline
@@ -147,7 +147,7 @@ self.addEventListener('fetch', (e) => {
           .then((res) => {
             if (res && res.ok) {
               const copy = res.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+              caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
               
               if (!resolved) {
                 clearTimeout(timeoutId);
@@ -182,7 +182,7 @@ self.addEventListener('fetch', (e) => {
       .then((res) => {
         if (res && res.ok) {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
         }
         return res;
       })
