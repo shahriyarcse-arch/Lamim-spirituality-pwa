@@ -727,6 +727,28 @@
       </div>
     </div>
 
+    <!-- Location Edit Modal -->
+    <div class="modal-overlay hidden" id="location-modal">
+      <div class="modal" style="max-width:360px">
+        <div class="modal-header">
+          <h3 class="modal-title">Location</h3>
+          <button class="modal-close" onclick="Profile.closeLocationModal()">✕</button>
+        </div>
+        <div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:12px;">
+          <label style="font-size:12px;font-weight:600;color:var(--color-text-muted)">Coordinates</label>
+          <div style="display:flex;gap:8px;">
+            <input class="input" id="loc-lat" type="number" step="any" placeholder="Latitude" style="flex:1;min-width:0;">
+            <input class="input" id="loc-lng" type="number" step="any" placeholder="Longitude" style="flex:1;min-width:0;">
+          </div>
+          <input class="input" id="loc-name" type="text" placeholder="Label (optional)" style="width:100%">
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" onclick="Profile.saveLocation()" style="flex:1">Save</button>
+            <button class="btn btn-ghost" onclick="Profile.detectLocation()" style="flex:1">Auto-Detect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Profile Edit Modal -->
     <div class="modal-overlay hidden" id="profile-edit-modal">
       <div class="modal" style="max-width:400px">
@@ -1148,8 +1170,8 @@
 
   <!-- Core Engine -->
   <script src="js/lang.js?v=127" defer></script>
-  <script src="js/utils.js?v=131" defer></script>
-  <script src="js/db.js?v=127" defer></script>
+  <script src="js/utils.js?v=132" defer></script>
+  <script src="js/db.js?v=128" defer></script>
   <script src="js/auth.js?v=147" defer></script>
   <script src="js/home.js?v=138" defer></script>
   

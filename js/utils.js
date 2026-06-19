@@ -101,7 +101,7 @@ const Utils = {
       navigator.geolocation.getCurrentPosition((pos) => {
         const newSettings = { ...DB.getSettings(), lat: pos.coords.latitude, lng: pos.coords.longitude };
         DB.setSettings(newSettings);
-        this._cachedTimesAt = 0; // Force recalc on next call
+        this._cachedTimesAt = 0;
       }, (err) => {
         console.warn('[Geo] Location detection failed:', err.message);
       }, { timeout: 10000, enableHighAccuracy: false });
@@ -138,27 +138,45 @@ const Utils = {
       const angleRad = angle * Math.PI / 180;
       const cosHA = (Math.sin(angleRad) - Math.sin(latRad) * Math.sin(decl)) /
                     (Math.cos(latRad) * Math.cos(decl));
-      // Clamp to [-1, 1] to handle floating-point drift and extreme latitudes
       const clamped = Math.max(-1, Math.min(1, cosHA));
-      return Math.acos(clamped) * 180 / Math.PI / 15; // in hours
+      return Math.acos(clamped) * 180 / Math.PI / 15;
     };
 
-    // Fajr: Sun at -18° (Muslim World League)
-    const fajrHA = hourAngle(-18);
-    const fajr = dhuhr - fajrHA;
-
-    // Asr: Hanafi method (shadow = 2x object + noon shadow)
-    const asrAngle = Math.atan(1 / (2 + Math.tan(Math.abs(latRad - decl)))) * 180 / Math.PI;
-    const asrHA = hourAngle(asrAngle);
-    const asr = dhuhr + asrHA;
+    // Calculation method angles
+    const METHODS = {
+      mwl:          { fajr: 18,   isha: 17, label: 'Muslim World League' },
+      isna:         { fajr: 15,   isha: 15, label: 'ISNA' },
+      umm_al_qurra: { fajr: 18.5, isha: null, ishaMin: 90, label: 'Umm al-Qura' },
+      egypt:        { fajr: 19.5, isha: 17.5, label: 'Egypt' },
+      karachi:      { fajr: 18,   isha: 18,   label: 'Karachi' },
+      tehran:       { fajr: 17.7, isha: 14,   label: 'Tehran' },
+    };
+    const method = METHODS[settings.calcMethod] || METHODS.mwl;
 
     // Maghrib: Sun at -0.833° (accounting for refraction)
     const maghribHA = hourAngle(-0.833);
     const maghrib = dhuhr + maghribHA;
 
-    // Isha: Sun at -17° (MWL)
-    const ishaHA = hourAngle(-17);
-    const isha = dhuhr + ishaHA;
+    // Fajr
+    const fajrHA = hourAngle(-method.fajr);
+    const fajr = dhuhr - fajrHA;
+
+    // Isha
+    let isha;
+    if (method.isha !== null) {
+      const ishaHA = hourAngle(-method.isha);
+      isha = dhuhr + ishaHA;
+    } else if (method.ishaMin) {
+      isha = maghrib + method.ishaMin / 60;
+    } else {
+      isha = dhuhr + 0;
+    }
+
+    // Asr
+    const asrShadow = settings.asrMethod === 'shafi' ? 1 : 2;
+    const asrAngle = Math.atan(1 / (asrShadow + Math.tan(Math.abs(latRad - decl)))) * 180 / Math.PI;
+    const asrHA = hourAngle(asrAngle);
+    const asr = dhuhr + asrHA;
 
     const makeTime = (hours) => {
       const d = new Date(now);

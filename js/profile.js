@@ -123,6 +123,7 @@ const Profile = {
     `;
 
     // Prayer settings
+    const METHOD_LABELS = { mwl: 'Muslim World League', isna: 'ISNA', umm_al_qurra: 'Umm al-Qura', egypt: 'Egypt', karachi: 'Karachi', tehran: 'Tehran' };
     const ps = document.getElementById('profile-prayer-settings');
     if (ps) ps.innerHTML = `
       <div class="settings-item" onclick="Profile.toggleJumuahMode()">
@@ -132,6 +133,23 @@ const Profile = {
       <div class="settings-item" onclick="Profile.toggleNotifications()">
         <div class="settings-item-left"><div class="settings-item-icon ic-amber">${icons.bell}</div><div><div class="settings-item-label">Prayer Notifications</div><div class="settings-item-value">Alerts for next waqt</div></div></div>
         <div class="settings-item-right"><div class="toggle ${settings.notifications?'active':''}"></div></div>
+      </div>
+      <div class="settings-item" style="cursor:default">
+        <div class="settings-item-left"><div class="settings-item-icon ic-blue">${icons.moon}</div><div><div class="settings-item-label">Calculation Method</div></div></div>
+        <div class="settings-item-right">
+          <select class="input" onchange="Profile.saveSetting('calcMethod',this.value)">
+            ${Object.entries(METHOD_LABELS).map(([k,v]) => `<option value="${k}" ${settings.calcMethod===k?'selected':''}>${v}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="settings-item" style="cursor:default">
+        <div class="settings-item-left"><div class="settings-item-icon ic-amber">${icons.sun}</div><div><div class="settings-item-label">Asr Method</div></div></div>
+        <div class="settings-item-right">
+          <div class="lang-toggle-pill">
+            <button class="${settings.asrMethod==='hanafi'?'active':''}" onclick="Profile.saveSetting('asrMethod','hanafi')">Hanafi</button>
+            <button class="${settings.asrMethod==='shafi'?'active':''}" onclick="Profile.saveSetting('asrMethod','shafi')">Shafi\u02BEi</button>
+          </div>
+        </div>
       </div>
     `;
 
@@ -156,9 +174,9 @@ const Profile = {
           </select>
         </div>
       </div>
-      <div class="settings-item" onclick="Profile.detectLocation(event)">
-        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.globe}</div><div><div class="settings-item-label">Detect Location</div><div class="settings-item-value">${settings.locationName || (settings.lat ? settings.lat.toFixed(2) + ', ' + settings.lng.toFixed(2) : 'Not set')}</div></div></div>
-        <div class="settings-item-right"><span>↻</span></div>
+      <div class="settings-item" onclick="Profile.showLocationModal()">
+        <div class="settings-item-left"><div class="settings-item-icon ic-teal">${icons.globe}</div><div><div class="settings-item-label">Location</div><div class="settings-item-value">${settings.locationName || (settings.lat ? settings.lat.toFixed(4) + ', ' + settings.lng.toFixed(4) : 'Not set')}</div></div></div>
+        <div class="settings-item-right"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
       </div>
       <div class="settings-item" style="cursor:default">
         <div class="settings-item-left"><div class="settings-item-icon ic-slate">${settings.theme==='dark'?icons.moon:icons.sun}</div><div><div class="settings-item-label" data-i18n="Theme">Theme</div></div></div>
@@ -330,15 +348,11 @@ const Profile = {
     const s = DB.getSettings();
     s[key] = val;
     DB.setSettings(s);
-    
-    const user = DB.getUser();
-    if (user && key === 'madhab') { user.madhab = val; DB.setUser(user); }
-    
-    // Re-render settings UI
+    if (key === 'calcMethod' || key === 'asrMethod') {
+      Utils._cachedTimesAt = 0;
+      if (typeof Home !== 'undefined') Home.render();
+    }
     Profile.renderSettings();
-    
-    // If it's a critical app setting, notify App
-    if (key === 'currency') this.renderSettings();
   },
 
   toggleTheme() {
@@ -651,6 +665,37 @@ const Profile = {
     }
   },
 
+
+  showLocationModal() {
+    const settings = DB.getSettings();
+    Utils.openModal(document.getElementById('location-modal'));
+    document.getElementById('loc-lat').value = settings.lat || '';
+    document.getElementById('loc-lng').value = settings.lng || '';
+    document.getElementById('loc-name').value = settings.locationName || '';
+  },
+
+  closeLocationModal() {
+    Utils.closeModal(document.getElementById('location-modal'));
+  },
+
+  saveLocation() {
+    const lat = parseFloat(document.getElementById('loc-lat').value);
+    const lng = parseFloat(document.getElementById('loc-lng').value);
+    if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      Utils.toast('Enter valid coordinates (lat: -90~90, lng: -180~180)', 'error');
+      return;
+    }
+    const settings = DB.getSettings();
+    settings.lat = lat;
+    settings.lng = lng;
+    settings.locationName = document.getElementById('loc-name').value.trim() || '';
+    DB.setSettings(settings);
+    Utils._cachedTimesAt = 0;
+    Utils.closeModal(document.getElementById('location-modal'));
+    this.renderSettings();
+    if (typeof Home !== 'undefined') Home.render();
+    Utils.toast('Location updated', 'success');
+  },
 
   async detectLocation(e) {
     if (this._isSyncingLocation) return;
