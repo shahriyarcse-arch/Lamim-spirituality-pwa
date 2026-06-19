@@ -319,8 +319,48 @@ const Salah = {
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
 
     const sm = this.statusMeta[status];
-    const result = sm.result === 'successful' ? '✅' : sm.result === 'qaza' ? '⏰' : '❌';
-    // Utils.toast(`${this.prayerMeta[prayer].label} — ${sm.label} ${result} (+${sm.points} pts)`, status === 'missed' ? 'warning' : 'success');
+    const meta = this.prayerMeta[prayer];
+
+    // Targeted DOM update — no full re-render, no flicker
+    const card = document.getElementById(`salah-card-${prayer}`);
+    if (card) {
+      // Remove status selector, insert locked result
+      const selector = card.querySelector('.salah-status-selector');
+      if (selector) {
+        selector.outerHTML = `
+          <div class="salah-locked-result">
+            <div class="salah-locked-icon" style="color:${sm.color};filter:drop-shadow(${sm.glow})">${sm.icon}</div>
+            <div class="salah-locked-info">
+              <div class="salah-locked-status" style="color:${sm.color}">${sm.label}</div>
+              <div class="salah-locked-desc" style="display:flex;align-items:center;gap:3px">
+                ${sm.result === 'successful' ? '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> Successful' : sm.result === 'qaza' ? '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-amber);filter:drop-shadow(0 0 4px rgba(251,191,36,0.6))"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Qaza' : '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Unsuccessful'} 
+                <span style="opacity:0.5;margin:0 2px">•</span> +${sm.points} pts
+              </div>
+            </div>
+            <svg class="salah-lock-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: lockPulse 2s ease-in-out infinite"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>`;
+      }
+      // Update status badge in header
+      const badge = card.querySelector('.salah-prayer-status-badge');
+      if (badge) {
+        badge.innerHTML = `
+          <div class="salah-status-chip" style="background:${sm.bgAlpha};border-color:${sm.borderAlpha};color:${sm.color};box-shadow:${sm.glow}">
+            <span>${sm.icon}</span> ${sm.label}
+          </div>`;
+      }
+      // Add has-status class
+      card.classList.add('has-status', `status-${status}`);
+    }
+
+    // Targeted stat update — no re-render
+    const newScore = Utils.salahScore(salah);
+    const statPrayed = document.querySelector('.salah-stat-card.stat-prayed .salah-stat-val');
+    if (statPrayed) statPrayed.textContent = `${newScore.done}/5`;
+    const statScore = document.querySelectorAll('.salah-stat-card .salah-stat-val');
+    if (statScore.length >= 5) statScore[4].textContent = `${newScore.pct}%`;
+
+    const sm2 = this.statusMeta[status];
+    const result2 = sm2.result === 'successful' ? '✅' : sm2.result === 'qaza' ? '⏰' : '❌';
 
     // Celebrate all 5 done
     const score = Utils.salahScore(DB.getSalah(date));
