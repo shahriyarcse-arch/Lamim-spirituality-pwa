@@ -602,7 +602,7 @@ const Home = {
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
     const visualPct = (score.done / 5) * 100;
-    const circumference = 2 * Math.PI * 54;
+    const circumference = 2 * Math.PI * 62;
     const offset = circumference - (visualPct / 100) * circumference;
     const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
     // Ensure structure is always fresh
