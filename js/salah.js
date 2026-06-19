@@ -39,7 +39,7 @@ const Salah = {
         if (document.getElementById('section-salah')?.classList.contains('active')) {
           this.renderAll(true);
         }
-      }, 300);
+      }, 50);
       window.addEventListener('lamim:data-updated', () => this._debouncedRender());
       this._dataUpdateBound = true;
     }
@@ -314,15 +314,9 @@ const Salah = {
   /* ---- Select status (permanent — no undo) ---- */
   selectStatus(prayer, status, date) {
     const salah = DB.getSalah(date);
-    // Allow updates even if already set, so user can correct mistakes
     salah[prayer] = status;
     DB.setSalah(date, salah);
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
-
-    // Partial update instead of full renderAll to prevent blinking
-    this.renderPrayerCards(date, true); // true = skipAnim
-    this.renderCalendar(); // Calendar needs update too, but we can make it smooth
-    Home.render();
 
     const sm = this.statusMeta[status];
     const result = sm.result === 'successful' ? '✅' : sm.result === 'qaza' ? '⏰' : '❌';
