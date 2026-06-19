@@ -28,7 +28,6 @@
 .goal-card,
 .salah-cal-cell,
 .nav-item .nav-icon,
-.bottom-nav-item .bnav-icon,
 .toggle,
 .mujahid-hero-glass,
 .forge-action-btn {
@@ -406,68 +405,144 @@
   to   { height: 24px; opacity: 1; }
 }
 
-/* ---- BOTTOM NAV ---- */
+/* ---- BOTTOM NAV — DOCK-STYLE FLOAT ---- */
 .bottom-nav {
-  animation: bnavEnter 0.5s var(--cb-spring) both;
+  animation: bnavEnter 0.6s var(--cb-spring) both;
 }
 
 @keyframes bnavEnter {
-  from { transform: scale(0.88) translateY(20px); opacity: 0; }
+  from { transform: scale(0.82) translateY(32px); opacity: 0; }
   to   { transform: scale(0.96) translateY(0); opacity: 1; }
 }
 
+/* Each item — smooth transform base */
 .bottom-nav-item {
-  transition: transform 0.35s var(--cb-spring),
-              color 0.3s var(--cb-smooth),
-              background 0.3s var(--cb-smooth) !important;
+  transition: transform 0.45s var(--cb-spring),
+              color 0.35s var(--cb-smooth) !important;
 }
 
+/* Icon — relative for aura layering */
 .bottom-nav-item .bnav-icon {
-  transition: transform 0.4s var(--cb-spring),
+  position: relative;
+  z-index: 2;
+  transition: transform 0.5s var(--cb-spring),
               filter 0.4s var(--cb-smooth) !important;
 }
 
+/* ---- AURA RING: glowing radial gradient behind active icon ---- */
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--color-accent-primary, #a78bfa) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: bnavAuraIn 0.5s var(--cb-smooth) forwards;
+}
+
+@keyframes bnavAuraIn {
+  from { opacity: 0; transform: translateX(-50%) scale(0.3); }
+  to   { opacity: 0.3; transform: translateX(-50%) scale(1); }
+}
+
+/* ---- DOCK FLOAT: active item rises above bar ---- */
+.bottom-nav-item.active {
+  transform: translateY(-6px);
+}
+
+/* Active icon spring-up */
 .bottom-nav-item.active .bnav-icon {
-  filter: drop-shadow(0 0 14px var(--color-accent-primary, #a78bfa)) brightness(1.15);
-  animation: bnavIconPop 0.4s var(--cb-bounce) both;
+  transform: scale(1.2) translateY(-2px);
+  filter: brightness(1.25) drop-shadow(0 0 18px var(--color-accent-primary, #a78bfa));
+  animation: bnavIconFloat 0.55s var(--cb-bounce) both;
 }
 
-@keyframes bnavIconPop {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.22) translateY(-2px); }
-  100% { transform: scale(1.15) translateY(-1px); }
+@keyframes bnavIconFloat {
+  0%   { transform: scale(1) translateY(0); }
+  40%  { transform: scale(1.28) translateY(-5px); }
+  100% { transform: scale(1.2) translateY(-2px); }
 }
 
+/* ---- LABEL REVEAL: dim + slide down when inactive, bright + lift when active ---- */
+.bottom-nav-item > span:last-child {
+  display: block;
+  opacity: 0.45;
+  transform: translateY(3px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: opacity 0.4s var(--cb-smooth),
+              transform 0.4s var(--cb-spring),
+              color 0.3s var(--cb-smooth);
+}
+
+.bottom-nav-item.active > span:last-child {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--color-accent-primary, #a78bfa);
+  font-weight: 600;
+}
+
+/* ---- GLOW PILL INDICATOR ---- */
 .bottom-nav-item.active::after {
   content: '';
   position: absolute;
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
-  border-radius: 4px;
+  width: 28px;
+  height: 4px;
+  border-radius: 6px;
   background: var(--color-accent-primary, #a78bfa);
-  box-shadow: 0 0 12px var(--color-accent-primary, #a78bfa);
-  animation: bottomNavIndicate 0.35s var(--cb-spring) both;
+  box-shadow: 0 0 14px var(--color-accent-primary, #a78bfa);
+  box-shadow: 0 0 14px var(--color-accent-primary, #a78bfa),
+              0 0 40px color-mix(in srgb, var(--color-accent-primary, #a78bfa) 35%, transparent);
+  animation: bnavPillGrow 0.45s var(--cb-spring) both;
 }
 
-@keyframes bottomNavIndicate {
+@keyframes bnavPillGrow {
   from { width: 0; opacity: 0; box-shadow: none; }
-  to   { width: 20px; opacity: 1; }
+  to   { width: 28px; opacity: 1; }
 }
 
+/* ---- INACTIVE AMBIENT BREATHE ---- */
+.bottom-nav-item:not(.active) .bnav-icon {
+  opacity: 0.7;
+  transition: opacity 0.5s var(--cb-smooth),
+              transform 0.5s var(--cb-spring),
+              filter 0.4s var(--cb-smooth) !important;
+}
+
+/* ---- HOVER / TAP (desktop) ---- */
 @media (hover: hover) {
   .bottom-nav-item:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
   .bottom-nav-item:hover .bnav-icon {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 8px var(--color-accent-primary, #a78bfa));
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 10px var(--color-accent-primary, #a78bfa));
   }
-  .bottom-nav-item:active .bnav-icon {
-    transform: scale(0.92);
-    transition-duration: 0.1s;
+  .bottom-nav-item.active:hover {
+    transform: translateY(-7px);
+  }
+  .bottom-nav-item.active:hover .bnav-icon {
+    transform: scale(1.22) translateY(-2px);
+  }
+  .bottom-nav-item:not(.active):active {
+    transform: translateY(1px);
+    transition-duration: 0.08s;
+  }
+  .bottom-nav-item:not(.active):active .bnav-icon {
+    transform: scale(0.88);
+    transition-duration: 0.08s;
+  }
+  .bottom-nav-item.active:active .bnav-icon {
+    transform: scale(1.05) translateY(-1px);
+    transition-duration: 0.08s;
   }
 }
 
