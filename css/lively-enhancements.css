@@ -407,6 +407,37 @@
 }
 
 /* ---- BOTTOM NAV ---- */
+.bottom-nav {
+  animation: bnavEnter 0.5s var(--cb-spring) both;
+}
+
+@keyframes bnavEnter {
+  from { transform: scale(0.88) translateY(20px); opacity: 0; }
+  to   { transform: scale(0.96) translateY(0); opacity: 1; }
+}
+
+.bottom-nav-item {
+  transition: transform 0.35s var(--cb-spring),
+              color 0.3s var(--cb-smooth),
+              background 0.3s var(--cb-smooth) !important;
+}
+
+.bottom-nav-item .bnav-icon {
+  transition: transform 0.4s var(--cb-spring),
+              filter 0.4s var(--cb-smooth) !important;
+}
+
+.bottom-nav-item.active .bnav-icon {
+  filter: drop-shadow(0 0 14px var(--color-accent-primary, #a78bfa)) brightness(1.15);
+  animation: bnavIconPop 0.4s var(--cb-bounce) both;
+}
+
+@keyframes bnavIconPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.22) translateY(-2px); }
+  100% { transform: scale(1.15) translateY(-1px); }
+}
+
 .bottom-nav-item.active::after {
   content: '';
   position: absolute;
@@ -416,13 +447,28 @@
   width: 20px;
   height: 3px;
   border-radius: 4px;
-  background: var(--section-accent, #10B981);
-  animation: bottomNavIndicate 0.3s var(--cb-spring) both;
+  background: var(--color-accent-primary, #a78bfa);
+  box-shadow: 0 0 12px var(--color-accent-primary, #a78bfa);
+  animation: bottomNavIndicate 0.35s var(--cb-spring) both;
 }
 
 @keyframes bottomNavIndicate {
-  from { width: 0; opacity: 0; }
+  from { width: 0; opacity: 0; box-shadow: none; }
   to   { width: 20px; opacity: 1; }
+}
+
+@media (hover: hover) {
+  .bottom-nav-item:hover {
+    transform: translateY(-3px);
+  }
+  .bottom-nav-item:hover .bnav-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary, #a78bfa));
+  }
+  .bottom-nav-item:active .bnav-icon {
+    transform: scale(0.92);
+    transition-duration: 0.1s;
+  }
 }
 
 /* ---- STREAK COUNTER BOUNCE ---- */
