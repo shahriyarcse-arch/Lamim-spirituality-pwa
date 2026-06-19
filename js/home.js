@@ -167,24 +167,24 @@ const Home = {
     container.innerHTML = `
       <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:flex-end">
         <div style="display:flex; flex-direction:column">
-          <span style="font-size:8px; font-weight:800; opacity:0.45; text-transform:uppercase; letter-spacing:1.2px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
-          <span style="font-size:16px; font-weight:900; color:${shs.rating.color}; letter-spacing:-0.3px;">${window.t ? window.t(current.label) : current.label}</span>
+          <span style="font-size:10px; font-weight:800; opacity:0.45; text-transform:uppercase; letter-spacing:1.2px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
+          <span style="font-size:18px; font-weight:900; color:${shs.rating.color}; letter-spacing:-0.3px;">${window.t ? window.t(current.label) : current.label}</span>
         </div>
         <div style="text-align:right; display:flex; flex-direction:column">
-          <span style="font-size:9px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.5px">${window.t ? window.t('Next') : 'Next'}: <span style="color:var(--color-accent-gold);">${window.t ? window.t(next.label) : next.label}</span></span>
-          <span style="font-size:12px; font-weight:800; color:${shs.rating.color}; margin-top:2px;">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
+          <span style="font-size:11px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.5px">${window.t ? window.t('Next') : 'Next'}: <span style="color:var(--color-accent-gold);">${window.t ? window.t(next.label) : next.label}</span></span>
+          <span style="font-size:14px; font-weight:800; color:${shs.rating.color}; margin-top:2px;">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
         </div>
       </div>
-      <div style="height:8px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible; margin-top:4px;">
+      <div style="height:10px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible; margin-top:6px;">
         <div style="width:${prog}%; height:100%; background:linear-gradient(90deg, ${shs.rating.color}, var(--color-accent-gold)); border-radius:10px; position:relative; box-shadow:0 0 16px ${shs.rating.color}40; transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);">
-          <div style="position:absolute; right:-6px; top:-5px; width:18px; height:18px; background:var(--color-bg-elevated); border-radius:50%; border:3px solid ${shs.rating.color}; box-shadow:0 0 14px ${shs.rating.color};"></div>
+          <div style="position:absolute; right:-6px; top:-4px; width:22px; height:22px; background:var(--color-bg-elevated); border-radius:50%; border:3px solid ${shs.rating.color}; box-shadow:0 0 14px ${shs.rating.color};"></div>
         </div>
       </div>
-      <div style="display:flex; justify-content:space-between; margin-top:8px; padding:0 2px;">
+      <div style="display:flex; justify-content:space-between; margin-top:10px; padding:0 2px;">
         ${ranks.map((r, idx) => `
-          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-            <div style="width:8px; height:8px; border-radius:50%; background:${idx <= curIdx ? shs.rating.color : 'var(--color-divider-subtle)'}; border:2px solid ${idx <= curIdx ? shs.rating.color : 'var(--color-border)'}; box-shadow:${idx <= curIdx ? `0 0 8px ${shs.rating.color}60` : 'none'}; transition:all 0.5s ease;"></div>
-            <span style="font-size:6px; font-weight:700; color:${idx === curIdx ? shs.rating.color : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.3px; opacity:${idx <= curIdx ? 1 : 0.4};">${window.t ? window.t(r.label.substring(0, 4)) : r.label.substring(0, 4)}</span>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <div style="width:12px; height:12px; border-radius:50%; background:${idx <= curIdx ? shs.rating.color : 'var(--color-divider-subtle)'}; border:3px solid ${idx <= curIdx ? shs.rating.color : 'var(--color-border)'}; box-shadow:${idx <= curIdx ? `0 0 8px ${shs.rating.color}60` : 'none'}; transition:all 0.5s ease;"></div>
+            <span style="font-size:9px; font-weight:700; color:${idx === curIdx ? shs.rating.color : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.5px; opacity:${idx <= curIdx ? 1 : 0.4};">${window.t ? window.t(r.label.substring(0, 4)) : r.label.substring(0, 4)}</span>
           </div>
         `).join('')}
       </div>
