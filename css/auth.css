@@ -71,7 +71,7 @@
   justify-content: center;
   background: radial-gradient(circle at 30% 30%, #f472b6, #d946ef, #8b5cf6, #3b82f6);
   background-size: 200% 200%;
-  animation: float-logo 4s ease-in-out infinite, gradientShift 6s ease infinite;
+  animation: float-logo 4s ease-in-out infinite, gradientShiftAuth 6s ease infinite;
   box-shadow: 
     0 12px 28px rgba(139, 92, 246, 0.4),
     inset 0 2px 4px rgba(255, 255, 255, 0.5);
@@ -96,7 +96,7 @@
   50% { transform: translateY(-4px); }
 }
 
-@keyframes gradientShift {
+@keyframes gradientShiftAuth {
   0% {
     background-position: 0% 50%;
   }
@@ -120,10 +120,10 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmerText 4s linear infinite;
+  animation: shimmerTextAuth 4s linear infinite;
 }
 
-@keyframes shimmerText {
+@keyframes shimmerTextAuth {
   to {
     background-position: 300% center;
   }

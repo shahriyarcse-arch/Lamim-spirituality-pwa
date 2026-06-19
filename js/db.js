@@ -66,7 +66,7 @@ const DB = {
       }
       try {
         const transaction = this._db.transaction(['keyvalue'], 'readonly');
-        const store = transaction.objectStore(['keyvalue']);
+        const store = transaction.objectStore('keyvalue');
         const request = store.openCursor();
         this._cache = {};
 
@@ -105,7 +105,7 @@ const DB = {
     return new Promise((resolve) => {
       try {
         const transaction = this._db.transaction(['keyvalue'], 'readwrite');
-        const store = transaction.objectStore(['keyvalue']);
+        const store = transaction.objectStore('keyvalue');
 
         keysToMigrate.forEach(key => {
           const val = localStorage.getItem(key);
@@ -358,7 +358,7 @@ const DB = {
   // Dhikr history
   getDhikrHistory(days = 30) {
     const result = [];
-    const d = new Date();
+    const d = typeof Utils.getOffsetDate === 'function' ? Utils.getOffsetDate() : new Date();
     for (let i = days - 1; i >= 0; i--) {
       const dd = new Date(d); dd.setDate(d.getDate() - i);
       const ds = Utils.dateStr(dd);

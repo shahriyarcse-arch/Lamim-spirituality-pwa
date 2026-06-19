@@ -74,7 +74,7 @@ const Home = {
     this.startLiveDateTime();
 
     // FIX #4: Compute SHS once and cache for sub-functions
-    this._cachedSHS = Analysis.calculateSHS();
+    this._cachedSHS = typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : 0;
 
     // Date bar (Streaks + LSS Score Aura on the far right)
     const db = document.getElementById('home-date-bar');
@@ -293,16 +293,14 @@ const Home = {
     // Clear existing interval and timeout to prevent overlapping transitions
     if (this.insightInterval) clearInterval(this.insightInterval);
     if (this.insightTimeout) clearTimeout(this.insightTimeout);
+    if (this._insightPulseTimeout) clearTimeout(this._insightPulseTimeout);
 
     this.insightInterval = setInterval(() => {
-      // COORDINATION: Stop if Home section is no longer active
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         clearInterval(this.insightInterval);
         this.insightInterval = null;
-        if (this.insightTimeout) {
-          clearTimeout(this.insightTimeout);
-          this.insightTimeout = null;
-        }
+        if (this.insightTimeout) { clearTimeout(this.insightTimeout); this.insightTimeout = null; }
+        if (this._insightPulseTimeout) { clearTimeout(this._insightPulseTimeout); this._insightPulseTimeout = null; }
         return;
       }
 
@@ -310,37 +308,33 @@ const Home = {
       const iconEl = document.getElementById('home-insight-icon');
       if (!textEl) return;
 
-      // 1. Trigger Fade Out
       textEl.classList.add('fade-out');
 
       this.insightTimeout = setTimeout(() => {
-        // 2. Change text and prepare for Fade In
         let newIdx = Math.floor(Math.random() * quotes.length);
         while (newIdx === qIdx && quotes.length > 1) {
           newIdx = Math.floor(Math.random() * quotes.length);
         }
         qIdx = newIdx;
-        
+
         textEl.classList.remove('fade-out');
         textEl.classList.add('fade-in-prep');
         textEl.textContent = quotes[qIdx];
-        
+
         if (iconEl) iconEl.classList.add('pulse');
 
-        // Force browser reflow so the 'prep' state applies immediately without animating
         void textEl.offsetWidth;
 
-        // 3. Trigger Fade In
         textEl.classList.remove('fade-in-prep');
-        
-        // Remove pulse from icon slightly later
-        this.insightTimeout = setTimeout(() => {
+
+        this._insightPulseTimeout = setTimeout(() => {
           if (iconEl) iconEl.classList.remove('pulse');
-          this.insightTimeout = null;
+          this._insightPulseTimeout = null;
         }, 500);
 
-      }, 600); // 600ms matches the fade-out CSS transition time
-    }, 10000); // 10 seconds per quote
+        this.insightTimeout = null;
+      }, 600);
+    }, 10000);
   },
 
   renderWeeklySummary() {

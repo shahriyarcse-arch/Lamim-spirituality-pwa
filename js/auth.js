@@ -108,12 +108,14 @@ const Auth = {
   },
 
   initDOBPicker() {
-    if (this._dobReady) return; // only build once
+    if (this._dobReady) return;
     this._dobReady = true;
 
     const ITEM_H = 44;
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    let selD = 0, selM = 0, selY = 60; // defaults: day=1, Jan, year=2000
+    let selD = 0, selM = 0, selY = 60;
+
+    const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
 
     const fill = (colId, labels, defaultIdx) => {
       const col = document.getElementById(colId);
@@ -123,30 +125,37 @@ const Auth = {
       h += '<div class="dob-drum-pad"></div>';
       col.innerHTML = h;
       requestAnimationFrame(() => { col.scrollTop = defaultIdx * ITEM_H; });
-
       let t;
       col.addEventListener('scroll', () => {
         clearTimeout(t);
         t = setTimeout(() => {
           const idx = Math.round(col.scrollTop / ITEM_H);
           col.scrollTo({ top: idx * ITEM_H, behavior: 'smooth' });
-          return idx;
         }, 80);
       }, { passive: true });
       return col;
     };
 
-    const days = Array.from({length:31}, (_,i) => String(i+1).padStart(2,'0'));
+    const rebuildDays = () => {
+      const max = daysInMonth(selM, 1930 + selY);
+      const labels = Array.from({length: max}, (_,i) => String(i+1).padStart(2,'0'));
+      return fill('dob-col-d', labels, Math.min(selD, max - 1));
+    };
+
     const years = Array.from({length:86}, (_,i) => String(1930+i));
 
-    const colD = fill('dob-col-d', days, selD);
+    let colD = fill('dob-col-d', Array.from({length:31}, (_,i) => String(i+1).padStart(2,'0')), selD);
     const colM = fill('dob-col-m', MONTHS, selM);
     const colY = fill('dob-col-y', years, selY);
 
     const sync = () => {
-      if (colD) selD = Math.round(colD.scrollTop / ITEM_H);
+      const prevM = selM, prevY = selY;
+      if (colD) selD = Math.min(Math.round(colD.scrollTop / ITEM_H), daysInMonth(selM, 1930 + selY) - 1);
       if (colM) selM = Math.round(colM.scrollTop / ITEM_H);
       if (colY) selY = Math.round(colY.scrollTop / ITEM_H);
+      if (selM !== prevM || selY !== prevY) {
+        colD = rebuildDays();
+      }
       const inp = document.getElementById('setup-dob');
       if (inp) inp.value = `${1930+selY}-${String(selM+1).padStart(2,'0')}-${String(selD+1).padStart(2,'0')}`;
     };

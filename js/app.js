@@ -172,6 +172,7 @@ const App = {
     const startupDate = Utils.todayStr();
     setInterval(() => {
       if (Utils.todayStr() !== startupDate) {
+        if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
         console.log("[App] Midnight rollover detected. Reloading app state...");
         window.location.reload();
       }
@@ -228,12 +229,16 @@ const App = {
     });
 
     // Android hardware back button support
+    let processingPop = false;
     window.addEventListener('popstate', (e) => {
+      if (processingPop) return;
+      processingPop = true;
       // Close any open modal first
       const openModal = document.querySelector('.modal-overlay:not(.hidden)');
       if (openModal) {
         Utils.closeModal(openModal);
         history.pushState({ section: this.currentSection }, '', '');
+        setTimeout(() => { processingPop = false; }, 100);
         return;
       }
       // Close sidebar if open
@@ -241,8 +246,10 @@ const App = {
       if (sidebar && sidebar.classList.contains('open')) {
         this.closeSidebar();
         history.pushState({ section: this.currentSection }, '', '');
+        setTimeout(() => { processingPop = false; }, 100);
         return;
       }
+      processingPop = false;
       // Navigate back to previous section or home
       if (e.state && e.state.section) {
         this.navigateTo(e.state.section, true);

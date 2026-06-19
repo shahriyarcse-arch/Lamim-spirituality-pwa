@@ -169,13 +169,13 @@
   width: 200%;
   height: 200%;
   background: conic-gradient(from 0deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-  animation: q-aurora 15s linear infinite;
+  animation: q-aurora-engine 15s linear infinite;
   opacity: 0.12;
   filter: blur(60px);
   z-index: 0;
 }
 
-@keyframes q-aurora {
+@keyframes q-aurora-engine {
   to {
     transform: rotate(360deg);
   }
@@ -221,7 +221,7 @@
   width: 200%;
   height: 200%;
   background: radial-gradient(circle, #ff00ea20 0%, #ffd70010 30%, transparent 70%);
-  animation: q-aurora 20s linear infinite reverse;
+  animation: q-aurora-engine 20s linear infinite reverse;
   filter: blur(40px);
   z-index: 0;
 }
@@ -1478,10 +1478,10 @@
   filter: blur(10px);
   opacity: 0.3;
   z-index: -1;
-  animation: iconPulse 2s infinite alternate;
+  animation: iconPulseEngine 2s infinite alternate;
 }
 
-@keyframes iconPulse {
+@keyframes iconPulseEngine {
   from {
     transform: scale(1);
     opacity: 0.2;

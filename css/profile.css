@@ -83,7 +83,7 @@
   transition: transform 0.3s ease;
   position: relative;
   z-index: 2;
-  animation: avatar-spin-in 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: avatarSpinInProfile 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .profile-avatar:hover { transform: scale(1.05); }
@@ -98,7 +98,7 @@
   100% { transform: rotate(0deg); }
 }
 
-@keyframes avatar-spin-in {
+@keyframes avatarSpinInProfile {
   0% { transform: rotate(-360deg) scale(0.5); opacity: 0; }
   100% { transform: rotate(0deg) scale(1); opacity: 1; }
 }

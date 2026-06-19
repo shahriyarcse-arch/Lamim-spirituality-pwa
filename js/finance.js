@@ -388,9 +388,14 @@ const Finance = {
     });
 
     const sortedCats = Object.entries(catWeights).sort((a,b) => b[1] - a[1]);
+    const getCatColor = (entry) => {
+      if (!entry) return '#ff3b30';
+      const cat = this.categories.find(c => c.id === entry[0]);
+      return cat ? cat.color : '#ff3b30';
+    };
     const gCols = [
-      sortedCats[0] ? this.getResolvedColor(this.categories.find(c=>c.id===sortedCats[0][0]).color) : this.getResolvedColor('#ff3b30'),
-      sortedCats[1] ? this.getResolvedColor(this.categories.find(c=>c.id===sortedCats[1][0]).color) : this.getResolvedColor('#ff9500'),
+      sortedCats[0] ? this.getResolvedColor(getCatColor(sortedCats[0])) : this.getResolvedColor('#ff3b30'),
+      sortedCats[1] ? this.getResolvedColor(getCatColor(sortedCats[1])) : this.getResolvedColor('#ff9500'),
       this.getResolvedColor('#007aff'), this.getResolvedColor('#af52de')
     ];
 

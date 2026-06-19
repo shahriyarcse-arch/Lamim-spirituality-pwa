@@ -1,4 +1,4 @@
-/* === SALAH (Farz Only — Fully Responsive) === */
+﻿/* === SALAH (Farz Only â€” Fully Responsive) === */
 
 .prayer-times-row {
   display: flex;
@@ -26,7 +26,7 @@
   min-width: 64px;
   position: relative;
   overflow: hidden;
-  animation: borderBreath 4s infinite ease-in-out;
+  animation: borderBreathSalah 4s infinite ease-in-out;
 }
 
 .prayer-time-pill:hover {
@@ -71,7 +71,7 @@
   padding: 1px 6px;
   border-radius: var(--radius-full);
   background: rgba(167, 139, 250, 0.15);
-  animation: pulse 2s infinite;
+    animation: pulseSalah 2s infinite;
 }
 
 /* Stats Grid */
@@ -94,7 +94,7 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   animation:
     popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both,
-    borderBreath 5s infinite ease-in-out;
+    borderBreathSalah 5s infinite ease-in-out;
 }
 
 .salah-stat-card:nth-child(1) {
@@ -198,7 +198,7 @@
   }
 }
 
-@keyframes borderBreath {
+@keyframes borderBreathSalah {
   0% {
     border-color: var(--color-border);
     box-shadow: 0 0 0 transparent;
@@ -215,10 +215,6 @@
   }
 }
 
-@keyframes textShimmer {
-  0% {
-    background-position: 0% 50%;
-  }
 
   50% {
     background-position: 100% 50%;
@@ -626,7 +622,7 @@
   color: #475569 !important;
 }
 
-@keyframes liveGlossy {
+@keyframes liveGlossySalah {
 
   0%,
   100% {
@@ -823,20 +819,6 @@
   .salah-option-btn {
     min-height: 84px;
   }
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .salah-cal-cell:hover {
@@ -857,24 +839,7 @@
   pointer-events: none;
 }
 
-@keyframes liveGlossy {
 
-  0%,
-  100% {
-    box-shadow:
-      inset 0 2px 10px rgba(255, 255, 255, 0.4),
-      0 0 10px rgba(16, 185, 129, 0.3);
-    filter: brightness(1.1);
-  }
-
-  50% {
-    box-shadow:
-      inset 0 4px 20px rgba(255, 255, 255, 0.8),
-      0 0 20px rgba(16, 185, 129, 0.6);
-    filter: brightness(1.3);
-    transform: scale(1.08);
-  }
-}
 
 /* Custom Calendar Tooltip */
 .salah-cal-tooltip {
@@ -1056,22 +1021,10 @@
   }
 }
 
-@keyframes pulse {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.6;
-  }
-}
-
 
 /* === MERGED FROM WITR-FIX.CSS === */
 /* =============================================
-   NIGHT PRAYERS — PREMIUM REDESIGN
+   NIGHT PRAYERS â€” PREMIUM REDESIGN
    ============================================= */
 
 :root {
@@ -1151,7 +1104,7 @@
   font-weight: 500;
 }
 
-/* Tahajjud Rakat Dial — Modern Row */
+/* Tahajjud Rakat Dial â€” Modern Row */
 .rakat-selector-dial {
   display: flex;
   gap: 10px;
@@ -2633,7 +2586,7 @@
 
 /* ===== PREMIUM SALAH ENHANCEMENTS ===== */
 
-/* Premium stat cards — bento grid */
+/* Premium stat cards â€” bento grid */
 .salah-stat-card {
   position: relative;
   overflow: hidden;

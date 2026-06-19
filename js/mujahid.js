@@ -395,63 +395,74 @@ const Mujahid = {
   },
 
   startLiveCounter() {
+    if (this._liveCounterId) return;
     let lastSec = -1;
-      setInterval(() => {
-        const now = new Date();
-        const currentSec = now.getSeconds();
-        if (currentSec === lastSec) return;
-        lastSec = currentSec;
-        
-        const timeDisplays = document.querySelectorAll('.mujahid-live-time');
-        if (timeDisplays.length === 0) return;
-        
-        timeDisplays.forEach(el => {
-          const habitId = el.dataset.habitId;
-          const timeStats = habitId && habitId !== '' ? this.getHabitTimeStats(habitId) : this.getTimeStats();
-          
-          const nums = el.querySelectorAll('.mujahid-time-num');
-          if (nums.length >= 4) {
-            const currentInterval = Math.floor(Date.now() / (1000 * 30));
-            const lastInterval = parseInt(el.dataset.lastInterval || '0');
-            
-            const lastKnownDays = el.dataset.lastKnownDays ? parseInt(el.dataset.lastKnownDays, 10) : timeStats.days;
-            el.dataset.lastKnownDays = timeStats.days;
-            
-            nums[0].textContent = timeStats.days;
-            nums[1].textContent = timeStats.hours;
-            nums[2].textContent = timeStats.minutes;
-            nums[3].textContent = timeStats.seconds;
-            
-            // MILESTONE SURGE: Detect Rank Change
-            if (lastKnownDays !== timeStats.days && habitId) {
-              const oldBadge = this.getBadgeForDays(lastKnownDays);
-              const newBadge = this.getBadgeForDays(timeStats.days);
-              if (newBadge && (!oldBadge || newBadge.days > oldBadge.days)) {
-                Utils.toast(`RANK ADVANCEMENT: You have achieved the rank of "${newBadge.name}"! 🛡️✨`, 'success');
-              }
-              this.render();
+    let firstTick = true;
+    this._liveCounterId = setInterval(() => {
+      const now = new Date();
+      const currentSec = now.getSeconds();
+      if (currentSec === lastSec) return;
+      lastSec = currentSec;
+
+      const timeDisplays = document.querySelectorAll('.mujahid-live-time');
+      if (timeDisplays.length === 0) return;
+
+      timeDisplays.forEach(el => {
+        const habitId = el.dataset.habitId;
+        const timeStats = habitId && habitId !== '' ? this.getHabitTimeStats(habitId) : this.getTimeStats();
+
+        const nums = el.querySelectorAll('.mujahid-time-num');
+        if (nums.length >= 4) {
+          const currentInterval = Math.floor(Date.now() / (1000 * 30));
+          const lastInterval = parseInt(el.dataset.lastInterval || '0');
+
+          el.dataset.lastKnownDays = timeStats.days;
+
+          nums[0].textContent = timeStats.days;
+          nums[1].textContent = timeStats.hours;
+          nums[2].textContent = timeStats.minutes;
+          nums[3].textContent = timeStats.seconds;
+
+          if (firstTick) { firstTick = false; return; }
+
+          const lastKnownDays = parseInt(el.dataset.lastKnownDays || '0', 10);
+
+          // MILESTONE SURGE: Detect Rank Change
+          if (lastKnownDays !== timeStats.days && habitId) {
+            const oldBadge = lastKnownDays > 0 ? this.getBadgeForDays(lastKnownDays) : null;
+            const newBadge = this.getBadgeForDays(timeStats.days);
+            if (newBadge && (!oldBadge || newBadge.days > oldBadge.days)) {
+              Utils.toast(`RANK ADVANCEMENT: You have achieved the rank of "${newBadge.name}"! 🛡️✨`, 'success');
             }
-            
-            if (currentInterval !== lastInterval) {
-              el.dataset.lastInterval = currentInterval;
-              const card = document.getElementById(`habit-${habitId}`);
-              if (card) {
-                const quoteEl = card.querySelector('.iw-quote');
-                if (quoteEl) {
-                  const quoteData = this.getCurrentMinuteQuote(habitId);
-                  // Smooth transition
-                  quoteEl.style.opacity = '0';
-                  setTimeout(() => {
-                    quoteEl.className = 'iw-quote ' + quoteData.effectClass;
-                    quoteEl.innerHTML = quoteData.text;
-                    quoteEl.style.opacity = '1';
-                  }, 500);
-                }
+            this.render();
+          }
+
+          if (currentInterval !== lastInterval) {
+            el.dataset.lastInterval = currentInterval;
+            const card = document.getElementById(`habit-${habitId}`);
+            if (card) {
+              const quoteEl = card.querySelector('.iw-quote');
+              if (quoteEl) {
+                const quoteData = this.getCurrentMinuteQuote(habitId);
+                quoteEl.style.opacity = '0';
+                setTimeout(() => {
+                  quoteEl.className = 'iw-quote ' + quoteData.effectClass;
+                  quoteEl.innerHTML = quoteData.text;
+                  quoteEl.style.opacity = '1';
+                }, 500);
               }
             }
           }
-        });
-      }, 500);
+        }
+      });
+    }, 500);
+  },
+
+  stopLiveCounter() {
+    if (this._liveCounterId) {
+      clearInterval(this._liveCounterId);
+      this._liveCounterId = null;
+    }
   },
 
   loadHabits() {

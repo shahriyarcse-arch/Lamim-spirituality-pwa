@@ -463,9 +463,9 @@ select.input option:disabled { color: var(--color-text-muted); }
   background: linear-gradient(135deg, #a855f7, #6366f1, #38bdf8);
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 16px rgba(139,92,246,0.35), 0 0 4px rgba(139,92,246,0.2);
-  animation: orbGlow 3s ease-in-out infinite;
+  animation: orbGlowComponent 3s ease-in-out infinite;
 }
-@keyframes orbGlow {
+@keyframes orbGlowComponent {
   0%, 100% { box-shadow: 0 0 16px rgba(139,92,246,0.35), 0 0 4px rgba(139,92,246,0.2); }
   50% { box-shadow: 0 0 24px rgba(139,92,246,0.5), 0 0 8px rgba(56,189,248,0.3); }
 }
@@ -476,9 +476,9 @@ select.input option:disabled { color: var(--color-text-muted); }
   background-size: 200% 200%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmerText 4s ease-in-out infinite;
+  animation: shimmerComponent 4s ease-in-out infinite;
 }
-@keyframes shimmerText {
+@keyframes shimmerComponent {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
