@@ -95,13 +95,16 @@ const Utils = {
     let lat = settings.lat || 23.8103;
     let lng = settings.lng || 90.4125;
 
-    // Automatic Location Detection (if not set)
-    if (!settings.lat && navigator.geolocation) {
+    // Automatic Location Detection (attempt once)
+    if (!settings.lat && navigator.geolocation && !this._geoAttempted) {
+      this._geoAttempted = true;
       navigator.geolocation.getCurrentPosition((pos) => {
-        const newSettings = { ...settings, lat: pos.coords.latitude, lng: pos.coords.longitude };
+        const newSettings = { ...DB.getSettings(), lat: pos.coords.latitude, lng: pos.coords.longitude };
         DB.setSettings(newSettings);
-        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
-      }, null, { timeout: 5000 });
+        this._cachedTimesAt = 0; // Force recalc on next call
+      }, (err) => {
+        console.warn('[Geo] Location detection failed:', err.message);
+      }, { timeout: 10000, enableHighAccuracy: false });
     }
     
     const now = new Date();
@@ -135,8 +138,9 @@ const Utils = {
       const angleRad = angle * Math.PI / 180;
       const cosHA = (Math.sin(angleRad) - Math.sin(latRad) * Math.sin(decl)) /
                     (Math.cos(latRad) * Math.cos(decl));
-      if (cosHA > 1 || cosHA < -1) return 0;
-      return Math.acos(cosHA) * 180 / Math.PI / 15; // in hours
+      // Clamp to [-1, 1] to handle floating-point drift and extreme latitudes
+      const clamped = Math.max(-1, Math.min(1, cosHA));
+      return Math.acos(clamped) * 180 / Math.PI / 15; // in hours
     };
 
     // Fajr: Sun at -18° (Muslim World League)
@@ -157,10 +161,9 @@ const Utils = {
     const isha = dhuhr + ishaHA;
 
     const makeTime = (hours) => {
-      const h = Math.floor(hours);
-      const m = Math.round((hours - h) * 60);
       const d = new Date(now);
-      d.setHours(h, m, 0, 0);
+      d.setHours(0, 0, 0, 0); // midnight today
+      d.setMinutes(Math.round(hours * 60));
       return d;
     };
 
