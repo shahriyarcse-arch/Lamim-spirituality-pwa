@@ -276,6 +276,8 @@ const App = {
     if (typeof PrayerNotifier !== 'undefined') {
       PrayerNotifier.init();
     }
+    // Initialize Home section listeners (data-updated event)
+    if (typeof Home !== 'undefined') Home.init();
   },
 
 
