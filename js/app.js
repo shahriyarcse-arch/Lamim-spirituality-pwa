@@ -337,9 +337,9 @@ const App = {
 
     // Section accent color
     const accents = {
-      home: '#10B981', salah: '#34D399', dhikr: '#A855F7',
-      nafl: '#6366F1', analysis: '#8B5CF6', mujahid: '#F59E0B',
-      finance: '#14B8A6', 'year-review': '#FCD34D', profile: '#6B7280'
+      home: '#10B981', salah: '#3B82F6', dhikr: '#A855F7',
+      nafl: '#F59E0B', analysis: '#EC4899', mujahid: '#EF4444',
+      finance: '#14B8A6', 'year-review': '#EAB308', profile: '#6B7280'
     };
     document.documentElement.style.setProperty('--section-accent', accents[sectionId] || '#10B981');
 
