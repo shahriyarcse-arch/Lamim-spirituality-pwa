@@ -681,6 +681,181 @@
   transition: transform 0.4s var(--cb-spring), box-shadow 0.4s var(--cb-smooth) !important;
 }
 
+/* ---- SALAH — LIVELY MICRO-ANIMATIONS ---- */
+
+/* Section header icon — gentle pulse */
+.section-title .icon svg {
+  animation: salahIconPulse 3s var(--cb-smooth) infinite;
+}
+@keyframes salahIconPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+/* Date nav buttons — hover lift + glow */
+.salah-date-nav-modern button {
+  transition: transform 0.3s var(--cb-spring), box-shadow 0.3s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .salah-date-nav-modern button:hover {
+    transform: scale(1.12);
+    box-shadow: 0 0 16px var(--section-accent, #3B82F6);
+  }
+  .salah-date-nav-modern button:active {
+    transform: scale(0.9);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Prayer times row — next pill gentle breathe */
+.prayer-time-pill.next {
+  animation: pillBreathe 3s var(--cb-smooth) infinite !important;
+}
+@keyframes pillBreathe {
+  0%, 100% { box-shadow: 0 0 8px var(--section-accent, #3B82F6); transform: translateY(0); }
+  50%      { box-shadow: 0 0 20px var(--section-accent, #3B82F6); transform: translateY(-2px); }
+}
+
+/* Prayer pills general hover */
+@media (hover: hover) {
+  .prayer-time-pill:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 2;
+  }
+  .prayer-time-pill:active {
+    transform: scale(0.95);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Stat cards — subtle hover lift + accent glow */
+.salah-stat-card {
+  transition: transform 0.35s var(--cb-spring), box-shadow 0.4s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .salah-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+  .salah-stat-card:active {
+    transform: scale(0.96);
+    transition-duration: 0.08s;
+  }
+}
+/* Mini ring subtle glow */
+.salah-stat-ring svg {
+  filter: drop-shadow(0 0 6px var(--color-accent-primary, #10B981));
+  animation: miniRingGlow 3.5s ease-in-out infinite;
+}
+@keyframes miniRingGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px var(--color-accent-primary, #10B981)); }
+  50%      { filter: drop-shadow(0 0 12px var(--color-accent-primary, #10B981)); }
+}
+
+/* Stat values — gentle color bounce */
+.salah-stat-val {
+  transition: transform 0.3s var(--cb-bounce), color 0.3s var(--cb-smooth) !important;
+}
+
+/* Prayer cards — hover lift + status chip breathe */
+.salah-prayer-card {
+  transition: transform 0.35s var(--cb-spring), border-color 0.3s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .salah-prayer-card:hover {
+    transform: translateY(-2px);
+  }
+  .salah-prayer-card:active {
+    transform: scale(0.98);
+    transition-duration: 0.08s;
+  }
+}
+/* Status chip — gentle glaze */
+.salah-status-chip:not(.salah-status-pending) {
+  animation: statusChipBreathe 3.5s ease-in-out infinite;
+}
+@keyframes statusChipBreathe {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.12); }
+}
+/* Pending chip — gentle pulse */
+.salah-status-pending {
+  animation: pendingPulse 2s ease-in-out infinite;
+}
+@keyframes pendingPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+/* Option buttons — spring hover */
+.salah-option-btn {
+  transition: transform 0.3s var(--cb-spring), box-shadow 0.3s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .salah-option-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .salah-option-btn:active {
+    transform: scale(0.94);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Calendar — cell hover */
+.salah-cal-cell {
+  transition: transform 0.3s var(--cb-spring), box-shadow 0.3s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .salah-cal-cell:hover {
+    transform: scale(1.08);
+    z-index: 2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .salah-cal-cell:active {
+    transform: scale(0.95);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Lock icon — already has lockPulse keyframe, just ensure smooth */
+.salah-lock-svg {
+  animation: lockPulse 2.5s var(--cb-smooth) infinite !important;
+}
+@keyframes lockPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* Export button subtle hover */
+@media (hover: hover) {
+  .salah-calendar + .salah-legend + * button,
+  .card-header button[onclick*="exportPDF"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .card-header button[onclick*="exportPDF"]:active {
+    transform: scale(0.96);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Section settings (reset) btn subtle hover */
+.section-settings-btn {
+  transition: transform 0.3s var(--cb-spring), color 0.3s var(--cb-smooth) !important;
+}
+@media (hover: hover) {
+  .section-settings-btn:hover {
+    transform: rotate(30deg) scale(1.1);
+    color: var(--color-accent-primary) !important;
+  }
+  .section-settings-btn:active {
+    transform: rotate(45deg) scale(0.9);
+    transition-duration: 0.08s;
+  }
+}
+
 /* ---- SETTINGS ITEM chevron animation ---- */
 .settings-item .settings-item-right svg:last-child {
   transition: transform 0.3s var(--cb-spring);
