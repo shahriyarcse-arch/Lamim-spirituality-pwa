@@ -223,7 +223,7 @@ const Auth = {
       const res = await fetch('https://ipapi.co/json/');
       const data = await res.json();
       if (data.latitude && data.longitude) {
-        updateFields(data.latitude, data.longitude, true);
+        await updateFields(data.latitude, data.longitude, true);
       } else {
         throw new Error("IP Geolocation failed");
       }

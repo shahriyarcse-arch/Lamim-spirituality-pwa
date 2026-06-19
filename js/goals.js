@@ -404,7 +404,7 @@ const Goals = {
       return;
     }
     const data = DB.getSalah(this.currentDate);
-    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat !== undefined) {
+    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat != null) {
       return;
     }
     data.tahajjud = true;
@@ -419,7 +419,7 @@ const Goals = {
       return;
     }
     const data = DB.getSalah(this.currentDate);
-    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat !== undefined) {
+    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat != null) {
       return;
     }
     data.tahajjud = false;
@@ -434,7 +434,7 @@ const Goals = {
       return;
     }
     const data = DB.getSalah(this.currentDate);
-    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat !== undefined) {
+    if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat != null) {
       return;
     }
     const r = prompt("Enter custom Rakat number (e.g. 14, 20):");

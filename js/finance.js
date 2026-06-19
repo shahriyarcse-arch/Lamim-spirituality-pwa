@@ -255,7 +255,7 @@ const Finance = {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) { console.warn('Exchange rate fetch failed:', e); }
   },
 
   getSymbol() { return DB.getSettings().currency === 'BDT' ? '৳' : '$'; },
@@ -393,12 +393,6 @@ const Finance = {
       const cat = this.categories.find(c => c.id === entry[0]);
       return cat ? cat.color : '#ff3b30';
     };
-    const gCols = [
-      sortedCats[0] ? this.getResolvedColor(getCatColor(sortedCats[0])) : this.getResolvedColor('#ff3b30'),
-      sortedCats[1] ? this.getResolvedColor(getCatColor(sortedCats[1])) : this.getResolvedColor('#ff9500'),
-      this.getResolvedColor('#007aff'), this.getResolvedColor('#af52de')
-    ];
-
     const isNegative = stats.totalAllTime < 0;
     // More robust date detection
     const allDates = [
@@ -580,7 +574,7 @@ const Finance = {
   },
 
   getCategory(id) {
-    return this.categoryMap.get(id) || { name: 'Other', icon: '❓', color: '#8E8E93' };
+    return (this.categoryMap && this.categoryMap.get(id)) || { name: 'Other', icon: '❓', color: '#8E8E93' };
   },
 
   renderActivityItem(e, index) {

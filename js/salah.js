@@ -167,7 +167,7 @@ const Salah = {
     let pts = 0;
     this.prayers.forEach(p => {
       if (salah[p] && this.statusMeta[salah[p]]) {
-        pts += this.statusMeta[salah[p]].points;
+        pts += (this.statusMeta[salah[p]].points || 0);
       }
     });
     return pts;

@@ -42,6 +42,12 @@ const Dhikr = {
   count: 0,
 
   // Track language fallback if App.lang isn't ready
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  },
+
   getLang() {
     return window.App && App.lang ? App.lang : (DB.rawGet('lamim_lang') || 'en');
   },
@@ -132,7 +138,7 @@ const Dhikr = {
       <div class="dhikr-preset-card ${p.id === this.currentId ? 'active' : ''}" onclick="Dhikr.selectDhikr('${p.id}')">
         <div class="dhikr-preset-icon">${p.icon || ''}</div>
         ${p.arabic ? `<div class="dhikr-preset-arabic">${p.arabic}</div>` : ''}
-        <div class="dhikr-preset-name">${p.latin}</div>
+        <div class="dhikr-preset-name">${this.escapeHtml(p.latin)}</div>
       </div>
     `).join('') + `
       <div class="dhikr-preset-card" onclick="Dhikr.showAddModal()" style="border-style:dashed">
@@ -320,7 +326,7 @@ const Dhikr = {
           <div class="dhikr-session-item anim-fade-in" id="session-item-${id}">
             <div class="ds-icon">${preset.icon}</div>
             <div class="ds-info">
-              <div class="ds-name">${preset.latin}</div>
+              <div class="ds-name">${this.escapeHtml(preset.latin)}</div>
               <div class="ds-count" id="session-count-${id}" style="transition: all 0.15s ease; display: inline-block;">${cnt}</div>
             </div>
           </div>
@@ -396,7 +402,7 @@ const Dhikr = {
             <div class="dhikr-history-item">
               <div class="dhikr-history-item-left">
                 <span class="dhikr-history-item-icon">${preset.icon}</span>
-                <span class="dhikr-history-item-name">${preset.latin}</span>
+                <span class="dhikr-history-item-name">${this.escapeHtml(preset.latin)}</span>
               </div>
               <span class="dhikr-history-item-count">${cnt}</span>
             </div>

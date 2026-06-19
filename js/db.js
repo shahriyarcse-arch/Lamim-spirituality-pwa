@@ -213,7 +213,7 @@ const DB = {
   },
 
   rawGet(key) {
-    return this._cache[key] || null;
+    return key in this._cache ? this._cache[key] : null;
   },
 
   rawSet(key, val) {

@@ -349,7 +349,6 @@ const Profile = {
     DB.setSettings(s);
     document.documentElement.setAttribute('data-theme', theme);
     this.renderSettings();
-    Profile.renderSettings();
   },
 
   toggleNotifications() {
@@ -371,7 +370,6 @@ const Profile = {
       if (typeof PrayerNotifier !== 'undefined') PrayerNotifier.stop();
     }
     this.renderSettings();
-    Profile.renderSettings();
   },
 
   toggleJumuahMode() {
@@ -379,7 +377,6 @@ const Profile = {
     s.jumuahMode = s.jumuahMode === undefined ? true : !s.jumuahMode;
     DB.setSettings(s);
     this.renderSettings();
-    Profile.renderSettings();
   },
 
 
@@ -684,7 +681,6 @@ const Profile = {
       
       const successMsg = settings.locationName ? `Location synced: ${settings.locationName}` : 'Location updated successfully!';
       Utils.toast(successMsg, 'success');
-      Profile.renderSettings();
       icons.forEach(icon => icon.classList.remove('rotating'));
       this._isSyncingLocation = false;
     };

@@ -38,10 +38,8 @@ const App = {
 
 
     // Pre-calculate reverse dictionary for fast translation lookup (O(1))
-    if (!this.reverseDict) {
-      this.reverseDict = new Map();
-      Object.keys(this.dict).forEach(k => this.reverseDict.set(this.dict[k], k));
-    }
+    this.reverseDict = new Map();
+    Object.keys(this.dict).forEach(k => this.reverseDict.set(this.dict[k], k));
 
     // 2. Translate explicit data-i18n elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -115,7 +113,7 @@ const App = {
         });
       }
       caches.keys().then(keys => {
-        keys.forEach(key => caches.delete(key));
+        keys.forEach(key => { try { caches.delete(key); } catch(e) {} });
       });
       setTimeout(() => window.location.reload(true), 500);
       return; // Stop initialization until reload
@@ -371,6 +369,12 @@ const App = {
   bindNav() {
     document.querySelectorAll('[data-section]').forEach(el => {
       el.addEventListener('click', () => this.navigateTo(el.dataset.section));
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.navigateTo(el.dataset.section);
+        }
+      });
     });
   },
 

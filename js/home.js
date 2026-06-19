@@ -144,7 +144,7 @@ const Home = {
     if (!container) return;
     
     // FIX #4: Use cached SHS instead of recalculating
-    const shs = this._cachedSHS || Analysis.calculateSHS();
+    const shs = this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { total: 0, rating: { color: '#8E8E93' } });
     const ranks = [
       { min: 0,  label: 'Ghafil' },
       { min: 15, label: 'Musafir' },
@@ -196,7 +196,7 @@ const Home = {
     if (!container) return;
     
     // FIX #4: Use cached SHS instead of recalculating
-    const color = (this._cachedSHS || Analysis.calculateSHS()).rating.color;
+    const color = (this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { rating: { color: '#8E8E93' } })).rating.color;
     container.style.overflow = 'visible';
     container.style.width = '80px'; 
     

@@ -331,9 +331,9 @@ const UI = {
 
     if (!modal) return;
 
-    if (opts.title) title.textContent = opts.title;
-    if (opts.desc) desc.textContent = opts.desc;
-    if (opts.confirmText) confirmBtn.textContent = opts.confirmText;
+    if (opts.title && title) title.textContent = opts.title;
+    if (opts.desc && desc) desc.textContent = opts.desc;
+    if (opts.confirmText && confirmBtn) confirmBtn.textContent = opts.confirmText;
     
     // Dynamic Icon/Color
     if (opts.type === 'danger') {

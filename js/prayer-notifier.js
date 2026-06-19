@@ -60,7 +60,7 @@ const PrayerNotifier = {
     if (!times || times.length === 0) return;
 
     const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
+    const todayStr = Utils.todayStr();
 
     // Find which prayer just started (within the last 2 minutes)
     for (const prayer of times) {

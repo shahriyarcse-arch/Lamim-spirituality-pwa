@@ -23,7 +23,6 @@ const ASSETS = [
   './css/goals.css',
   './css/mujahid.css',
   './css/analysis.css',
-  './css/finance.css',
   './css/profile.css',
   './css/profile-premium.css',
   './css/glass-panel.css',
@@ -131,14 +130,18 @@ self.addEventListener('fetch', (e) => {
                   console.log('[SW] Timeout fallback to cache for:', e.request.url);
                   resolve(cached);
                 } else {
-                  // No cache AND network is slow — must resolve or the page hangs forever
                   console.log('[SW] Timeout with no cache for:', e.request.url);
                   resolve(new Response('Offline – resource unavailable', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
                 }
               }
+            }).catch(() => {
+              if (!resolved) {
+                resolved = true;
+                resolve(new Response('Offline', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
+              }
             });
           }
-        }, 1500); // 1.5 seconds timeout
+        }, 1500);
 
         fetch(e.request, { cache: 'no-cache' })
           .then((res) => {

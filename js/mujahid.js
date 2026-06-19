@@ -416,16 +416,16 @@ const Mujahid = {
           const currentInterval = Math.floor(Date.now() / (1000 * 30));
           const lastInterval = parseInt(el.dataset.lastInterval || '0');
 
-          el.dataset.lastKnownDays = timeStats.days;
+          const lastKnownDays = parseInt(el.dataset.lastKnownDays || '0', 10);
 
           nums[0].textContent = timeStats.days;
           nums[1].textContent = timeStats.hours;
           nums[2].textContent = timeStats.minutes;
           nums[3].textContent = timeStats.seconds;
 
-          if (firstTick) { firstTick = false; return; }
+          el.dataset.lastKnownDays = timeStats.days;
 
-          const lastKnownDays = parseInt(el.dataset.lastKnownDays || '0', 10);
+          if (firstTick) { firstTick = false; return; }
 
           // MILESTONE SURGE: Detect Rank Change
           if (lastKnownDays !== timeStats.days && habitId) {

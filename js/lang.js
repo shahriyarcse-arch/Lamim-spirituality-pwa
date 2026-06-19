@@ -253,48 +253,39 @@ window.n = function(num) {
   const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   return String(num).replace(/\d/g, d => bnNums[d]);
 };
-// Auto-Translator MutationObserver
-const autoTranslateObserver = new MutationObserver((mutations) => {
+function processTextNode(node) {
   const isBn = (localStorage.getItem('lamim_lang') || 'en') === 'bn';
   const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   const enNums = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
-
-  autoTranslateObserver.disconnect();
-
-  function processTextNode(node) {
-    const p = node.parentElement;
-    if (!p) return;
-    // Skip script, style, SVG internals, inputs, textareas, and code blocks
-    const tag = p.tagName;
-    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return;
-    if (p.closest('svg')) return; // Never touch SVG content - breaks viewBox, coordinates, etc.
-    if (p.hasAttribute('data-no-translate')) return; // Allow opting out
-    let text = node.nodeValue;
-    if (!text || !text.trim()) return;
-
-    let changed = false;
-    
-    // 1. Text Translation
-    let trimmed = text.trim();
-    if (isBn && Translations[trimmed]) {
-      text = text.replace(trimmed, Translations[trimmed]);
-      changed = true;
-    }
-
-    // 2. Number Translation
-    if (isBn && /\d/.test(text)) {
-      text = text.replace(/\d/g, d => bnNums[d]);
-      changed = true;
-    } else if (!isBn && /[০-৯]/.test(text)) {
-      text = text.replace(/[০-৯]/g, d => enNums[d]);
-      changed = true;
-    }
-
-    if (changed && node.nodeValue !== text) {
-      node.nodeValue = text;
-    }
+  const p = node.parentElement;
+  if (!p) return;
+  const tag = p.tagName;
+  if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return;
+  if (p.closest('svg')) return;
+  if (p.hasAttribute('data-no-translate')) return;
+  let text = node.nodeValue;
+  if (!text || !text.trim()) return;
+  let changed = false;
+  let trimmed = text.trim();
+  if (isBn && Translations[trimmed]) {
+    text = text.replace(trimmed, Translations[trimmed]);
+    changed = true;
   }
+  if (isBn && /\d/.test(text)) {
+    text = text.replace(/\d/g, d => bnNums[d]);
+    changed = true;
+  } else if (!isBn && /[০-৯]/.test(text)) {
+    text = text.replace(/[০-৯]/g, d => enNums[d]);
+    changed = true;
+  }
+  if (changed && node.nodeValue !== text) {
+    node.nodeValue = text;
+  }
+}
 
+// Auto-Translator MutationObserver
+const autoTranslateObserver = new MutationObserver((mutations) => {
+  autoTranslateObserver.disconnect();
   for (let m of mutations) {
     if (m.type === 'characterData') {
       processTextNode(m.target);
@@ -313,7 +304,6 @@ const autoTranslateObserver = new MutationObserver((mutations) => {
       });
     }
   }
-
   autoTranslateObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
 });
 
