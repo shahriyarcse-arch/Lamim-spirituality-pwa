@@ -586,7 +586,7 @@ const Finance = {
     return `
       <div class="transaction-item-wrapper" style="position: relative;">
         <div class="transaction-timeline-connector" style="--timeline-dot-color: ${isInc ? '#34C759' : '#FF2D55'};"></div>
-        <div class="transaction-item" style="animation-delay: ${index * 0.05}s;">
+        <div class="transaction-item anim-fade-in-up" style="animation-delay: ${index * 0.04}s;">
           <div class="transaction-icon" style="background:${resolvedColor}15; color:${resolvedColor}">${c.icon}</div>
           <div class="transaction-info">
             <div class="transaction-name">${Utils.escapeHTML(isInc ? e.description : c.name)}</div>
@@ -629,7 +629,7 @@ const Finance = {
           const LIMIT = 4;
           const reversedVaults = [...this.data.savings].reverse();
           const displayVaults = reversedVaults.slice(0, LIMIT);
-          return displayVaults.map(s => this.renderSavingsItem(s)).join('');
+          return displayVaults.map((s, i) => this.renderSavingsItem(s, i)).join('');
         })() : `
           <div class="vault-empty-state" onclick="Finance.showSavingsModal()">
             <div class="vault-empty-icon">💎</div>
@@ -678,7 +678,8 @@ const Finance = {
     return '💎'; 
   },
 
-  renderSavingsItem(g) {
+  renderSavingsItem(g, idx) {
+    idx = idx || 0;
     const p = g.target > 0 ? (g.saved / g.target) * 100 : 0;
     const displayP = Math.floor(p);
     const sym = this.getSymbol();
@@ -700,7 +701,7 @@ const Finance = {
     }
 
     return `
-      <div class="vault-card ${p >= 100 ? 'completed' : ''}" onclick="Finance.addToSavings('${g.id}')">
+      <div class="vault-card anim-fade-in-up ${p >= 100 ? 'completed' : ''}" style="animation-delay:${idx * 0.06}s" onclick="Finance.addToSavings('${g.id}')">
         <div class="vault-header">
           <div class="vault-icon-box" style="background:${p >= 100 ? 'rgba(255,214,10,0.1)' : ''}; color:${p >= 100 ? '#FFD60A' : ''}; box-shadow:${p >= 100 ? '0 0 20px rgba(255,214,10,0.15)' : ''};">${icon}</div>
           <div class="vault-info">

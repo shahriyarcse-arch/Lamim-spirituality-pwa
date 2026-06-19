@@ -134,14 +134,14 @@ const Dhikr = {
       sugEl.innerHTML = '';
     }
 
-    grid.innerHTML = presets.map(p => `
-      <div class="dhikr-preset-card ${p.id === this.currentId ? 'active' : ''}" onclick="Dhikr.selectDhikr('${p.id}')">
+    grid.innerHTML = presets.map((p, i) => `
+      <div class="dhikr-preset-card anim-fade-in-up ${p.id === this.currentId ? 'active' : ''}" style="animation-delay:${i * 0.04}s" onclick="Dhikr.selectDhikr('${p.id}')">
         <div class="dhikr-preset-icon">${p.icon || ''}</div>
         ${p.arabic ? `<div class="dhikr-preset-arabic">${p.arabic}</div>` : ''}
         <div class="dhikr-preset-name">${this.escapeHtml(p.latin)}</div>
       </div>
     `).join('') + `
-      <div class="dhikr-preset-card" onclick="Dhikr.showAddModal()" style="border-style:dashed">
+      <div class="dhikr-preset-card anim-fade-in-up" style="animation-delay:${presets.length * 0.04}s;border-style:dashed" onclick="Dhikr.showAddModal()">
         <div class="dhikr-preset-icon" style="font-size:18px; color:var(--color-text-muted)">+</div>
         <div class="dhikr-preset-name" style="font-size:10px; -webkit-text-fill-color:var(--color-text-muted); color:var(--color-text-muted)">Custom</div>
       </div>
