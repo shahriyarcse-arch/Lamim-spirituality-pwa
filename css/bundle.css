@@ -3641,22 +3641,6 @@ select.input option:disabled { color: var(--color-text-muted); }
   position: relative;
   overflow: hidden;
 }
-.next-prayer-premium::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-gold), var(--color-accent-primary));
-  background-size: 200% 100%;
-  animation: shimmerBar 3s ease-in-out infinite;
-}
-@keyframes shimmerBar {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 .next-prayer-glow {
   animation: prayerGlow 3s ease-in-out infinite;
 }
