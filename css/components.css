@@ -874,4 +874,43 @@ select.input option:disabled { color: var(--color-text-muted); }
   text-overflow: ellipsis;
 }
 
+/* === MICRO-INTERACTIONS === */
+.btn:active, .btn-primary:active, .btn-secondary:active, 
+.btn-ghost:active, .btn-icon-sm:active, .section-settings-btn:active,
+.section-tools-btn:active, .modal-close:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
 
+.btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-icon-sm,
+.section-settings-btn, .section-tools-btn, .modal-close {
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.nav-item, .bottom-nav-item, .gender-card-v2 {
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.nav-item:active, .bottom-nav-item:active {
+  transform: scale(0.96);
+}
+
+.gender-card-v2:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) {
+  .btn:hover, .btn-primary:hover, .btn-secondary:hover, .btn-ghost:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .section-settings-btn:hover, .section-tools-btn:hover {
+    transform: rotate(45deg);
+  }
+}
