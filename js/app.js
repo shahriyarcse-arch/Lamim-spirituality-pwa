@@ -337,7 +337,7 @@ const App = {
     const accents = {
       home: '#10B981', salah: '#34D399', dhikr: '#A855F7',
       nafl: '#6366F1', analysis: '#8B5CF6', mujahid: '#F59E0B',
-      finance: '#14B8A6', profile: '#6B7280'
+      finance: '#14B8A6', 'year-review': '#FCD34D', profile: '#6B7280'
     };
     document.documentElement.style.setProperty('--section-accent', accents[sectionId] || '#10B981');
 
@@ -356,7 +356,7 @@ const App = {
     }
 
     // Init section
-    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, profile: Profile, mujahid: Mujahid, finance: Finance };
+    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, 'year-review': YearReview, profile: Profile, mujahid: Mujahid, finance: Finance };
     inits[sectionId]?.init();
 
     // Close sidebar on mobile
@@ -460,7 +460,7 @@ const App = {
 
   refreshCurrentPage() {
     const s = this.currentSection;
-    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, profile: Profile, mujahid: Mujahid, finance: Finance };
+    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, 'year-review': YearReview, profile: Profile, mujahid: Mujahid, finance: Finance };
     if (inits[s]) inits[s].init();
     this.updateAvatars();
   },
