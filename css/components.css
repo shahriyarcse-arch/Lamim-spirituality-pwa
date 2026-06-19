@@ -375,10 +375,10 @@ select.input option:disabled { color: var(--color-text-muted); }
   flex-shrink: 0;
 }
 .bottom-nav-item.active {
-  background: color-mix(in srgb, var(--section-accent, #10B981) 10%, transparent);
+  background: color-mix(in srgb, var(--item-accent, #10B981) 10%, transparent);
 }
 [data-theme="light"] .bottom-nav-item.active {
-  background: color-mix(in srgb, var(--section-accent, #10B981) 8%, transparent);
+  background: color-mix(in srgb, var(--item-accent, #10B981) 8%, transparent);
 }
 .bottom-nav-item .bnav-icon { 
   font-size: 20px; 
