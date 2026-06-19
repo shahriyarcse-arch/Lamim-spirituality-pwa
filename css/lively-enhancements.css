@@ -631,13 +631,13 @@
   50%      { opacity: 0.12; }
 }
 
-/* Ring container — subtle float + glow */
+/* Ring container — subtle float + minimal glow */
 .salah-ring-premium {
   animation: ringFloat 5s var(--cb-smooth) infinite;
 }
 @keyframes ringFloat {
-  0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 6px var(--color-accent-primary, #10B981)); }
-  50%      { transform: translateY(-4px); filter: drop-shadow(0 0 16px var(--color-accent-primary, #10B981)); }
+  0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 2px var(--color-accent-primary, #10B981)); }
+  50%      { transform: translateY(-3px); filter: drop-shadow(0 0 6px var(--color-accent-primary, #10B981)); }
 }
 
 /* Level progress knob glow */
