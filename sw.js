@@ -1,8 +1,60 @@
-const CACHE_NAME = 'lamim-v124';
+const CACHE_NAME = 'lamim-v125';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  // Icons
+  './assets/icon.svg',
+  './assets/icon-32x32.png',
+  './assets/icon-180x180.png',
+  './assets/icon-192x192.png',
+  './assets/icon-512x512.png',
+  // CSS
+  './css/variables.css',
+  './css/base.css',
+  './css/animations.css',
+  './css/components.css',
+  './css/desktop-layout.css',
+  './css/main-layout.css',
+  './css/sidebar-widgets.css',
+  './css/home.css',
+  './css/salah.css',
+  './css/dhikr.css',
+  './css/goals.css',
+  './css/mujahid.css',
+  './css/analysis.css',
+  './css/finance.css',
+  './css/profile.css',
+  './css/profile-premium.css',
+  './css/glass-panel.css',
+  './css/stats-row.css',
+  './css/mini-badges.css',
+  './css/health-bars.css',
+  './css/activity-log.css',
+  './css/dua.css',
+  './css/auth.css',
+  './css/splash.css',
+  './css/mobile-optimizations.css',
+  './css/ultra-small-screens.css',
+  './css/radiant-soul-animation-engine.css',
+  './css/complete-cinematic-quote-effects.css',
+  // JS
+  './js/lang.js',
+  './js/utils.js',
+  './js/db.js',
+  './js/hijri.js',
+  './js/auth.js',
+  './js/home.js',
+  './js/salah.js',
+  './js/dhikr.js',
+  './js/goals.js',
+  './js/finance.js',
+  './js/mujahid.js',
+  './js/profile.js',
+  './js/analysis.js',
+  './js/dua.js',
+  './js/prayer-notifier.js',
+  './js/app.js'
 ];
 
 // Install: Cache core assets & skip waiting immediately
@@ -56,7 +108,7 @@ self.addEventListener('fetch', (e) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
           return res;
         })
-        .catch(() => caches.match(e.request).then((cached) => cached || caches.match('./index.html'))) // Fallback to cache or index.html if offline
+        .catch(() => caches.match(e.request, { ignoreSearch: true }).then((cached) => cached || caches.match('./index.html', { ignoreSearch: true }))) // Fallback to cache or index.html if offline
     );
     return;
   }
@@ -72,7 +124,7 @@ self.addEventListener('fetch', (e) => {
 
         const timeoutId = setTimeout(() => {
           if (!resolved) {
-            caches.match(e.request).then((cached) => {
+            caches.match(e.request, { ignoreSearch: true }).then((cached) => {
               if (!resolved) {
                 resolved = true;
                 if (cached) {
@@ -81,7 +133,7 @@ self.addEventListener('fetch', (e) => {
                 } else {
                   // No cache AND network is slow — must resolve or the page hangs forever
                   console.log('[SW] Timeout with no cache for:', e.request.url);
-                  resolve(new Response('Offline – resource unavailable', { status: 503, statusText: 'Service Unavailable' }));
+                  resolve(new Response('Offline – resource unavailable', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
                 }
               }
             });
@@ -103,7 +155,7 @@ self.addEventListener('fetch', (e) => {
               if (!resolved) {
                 clearTimeout(timeoutId);
                 resolved = true;
-                caches.match(e.request).then((cached) => resolve(cached || res));
+                caches.match(e.request, { ignoreSearch: true }).then((cached) => resolve(cached || res));
               }
             }
           })
@@ -111,8 +163,8 @@ self.addEventListener('fetch', (e) => {
             if (!resolved) {
               clearTimeout(timeoutId);
               resolved = true;
-              caches.match(e.request).then((cached) => {
-                resolve(cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' }));
+              caches.match(e.request, { ignoreSearch: true }).then((cached) => {
+                resolve(cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
               });
             }
           });
@@ -133,8 +185,8 @@ self.addEventListener('fetch', (e) => {
       })
       .catch(() => {
         // Network failed, try cache, otherwise return error response
-        return caches.match(e.request).then((cached) => {
-          return cached || new Response('Offline – CDN unavailable', { status: 503, statusText: 'Service Unavailable' });
+        return caches.match(e.request, { ignoreSearch: true }).then((cached) => {
+          return cached || new Response('Offline – CDN unavailable', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } });
         });
       })
   );

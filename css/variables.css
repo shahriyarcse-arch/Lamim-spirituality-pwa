@@ -36,6 +36,7 @@
 
   /* SECTION ACCENT — dynamically set by JS per section, default gold */
   --section-accent: #F59E0B;
+  --color-primary:  #6366F1;
 
   /* PRAYER STATUS COLORS */
   --color-jamaat:  #10B981; 
@@ -268,6 +269,7 @@
   --color-accent-purple:  #7C3AED; 
   --color-accent-teal:    #0D9488; 
   --color-accent-blue:    #2563EB; 
+  --color-primary:         #4F46E5;
 
   --color-text-on-primary: #FFFFFF;
   --color-text-on-success: #FFFFFF;

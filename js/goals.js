@@ -274,7 +274,7 @@ const Goals = {
     // Check if all sunnah, tahajjud, witr complete
     const done = Object.values(data.sunnah || {}).filter(v => v === true || v === 'prayed').length;
     const allSunnah = done === this.sunnahList.length;
-    if (allSunnah && (data.tahajjud_rakat > 0 || data.tahajjud === false) && (data.witr > 0 || data.witr === -1)) {
+    if (allSunnah && data.tahajjud_rakat > 0 && data.witr > 0) {
       setTimeout(() => Utils.confetti(24), 400);
     }
     } catch(e) { console.error('[Goals] selectSunnah error:', e); }

@@ -530,7 +530,7 @@ const Home = {
             <div id="home-next-name" class="next-prayer-glow" style="font-size:1.7rem; font-weight:900; color:var(--home-time-color); line-height:1.1; margin-bottom:6px; text-transform:capitalize; letter-spacing:-0.5px;">${window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
             <div id="home-next-time" style="font-size:13px; font-weight:600; color:var(--color-text-muted); display:flex; align-items:center; gap:8px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              ${window.n ? window.n(next.timeStr) : next.timeStr}
+              ${window.n ? window.n(nextLabel) : nextLabel}
             </div>
           </div>
           <div style="display: flex; flex-direction: column; align-items: center;">
@@ -550,7 +550,7 @@ const Home = {
     const nameEl = document.getElementById('home-next-name');
     const timeEl = document.getElementById('home-next-time');
     if (nameEl) nameEl.textContent = window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1);
-    if (timeEl) timeEl.textContent = window.n ? window.n(next.timeStr) : next.timeStr;
+    if (timeEl) timeEl.textContent = window.n ? window.n(nextLabel) : nextLabel;
 
     // Cancel previous loop
     if (this.countdownRAF) cancelAnimationFrame(this.countdownRAF);
@@ -586,7 +586,7 @@ const Home = {
       // Countdown progress bar: elapsed time between previous and next prayer
       const nowMs = Date.now();
       const nIdx = t.findIndex(p => p.time.getTime() === n.time.getTime());
-      const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : n.time.getTime() - 86400000);
+      const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : (t.length > 0 ? t[t.length - 1].time.getTime() : n.time.getTime() - 86400000 / 5));
       const totalGap = n.time.getTime() - prevTime;
       if (totalGap > 0 && totalGap < 86400000) {
         const elapsed = nowMs - prevTime;

@@ -476,9 +476,9 @@ select.input option:disabled { color: var(--color-text-muted); }
   background-size: 200% 200%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s ease-in-out infinite;
+  animation: shimmerText 4s ease-in-out infinite;
 }
-@keyframes shimmer {
+@keyframes shimmerText {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }

@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://api.bigdatacloud.net https://ipapi.co https://open.er-api.com; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <title>Lamim | Your Spiritual Journey</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
@@ -747,7 +748,7 @@
       </div>
     </div>
     <!-- Confirmation Modal -->
-    <div class="modal-overlay hidden" id="confirm-modal" style="display:flex; align-items:center; justify-content:center;">
+    <div class="modal-overlay hidden" id="confirm-modal">
       <div class="modal custom-confirm-panel">
         <div class="confirm-icon-wrap" id="confirm-icon-box">⚠️</div>
         <h3 class="confirm-title" id="confirm-title">Are you sure?</h3>
@@ -1147,22 +1148,22 @@
 
 
   <!-- Core Engine -->
-  <script src="js/lang.js?v=127"></script>
-  <script src="js/utils.js?v=129"></script>
-  <script src="js/db.js?v=127"></script>
-  <script src="js/auth.js?v=146"></script>
-  <script src="js/home.js?v=137"></script>
+  <script src="js/lang.js?v=127" defer></script>
+  <script src="js/utils.js?v=129" defer></script>
+  <script src="js/db.js?v=127" defer></script>
+  <script src="js/auth.js?v=146" defer></script>
+  <script src="js/home.js?v=137" defer></script>
   
   <!-- App Modules -->
-  <script src="js/hijri.js?v=137"></script>
-  <script src="js/salah.js?v=138"></script>
-  <script src="js/dhikr.js?v=138"></script>
-  <script src="js/goals.js?v=138"></script>
-  <script src="js/finance.js?v=137"></script>
-  <script src="js/mujahid.js?v=138"></script>
-  <script src="js/profile.js?v=142"></script>
-  <script src="js/analysis.js?v=137"></script>
-  <script src="js/dua.js?v=138"></script>
+  <script src="js/hijri.js?v=137" defer></script>
+  <script src="js/salah.js?v=138" defer></script>
+  <script src="js/dhikr.js?v=138" defer></script>
+  <script src="js/goals.js?v=138" defer></script>
+  <script src="js/finance.js?v=137" defer></script>
+  <script src="js/mujahid.js?v=138" defer></script>
+  <script src="js/profile.js?v=142" defer></script>
+  <script src="js/analysis.js?v=137" defer></script>
+  <script src="js/dua.js?v=138" defer></script>
 
 
   
@@ -1257,8 +1258,8 @@
     .gender-card-v2.active.female { border-color: #ec4899; box-shadow: 0 0 0 3px rgba(236,72,153,0.15), 0 8px 25px rgba(236,72,153,0.2) !important; transform: scale(1.02); }
   </style>
 
-  <script src="js/prayer-notifier.js?v=2"></script>
-  <script src="js/app.js?v=137"></script>
+  <script src="js/prayer-notifier.js?v=2" defer></script>
+  <script src="js/app.js?v=137" defer></script>
 
   <!-- Service Worker Registration handled in app.js -->
   <script>

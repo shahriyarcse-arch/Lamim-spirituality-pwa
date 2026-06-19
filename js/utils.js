@@ -433,3 +433,5 @@ const UI = {
     }
   }
 };
+Utils.sparkle = UI.sparkle.bind(UI);
+Utils.confetti = UI.confetti.bind(UI);
