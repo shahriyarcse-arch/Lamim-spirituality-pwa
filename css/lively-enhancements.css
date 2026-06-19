@@ -406,9 +406,11 @@
 
 /* ---- BOTTOM NAV + SIDEBAR NAV — LIVELY PER-SECTION COLORS + GLOW ---- */
 
-/* Sidebar active — section accent color + glow */
-.nav-item.active { color: var(--section-accent, #10B981) !important; }
+/* Sidebar + bottom nav active — section accent color + glow */
+.nav-item.active,
+.bottom-nav-item.active { color: var(--section-accent, #10B981) !important; }
 .nav-item.active .nav-icon { filter: drop-shadow(0 0 10px var(--section-accent, #10B981)); }
+.bottom-nav-item.active .bnav-icon svg { filter: drop-shadow(0 0 10px var(--section-accent, #10B981)); }
 
 .bottom-nav-item {
   transition: transform 0.35s var(--cb-spring),
