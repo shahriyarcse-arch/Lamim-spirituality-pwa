@@ -881,8 +881,28 @@ const Salah = {
         ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => delete data[p]);
         DB.setSalah(this.selectedDate, data);
         this.renderAll(true);
-        Home.render(); // Also update home stats
+        Home.render();
         Utils.toast('Salah data cleared', 'info');
+      }
+    });
+  },
+
+  clearWeekHistory() {
+    UI.showSettingsModal({
+      title: 'Clear 7-Day History?',
+      desc: 'Remove all salah and dhikr records from the last 7 days. The Weekly Pulse card will disappear until you log new data.',
+      confirmText: 'Clear All',
+      type: 'danger',
+      onConfirm: () => {
+        const d = Utils.getOffsetDate();
+        for (let i = 0; i < 7; i++) {
+          const dd = new Date(d); dd.setDate(d.getDate() - i);
+          const ds = Utils.dateStr(dd);
+          DB.remove('lamim_salah_' + ds);
+          DB.remove('lamim_dhikr_' + ds);
+        }
+        Home.render();
+        Utils.toast('Last 7 days cleared', 'info');
       }
     });
   }
