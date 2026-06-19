@@ -798,6 +798,11 @@
   }
 }
 
+/* ---- FINANCE — ensure selected category name is always visible ---- */
+.fin-cat-pill.active .fin-cat-name {
+  color: #fff !important;
+}
+
 /* ---- SETTINGS ITEM chevron animation ---- */
 .settings-item .settings-item-right svg:last-child {
   transition: transform 0.3s var(--cb-spring);
