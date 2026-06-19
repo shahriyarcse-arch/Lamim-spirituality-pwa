@@ -743,14 +743,14 @@
     transition-duration: 0.08s;
   }
 }
-/* Mini ring subtle glow */
+/* Mini ring subtle glow (reduced) */
 .salah-stat-ring svg {
-  filter: drop-shadow(0 0 6px var(--color-accent-primary, #10B981));
+  filter: drop-shadow(0 0 2px var(--color-accent-primary, #10B981));
   animation: miniRingGlow 3.5s ease-in-out infinite;
 }
 @keyframes miniRingGlow {
-  0%, 100% { filter: drop-shadow(0 0 4px var(--color-accent-primary, #10B981)); }
-  50%      { filter: drop-shadow(0 0 12px var(--color-accent-primary, #10B981)); }
+  0%, 100% { filter: drop-shadow(0 0 1px var(--color-accent-primary, #10B981)); }
+  50%      { filter: drop-shadow(0 0 4px var(--color-accent-primary, #10B981)); }
 }
 
 /* Stat values — gentle color bounce */
