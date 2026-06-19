@@ -658,15 +658,6 @@
   }
 }
 
-/* Prayer times row — next pill gentle breathe */
-.prayer-time-pill.next {
-  animation: pillBreathe 3s var(--cb-smooth) infinite !important;
-}
-@keyframes pillBreathe {
-  0%, 100% { box-shadow: 0 0 8px var(--section-accent, #3B82F6); transform: translateY(0); }
-  50%      { box-shadow: 0 0 20px var(--section-accent, #3B82F6); transform: translateY(-2px); }
-}
-
 /* Prayer pills general hover */
 @media (hover: hover) {
   .prayer-time-pill:hover {
