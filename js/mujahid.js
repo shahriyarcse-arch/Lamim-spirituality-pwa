@@ -1567,6 +1567,7 @@ const Mujahid = {
       () => {
         DB.setMujahid([]);
         this.habits = [];
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.render(true);
         this.hideToolsModal();
         Utils.toast('System Reset Complete', 'info');

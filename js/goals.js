@@ -297,6 +297,7 @@ const Goals = {
         () => {
           delete data.sunnah[id];
           DB.setSalah(this.currentDate, data);
+          window.dispatchEvent(new CustomEvent('lamim:data-updated'));
           this.render(true);
         },
         'warning'
