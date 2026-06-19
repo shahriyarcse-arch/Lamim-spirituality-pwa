@@ -490,6 +490,7 @@ const Mujahid = {
 
   saveHabits() {
     DB.setMujahid(this.habits);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
   },
 
   getHabit(id) {

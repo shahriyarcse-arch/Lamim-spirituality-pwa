@@ -280,7 +280,10 @@ const Finance = {
     this.currentViewDate = new Date();
   },
 
-  saveData() { DB.setFinance(this.data); },
+  saveData() {
+    DB.setFinance(this.data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+  },
 
   render() {
     const container = document.getElementById('finance-content');

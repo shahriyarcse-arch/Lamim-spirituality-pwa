@@ -389,6 +389,7 @@ const Auth = {
       'Are you sure you want to delete your profile? This will log you out but keep your local data.',
       () => {
         DB.remove('lamim_user');
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         Utils.toast('Logged out successfully', 'info');
         setTimeout(() => App.showPage('setup'), 500);
       }

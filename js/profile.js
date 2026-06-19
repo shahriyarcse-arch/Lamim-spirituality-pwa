@@ -432,6 +432,7 @@ const Profile = {
       () => {
         DB.clearAllUserData();
         DB.remove('lamim_user');
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         Utils.toast('Local data wiped.', 'success');
         setTimeout(() => App.showPage('setup'), 1000);
       }
@@ -522,6 +523,7 @@ const Profile = {
             }
           }
           if (restored > 0) {
+            window.dispatchEvent(new CustomEvent('lamim:data-updated'));
             Utils.toast('Backup restored successfully! Reloading...', 'success');
             setTimeout(() => window.location.reload(), 1500);
           } else {

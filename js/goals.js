@@ -153,10 +153,9 @@ const Goals = {
         data.tahajjud_rakat = 0;
         data.witr = 0;
         
-        // Save to DB (this triggers sync)
         DB.setSalah(this.currentDate, data);
-        
-        this.render(true); // skip animation on reset
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        this.render(true);
         Utils.toast('Nafl data cleared', 'info');
         console.log("[Goals] Data reset for sync:", this.currentDate);
       }
@@ -269,6 +268,7 @@ const Goals = {
 
     data.sunnah[id] = status;
     DB.setSalah(this.currentDate, data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
 
     // Check if all sunnah, tahajjud, witr complete
@@ -410,6 +410,7 @@ const Goals = {
     data.tahajjud = true;
     data.tahajjud_rakat = rakat;
     DB.setSalah(this.currentDate, data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
   },
 
@@ -425,6 +426,7 @@ const Goals = {
     data.tahajjud = false;
     data.tahajjud_rakat = -1;
     DB.setSalah(this.currentDate, data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
   },
 
@@ -549,6 +551,7 @@ const Goals = {
     }
     data.witr = 3;
     DB.setSalah(this.currentDate, data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     Utils.sparkle(document.getElementById('witr-salah-card') || document.body, 4);
     this.render(true);
   },
@@ -564,6 +567,7 @@ const Goals = {
     }
     data.witr = -1;
     DB.setSalah(this.currentDate, data);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
   },
 

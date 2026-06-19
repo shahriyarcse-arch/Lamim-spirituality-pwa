@@ -256,6 +256,7 @@ const Dhikr = {
     const dhikr = DB.getDhikr(today);
     dhikr[this.currentId] = this.count;
     DB.setDhikr(today, dhikr);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
   },
 
   floatUp() {
@@ -433,6 +434,7 @@ const Dhikr = {
     const presets = DB.getDhikrPresets();
     presets.push(preset);
     DB.setDhikrPresets(presets);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.hideAddModal();
     this.renderPresetRow();
     Utils.toast('Custom dhikr added!', 'success');
@@ -446,7 +448,8 @@ const Dhikr = {
       type: 'danger',
       onConfirm: () => {
         const today = Utils.todayStr();
-        DB.setDhikr(today, {});
+        DB.remove('lamim_dhikr_' + today);
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.init();
         Utils.toast('Dhikr data cleared', 'info');
       }

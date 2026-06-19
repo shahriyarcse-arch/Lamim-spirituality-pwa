@@ -317,6 +317,7 @@ const Salah = {
     // Allow updates even if already set, so user can correct mistakes
     salah[prayer] = status;
     DB.setSalah(date, salah);
+    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
 
     // Partial update instead of full renderAll to prevent blinking
     this.renderPrayerCards(date, true); // true = skipAnim
@@ -878,8 +879,9 @@ const Salah = {
       type: 'danger',
       onConfirm: () => {
         const data = DB.getSalah(this.selectedDate);
-        ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => delete data[p]);
+        ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => data[p] = null);
         DB.setSalah(this.selectedDate, data);
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.renderAll(true);
         Home.render();
         Utils.toast('Salah data cleared', 'info');
@@ -901,6 +903,7 @@ const Salah = {
           DB.remove('lamim_salah_' + ds);
           DB.remove('lamim_dhikr_' + ds);
         }
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         Home.render();
         Utils.toast('Last 7 days cleared', 'info');
       }
