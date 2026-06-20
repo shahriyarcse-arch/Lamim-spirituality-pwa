@@ -1,17 +1,13 @@
-const CACHE_NAME = 'lamim-v126';
+const CACHE_NAME = 'lamim-v129';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  // Icons
   './assets/icon.svg',
   './assets/icon-32x32.png',
   './assets/icon-180x180.png',
   './assets/icon-192x192.png',
   './assets/icon-512x512.png',
-  // CSS (bundled)
-  './css/bundle.css',
-  // JS
   './js/lang.js',
   './js/utils.js',
   './js/db.js',
