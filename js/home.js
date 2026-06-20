@@ -549,43 +549,25 @@ const Home = {
     const waqtColor = waqtColors[next.name] || '#10B981';
     const waqtClass = 'waqt-' + (next.name || 'fajr');
 
-    const waqtMsgs = {
-      fajr: "The angels of night and day witness the Dawn prayer.",
-      dhuhr: "The gates of heaven open; a perfect time for reflection.",
-      asr: "Guard strictly your afternoon prayer; it carries immense reward.",
-      maghrib: "The day concludes; seek forgiveness and embrace the evening.",
-      isha: "End your day with peace; a light for the darkness of night."
-    };
-    const waqtMsg = waqtMsgs[next.name] || "Seek comfort in your connection with the Creator.";
-
     el.innerHTML = `
-      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin: 0;">
-        <div class="waqt-orb-header">
-          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
-          <div style="display:flex; align-items:center; gap:4px; font-size:9px; font-weight:700; color:var(--color-accent-gold);">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>${window.t ? window.t('Tracked') : 'Tracked'}</span>
-          </div>
+      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin: 0; padding: 24px;">
+        <div class="waqt-orb-header" style="justify-content:center; margin-bottom: 16px;">
+          <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
         </div>
         <div class="waqt-orb-body">
-          <div class="waqt-info-side">
-            <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor}; font-size: 2.4rem; margin-bottom: 2px;">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-            <div id="home-next-time" class="waqt-prayer-time" style="font-size: 1.1rem;">${window.n ? window.n(nextLabel) : nextLabel}</div>
-            
-            <div class="waqt-context-msg" style="margin-top: 14px; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); line-height: 1.4; border-left: 3px solid ${waqtColor}60; padding-left: 12px; font-style: italic;">
-              "${window.t ? window.t(waqtMsg) : waqtMsg}"
-            </div>
-          </div>
-
           <div class="waqt-orb-visual">
             <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
-            <svg width="140" height="140" viewBox="0 0 140 140">
-              <circle cx="70" cy="70" r="58" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
-              <circle id="waqt-ring" cx="70" cy="70" r="58" stroke="${waqtColor}" stroke-width="4" fill="none" stroke-dasharray="364.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+            <svg width="160" height="160" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="72" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
+              <circle id="waqt-ring" cx="80" cy="80" r="72" stroke="${waqtColor}" stroke-width="5" fill="none" stroke-dasharray="452.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 80 80)"/>
             </svg>
             <div class="waqt-orb-inner">
-              <div id="home-countdown" class="waqt-countdown">--:--:--</div>
+              <div id="home-countdown" class="waqt-countdown" style="font-size: 1.8rem;">--:--:--</div>
             </div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; margin-top:8px;">
+            <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor}; font-size:2.2rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+            <div id="home-next-time" class="waqt-prayer-time" style="font-size:1.15rem; font-weight:700; color:var(--color-text-primary); opacity:0.8;">${window.n ? window.n(nextLabel) : nextLabel}</div>
           </div>
         </div>
       </div>
@@ -598,7 +580,7 @@ const Home = {
 
     let lastCountdown = '';
     let lastPct = -1;
-    const CIRC = 364.4;
+    const CIRC = 452.4;
     const tickCountdown = () => {
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;
