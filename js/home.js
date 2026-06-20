@@ -416,6 +416,15 @@ const Home = {
           : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
             : '🤲 You\'re doing great. Small steps lead to big transformations.';
 
+    const formattedAvg = window.n ? window.n(avgPrayed) : avgPrayed;
+    const formattedPerfect = window.n ? window.n(perfectDays) : perfectDays;
+    const formattedDhikrVal = totalDhikr > 999 ? (totalDhikr / 1000).toFixed(1) + 'k' : totalDhikr;
+    const formattedDhikr = window.n ? window.n(formattedDhikrVal) : formattedDhikrVal;
+    
+    const labelAvg = window.t ? window.t('avg') : 'avg';
+    const labelPerfect = window.t ? window.t('perfect') : 'perfect';
+    const labelDhikr = window.t ? window.t('dhikr') : 'dhikr';
+
     container.innerHTML = `
       <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
         <div style="display:flex; align-items:center; gap:12px;">
@@ -423,19 +432,19 @@ const Home = {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </div>
           <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
-            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;">Weekly Pulse</div>
+            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;">${window.t ? window.t('Weekly Pulse') : 'Weekly Pulse'}</div>
             <div style="font-size:12px;font-weight:600;color:var(--color-text-secondary);line-height:1.4;">
-              ${avgPrayed}/5 avg · ${perfectDays} perfect · ${totalDhikr > 999 ? (totalDhikr / 1000).toFixed(1) + 'k' : totalDhikr} dhikr
+              ${formattedAvg}/${window.n ? window.n(5) : 5} ${labelAvg} · ${formattedPerfect} ${labelPerfect} · ${formattedDhikr} ${labelDhikr}
             </div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
-            <div style="font-size:9px;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;">Best</div>
-            <div style="font-size:16px;font-weight:900;color:var(--color-accent-gold);">${bestDay}/5</div>
+            <div style="font-size:9px;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;">${window.t ? window.t('Best') : 'Best'}</div>
+            <div style="font-size:16px;font-weight:900;color:var(--color-accent-gold);">${window.n ? window.n(bestDay) : bestDay}/${window.n ? window.n(5) : 5}</div>
           </div>
         </div>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border-muted);display:flex;align-items:center;gap:8px;">
           <span style="font-size:14px;line-height:1;">💡</span>
-          <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${tip}</span>
+          <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${window.t ? window.t(tip) : tip}</span>
         </div>
       </div>
     `;
@@ -700,17 +709,19 @@ const Home = {
       `;
     });
 
+    const statusMsg = isPerfect ? "Beautiful! You've prayed all 5." : isMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey.";
+
     el.innerHTML = `
       <div style="display:flex; flex-direction:column; width:100%; padding: 4px 0;">
         <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 28px;">
           <div style="text-align:left;">
             <div style="font-size:1.5rem; font-weight:900; letter-spacing:-0.5px; color:var(--color-text-primary);">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
             <div style="color:var(--color-text-muted); font-size:12px; margin-top:4px; font-weight:600;">
-              ${isPerfect ? "Beautiful! You've prayed all 5." : isMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey."}
+              ${window.t ? window.t(statusMsg) : statusMsg}
             </div>
           </div>
           <div style="background:color-mix(in srgb, ${accentColor} 15%, transparent); color:${accentColor}; padding:6px 14px; border-radius:20px; font-size:16px; font-weight:800; border:1px solid color-mix(in srgb, ${accentColor} 30%, transparent);">
-            ${window.n ? window.n(score.done) : score.done}/5
+            ${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}
           </div>
         </div>
 

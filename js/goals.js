@@ -53,7 +53,13 @@ const Goals = {
 
     const isToday = this.currentDate === Utils.todayStr();
     const label = document.getElementById('nafl-date-label');
-    if (label) label.textContent = isToday ? 'Today' : new Date(this.currentDate + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    if (label) {
+      if (isToday) {
+        label.textContent = window.t ? window.t('Today') : 'Today';
+      } else {
+        label.textContent = Utils.formatDate(new Date(this.currentDate + 'T00:00:00'), {month:'short', day:'numeric'});
+      }
+    }
 
     // TEMPORAL LOCK: Use explicit ID
     const nextBtn = document.getElementById('nafl-next-btn');
@@ -84,6 +90,11 @@ const Goals = {
     
     const total = this.sunnahList.length + 2;
     const pct = (done / total) * 100;
+
+    const deedsTemplate = window.t ? window.t('{done} / {total} Deeds Complete') : '{done} / {total} Deeds Complete';
+    const doneTrans = window.n ? window.n(done) : done;
+    const totalTrans = window.n ? window.n(total) : total;
+    const progressText = deedsTemplate.replace('{done}', doneTrans).replace('{total}', totalTrans);
     
     hero.innerHTML = `
       <div class="nafl-celestial-glass ${skipAnim ? '' : 'anim-scale-up'}">
@@ -94,12 +105,12 @@ const Goals = {
           </svg>
         </div>
         <div class="nafl-hero-content">
-          <h1 class="nafl-hero-title">Celestial Deeds</h1>
-          <p class="nafl-hero-subtitle">Light up your path with Sunnah & Nafl</p>
+          <h1 class="nafl-hero-title">${window.t ? window.t('Celestial Deeds') : 'Celestial Deeds'}</h1>
+          <p class="nafl-hero-subtitle">${window.t ? window.t('Light up your path with Sunnah & Nafl') : 'Light up your path with Sunnah & Nafl'}</p>
           <div class="nafl-progress-track">
             <div class="nafl-progress-bar" style="width: ${pct}%"></div>
           </div>
-          <div class="nafl-progress-stat">${done} / ${total} Deeds Complete</div>
+          <div class="nafl-progress-stat">${progressText}</div>
         </div>
       </div>
     `;
@@ -117,8 +128,11 @@ const Goals = {
 
     const sEl = document.getElementById('journey-salah-focus');
     const dEl = document.getElementById('journey-dhikr-focus');
-    if (sEl) sEl.textContent = `${sCount} / 5`;
-    if (dEl) dEl.textContent = `${dTotal > 999 ? (dTotal / 1000).toFixed(1) + 'k' : dTotal} / 100`;
+    if (sEl) sEl.textContent = `${window.n ? window.n(sCount) : sCount} / ${window.n ? window.n(5) : 5}`;
+    
+    const dTotalFormatted = dTotal > 999 ? (dTotal / 1000).toFixed(1) + 'k' : dTotal;
+    const dTotalTrans = window.n ? window.n(dTotalFormatted) : dTotalFormatted;
+    if (dEl) dEl.textContent = `${dTotalTrans} / ${window.n ? window.n(100) : 100}`;
 
     const history = DB.getSalahHistory(7);
     let activeDays = history.filter(d => {
@@ -133,7 +147,9 @@ const Goals = {
       if (activeDays >= 6) msg = "Excellent consistency this week! 🌟";
       else if (activeDays >= 3) msg = "You're building a strong habit. Keep it up! 🤍";
       else if (activeDays > 0) msg = "Every prayer is a step closer to peace. 🕊️";
-      mEl.textContent = `"${msg}"`;
+      
+      const msgTrans = window.t ? window.t(msg) : msg;
+      mEl.textContent = `"${msgTrans}"`;
     }
   },
 
@@ -148,12 +164,15 @@ const Goals = {
   },
 
   resetToday() {
-    UI.showSettingsModal({
-      title: 'Reset Nafl Data?',
-      desc: `Clear all Sunnah & Nafl records for ${Utils.formatDate(new Date(this.currentDate), {day:'numeric', month:'short'})}?`,
-      confirmText: 'Yes, Clear',
-      type: 'danger',
-      onConfirm: () => {
+    const dateFormatted = Utils.formatDate(new Date(this.currentDate + 'T00:00:00'), {day:'numeric', month:'short'});
+    const title = window.t ? window.t('Reset Nafl Data?') : 'Reset Nafl Data?';
+    const msgTemplate = window.t ? window.t('Clear all Sunnah & Nafl records for {date}?') : 'Clear all Sunnah & Nafl records for {date}?';
+    const msg = msgTemplate.replace('{date}', dateFormatted);
+
+    Utils.confirm(
+      title,
+      msg,
+      () => {
         const data = DB.getSalah(this.currentDate);
         // Explicitly clear all Nafl fields
         data.sunnah = {};
@@ -164,10 +183,11 @@ const Goals = {
         DB.setSalah(this.currentDate, data);
         window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.render(true);
-        Utils.toast('Nafl data cleared', 'info');
+        Utils.toast(window.t ? window.t('Nafl data cleared') : 'Nafl data cleared', 'info');
         console.log("[Goals] Data reset for sync:", this.currentDate);
-      }
-    });
+      },
+      'danger'
+    );
   },
 
   renderSunnah(sunnahData, skipAnim = false) {
@@ -184,6 +204,10 @@ const Goals = {
 
       let bgGradient = item.id.includes('fajr') ? 'linear-gradient(135deg, #f472b6, #ec4899)' : item.id.includes('dhuhr') ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' : item.id.includes('maghrib') ? 'linear-gradient(135deg, #a855f7, #8b5cf6)' : 'linear-gradient(135deg, #6366f1, #4f46e5)';
 
+      const labelTrans = window.t ? window.t(item.label) : item.label;
+      const rakatTrans = window.n ? window.n(item.rakat) : item.rakat;
+      const typeTrans = window.t ? window.t("Sunnah Mu'akkadah") : "Sunnah Mu'akkadah";
+
       return `
         <div class="salah-prayer-card nafl-sunnah-card-modern ${skipAnim ? '' : 'anim-fade-in'} ${isLocked ? (isPrayed ? 'has-status status-jamaat active' : 'has-status status-missed') : ''}" 
              id="sunnah-card-${item.id}"
@@ -195,20 +219,20 @@ const Goals = {
               <span class="salah-prayer-emoji">${item.icon}</span>
             </div>
             <div class="salah-prayer-info">
-              <div class="salah-prayer-name">${item.label}</div>
-              <div class="salah-prayer-time">${item.rakat} Rakat · Sunnah Mu'akkadah</div>
+              <div class="salah-prayer-name">${labelTrans}</div>
+              <div class="salah-prayer-time">${rakatTrans} ${window.t ? window.t('Rakat') : 'Rakat'} · ${typeTrans}</div>
             </div>
             <div class="salah-prayer-status-badge">
                ${isLocked 
                  ? (isPrayed 
                      ? `<div class="salah-status-chip" style="background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4); color: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4)">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Prayed
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> ${window.t ? window.t('Prayed') : 'Prayed'}
                         </div>`
                      : `<div class="salah-status-chip" style="background: rgba(248,81,73,0.15); border-color: rgba(248,81,73,0.4); color: #f85149; box-shadow: 0 0 12px rgba(248,81,73,0.4)">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Missed') : 'Missed'}
                         </div>`)
                  : `<div class="salah-status-chip salah-status-pending">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${window.t ? window.t('Pending') : 'Pending'}
                     </div>`
                }
             </div>
@@ -221,28 +245,28 @@ const Goals = {
                    ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                  </div>
                  <div class="salah-locked-info">
-                   <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">${isPrayed ? 'Sunnah Prayed' : 'Sunnah Missed'}</div>
+                   <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">${isPrayed ? (window.t ? window.t('Sunnah Prayed') : 'Sunnah Prayed') : (window.t ? window.t('Sunnah Missed') : 'Sunnah Missed')}</div>
                    <div class="salah-locked-desc" style="display:flex;align-items:center;gap:3px">
-                     ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> Successful' : '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Unsuccessful'}
-                     <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? pts : 0} pts
+                     ${isPrayed ? `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> ${window.t ? window.t('Successful') : 'Successful'}` : `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Unsuccessful') : 'Unsuccessful'}`}
+                     <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? (window.n ? window.n(pts) : pts) : 0} ${window.t ? window.t('Points') : 'pts'}
                    </div>
                  </div>
                  <svg class="salah-lock-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: lockPulse 2s ease-in-out infinite"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                </div>`
             : `<div class="salah-status-selector">
-                 <div class="salah-options-label">Did you pray this Sunnah?</div>
+                 <div class="salah-options-label">${window.t ? window.t('Did you pray this Sunnah?') : 'Did you pray this Sunnah?'}</div>
                  <div class="salah-options-grid" style="grid-template-columns: repeat(2, 1fr);">
                     <button class="salah-option-btn" data-nafl="sunnah" data-id="${item.id}" data-action="prayed" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);">
                       <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
-                      <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
-                      <span class="salah-opt-desc">Sunnah Mu'akkadah</span>
-                      <span class="salah-opt-pts">+${pts} pts</span>
+                      <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">${window.t ? window.t('Prayed') : 'Prayed'}</span>
+                      <span class="salah-opt-desc">${typeTrans}</span>
+                      <span class="salah-opt-pts">+${window.n ? window.n(pts) : pts} ${window.t ? window.t('Points') : 'pts'}</span>
                     </button>
                     <button class="salah-option-btn" data-nafl="sunnah" data-id="${item.id}" data-action="missed" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);">
                       <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
-                      <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
-                      <span class="salah-opt-desc">Not prayed</span>
-                      <span class="salah-opt-pts">+0 pts</span>
+                      <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">${window.t ? window.t('Missed') : 'Missed'}</span>
+                      <span class="salah-opt-desc">${window.t ? window.t('Not prayed') : 'Not prayed'}</span>
+                      <span class="salah-opt-pts">+${window.n ? window.n(0) : 0} ${window.t ? window.t('Points') : 'pts'}</span>
                     </button>
                  </div>
                </div>`
@@ -264,33 +288,33 @@ const Goals = {
 
   selectSunnah(id, status) {
     try {
-    if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
-      return;
-    }
-    const data = DB.getSalah(this.currentDate);
-    if (!data.sunnah) data.sunnah = {};
-    const item = this.sunnahList.find(s => s.id === id);
+      if (this.currentDate > Utils.todayStr()) {
+        Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
+        return;
+      }
+      const data = DB.getSalah(this.currentDate);
+      if (!data.sunnah) data.sunnah = {};
+      const item = this.sunnahList.find(s => s.id === id);
 
-    Utils.sparkle(document.getElementById('sunnah-card-' + id) || document.body, 4);
+      Utils.sparkle(document.getElementById('sunnah-card-' + id) || document.body, 4);
 
-    data.sunnah[id] = status;
-    DB.setSalah(this.currentDate, data);
-    window.dispatchEvent(new CustomEvent('lamim:data-updated'));
-    this.render(true);
+      data.sunnah[id] = status;
+      DB.setSalah(this.currentDate, data);
+      window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+      this.render(true);
 
-    // Check if all sunnah, tahajjud, witr complete
-    const done = Object.values(data.sunnah || {}).filter(v => v === true || v === 'prayed').length;
-    const allSunnah = done === this.sunnahList.length;
-    if (allSunnah && data.tahajjud_rakat > 0 && data.witr > 0) {
-      setTimeout(() => Utils.confetti(24), 400);
-    }
+      // Check if all sunnah, tahajjud, witr complete
+      const done = Object.values(data.sunnah || {}).filter(v => v === true || v === 'prayed').length;
+      const allSunnah = done === this.sunnahList.length;
+      if (allSunnah && data.tahajjud_rakat > 0 && data.witr > 0) {
+        setTimeout(() => Utils.confetti(24), 400);
+      }
     } catch(e) { console.error('[Goals] selectSunnah error:', e); }
   },
 
   toggleSunnah(id) {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
@@ -299,9 +323,13 @@ const Goals = {
 
     if (data.sunnah[id]) {
       const name = item ? item.label : 'this Sunnah';
+      const nameTrans = window.t ? window.t(name) : name;
+      const title = window.t ? window.t('Unlock Sunnah') : 'Unlock Sunnah';
+      const msgTemplate = window.t ? window.t('Unlock and reset {sunnah}?') : 'Unlock and reset {sunnah}?';
+
       Utils.confirm(
-        'Unlock Sunnah',
-        `Unlock and reset ${name}?`,
+        title,
+        msgTemplate.replace('{sunnah}', nameTrans),
         () => {
           delete data.sunnah[id];
           DB.setSalah(this.currentDate, data);
@@ -325,6 +353,10 @@ const Goals = {
 
     let bgGradient = 'linear-gradient(135deg, #818cf8, #6366f1)';
 
+    const rakatTrans = window.n ? window.n(rakat) : rakat;
+    const titleTrans = window.t ? window.t('Tahajjud') : 'Tahajjud';
+    const subtrans = window.t ? window.t('Night Vigils · Nafl') : 'Night Vigils · Nafl';
+
     let html = `
       <div class="salah-prayer-card nafl-sunnah-card-modern anim-fade-in ${isLocked ? (isPrayed ? 'has-status status-jamaat active' : 'has-status status-missed') : ''}" 
            id="tahajjud-salah-card"
@@ -336,20 +368,20 @@ const Goals = {
             <span class="salah-prayer-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M17 5h4"/></svg></span>
           </div>
           <div class="salah-prayer-info">
-            <div class="salah-prayer-name">Tahajjud</div>
-            <div class="salah-prayer-time">Night Vigils · Nafl</div>
+            <div class="salah-prayer-name">${titleTrans}</div>
+            <div class="salah-prayer-time">${subtrans}</div>
           </div>
           <div class="salah-prayer-status-badge">
             ${isLocked 
               ? (isPrayed 
                   ? `<div class="salah-status-chip" style="background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4); color: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4)">
-                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Prayed (${rakat} RK)
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> ${window.t ? window.t('Prayed') : 'Prayed'} (${rakatTrans} ${window.t ? window.t('RK') : 'RK'})
                      </div>`
                   : `<div class="salah-status-chip" style="background: rgba(248,81,73,0.15); border-color: rgba(248,81,73,0.4); color: #f85149; box-shadow: 0 0 12px rgba(248,81,73,0.4)">
-                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Missed') : 'Missed'}
                      </div>`)
               : `<div class="salah-status-chip salah-status-pending">
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${window.t ? window.t('Pending') : 'Pending'}
                  </div>`
             }
           </div>
@@ -362,29 +394,33 @@ const Goals = {
                  ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                </div>
                <div class="salah-locked-info">
-                 <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">${isPrayed ? `Tahajjud Prayed (${rakat} RK)` : 'Tahajjud Missed'}</div>
+                 <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">
+                   ${isPrayed 
+                     ? (window.t ? window.t('Tahajjud Prayed ({rakat} RK)').replace('{rakat}', rakatTrans) : `Tahajjud Prayed (${rakatTrans} RK)`)
+                     : (window.t ? window.t('Tahajjud Missed') : 'Tahajjud Missed')}
+                 </div>
                  <div class="salah-locked-desc" style="display:flex;align-items:center;gap:3px">
-                   ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> Successful' : '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Unsuccessful'}
-                   <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? 3 : 0} pts
+                   ${isPrayed ? `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> ${window.t ? window.t('Successful') : 'Successful'}` : `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Unsuccessful') : 'Unsuccessful'}`}
+                   <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? (window.n ? window.n(3) : 3) : 0} ${window.t ? window.t('Points') : 'pts'}
                  </div>
                </div>
                <svg class="salah-lock-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: lockPulse 2s ease-in-out infinite"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
              </div>`
           : `<div class="salah-status-selector">
                <div class="salah-options-label" style="display:flex; justify-content:space-between; align-items:center;">
-                 <span>How many Rakat did you pray?</span>
-                  <button data-nafl="tahajjud" data-action="missed" style="background:rgba(248,81,73,0.1); border:1px solid rgba(248,81,73,0.3); color:#f85149; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed</button>
+                 <span>${window.t ? window.t('How many Rakat did you pray?') : 'How many Rakat did you pray?'}</span>
+                  <button data-nafl="tahajjud" data-action="missed" style="background:rgba(248,81,73,0.1); border:1px solid rgba(248,81,73,0.3); color:#f85149; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Missed') : 'Missed'}</button>
                </div>
                <div class="salah-options-grid" style="grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:8px;">
                  ${[2, 4, 6, 8, 10, 12].map(opt => `
                     <button class="salah-option-btn" data-nafl="tahajjud" data-rakat="${opt}" style="border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:55px; padding:8px;">
-                      <span class="salah-opt-label" style="color: #818cf8; font-size:13px">${opt} RK</span>
-                      <span class="salah-opt-pts">+3 pts</span>
+                      <span class="salah-opt-label" style="color: #818cf8; font-size:13px">${window.n ? window.n(opt) : opt} ${window.t ? window.t('RK') : 'RK'}</span>
+                      <span class="salah-opt-pts">+${window.n ? window.n(3) : 3} ${window.t ? window.t('Points') : 'pts'}</span>
                     </button>
                  `).join('')}
                   <button class="salah-option-btn" data-nafl="tahajjud" data-action="custom" style="grid-column: span 3; border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); min-height:40px; flex-direction:row; gap:6px; padding:6px; display:flex; align-items:center; justify-content:center;">
                    <span class="salah-opt-icon" style="display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px; color:#818cf8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
-                   <span class="salah-opt-label" style="color: #818cf8; margin-top:0;">Custom Rakat</span>
+                   <span class="salah-opt-label" style="color: #818cf8; margin-top:0;">${window.t ? window.t('Custom Rakat') : 'Custom Rakat'}</span>
                  </button>
                </div>
              </div>`
@@ -409,7 +445,7 @@ const Goals = {
 
   setTahajjudRakat(rakat) {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
@@ -425,7 +461,7 @@ const Goals = {
 
   setTahajjudMissed() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
@@ -441,40 +477,41 @@ const Goals = {
 
   promptCustomTahajjud() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
     if (data.tahajjud_rakat !== 0 && data.tahajjud_rakat != null) {
       return;
     }
-    const r = prompt("Enter custom Rakat number (e.g. 14, 20):");
+    const promptMsg = window.t ? window.t("Enter custom Rakat number (e.g. 14, 20):") : "Enter custom Rakat number (e.g. 14, 20):";
+    const r = prompt(promptMsg);
     if (r) {
       const num = parseInt(r);
       if (!isNaN(num) && num > 0) {
         this.setTahajjudRakat(num);
       } else {
-        Utils.toast("Invalid number", "error");
+        Utils.toast(window.t ? window.t("Invalid number") : "Invalid number", "error");
       }
     }
   },
 
   unlockTahajjud() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
     Utils.confirm(
-      'Unlock Tahajjud',
-      'Unlock and reset Tahajjud status?',
+      window.t ? window.t('Unlock Tahajjud') : 'Unlock Tahajjud',
+      window.t ? window.t('Unlock and reset Tahajjud status?') : 'Unlock and reset Tahajjud status?',
       () => {
         data.tahajjud = false;
         data.tahajjud_rakat = 0;
         DB.setSalah(this.currentDate, data);
         window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.render(true);
-        Utils.toast('Tahajjud unlocked', 'info');
+        Utils.toast(window.t ? window.t('Tahajjud unlocked') : 'Tahajjud unlocked', 'info');
       },
       'warning'
     );
@@ -491,6 +528,9 @@ const Goals = {
 
     let bgGradient = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
 
+    const labelTrans = window.t ? window.t('Witr') : 'Witr';
+    const subtrans = window.t ? window.t('3 Rakat · Wajib') : '3 Rakat · Wajib';
+
     let html = `
       <div class="salah-prayer-card nafl-sunnah-card-modern anim-fade-in ${isLocked ? (isPrayed ? 'has-status status-jamaat active' : 'has-status status-missed') : ''}" 
            id="witr-salah-card"
@@ -502,20 +542,20 @@ const Goals = {
             <span class="salah-prayer-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
           </div>
           <div class="salah-prayer-info">
-            <div class="salah-prayer-name">Witr</div>
-            <div class="salah-prayer-time">3 Rakat · Wajib</div>
+            <div class="salah-prayer-name">${labelTrans}</div>
+            <div class="salah-prayer-time">${subtrans}</div>
           </div>
           <div class="salah-prayer-status-badge">
             ${isLocked 
               ? (isPrayed 
                   ? `<div class="salah-status-chip" style="background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4); color: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4)">
-                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Prayed
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> ${window.t ? window.t('Prayed') : 'Prayed'}
                      </div>`
                   : `<div class="salah-status-chip" style="background: rgba(248,81,73,0.15); border-color: rgba(248,81,73,0.4); color: #f85149; box-shadow: 0 0 12px rgba(248,81,73,0.4)">
-                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Missed
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Missed') : 'Missed'}
                      </div>`)
               : `<div class="salah-status-chip salah-status-pending">
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${window.t ? window.t('Pending') : 'Pending'}
                  </div>`
             }
           </div>
@@ -528,28 +568,28 @@ const Goals = {
                  ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                </div>
                <div class="salah-locked-info">
-                 <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">${isPrayed ? 'Witr Prayed' : 'Witr Missed'}</div>
+                 <div class="salah-locked-status" style="color: ${isPrayed ? '#34d399' : '#f85149'}">${isPrayed ? (window.t ? window.t('Witr Prayed') : 'Witr Prayed') : (window.t ? window.t('Witr Missed') : 'Witr Missed')}</div>
                  <div class="salah-locked-desc" style="display:flex;align-items:center;gap:3px">
-                   ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> Successful' : '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Unsuccessful'}
-                   <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? 2 : 0} pts
+                   ${isPrayed ? `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 4px rgba(16,185,129,0.6))"><polyline points="20 6 9 17 4 12"></polyline></svg> ${window.t ? window.t('Successful') : 'Successful'}` : `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-red);filter:drop-shadow(0 0 4px rgba(248,81,73,0.6))"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ${window.t ? window.t('Unsuccessful') : 'Unsuccessful'}`}
+                   <span style="opacity:0.5;margin:0 2px">•</span> +${isPrayed ? (window.n ? window.n(2) : 2) : 0} ${window.t ? window.t('Points') : 'pts'}
                  </div>
                </div>
                <svg class="salah-lock-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: lockPulse 2s ease-in-out infinite"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
              </div>`
           : `<div class="salah-status-selector">
-               <div class="salah-options-label">Did you pray Witr?</div>
+               <div class="salah-options-label">${window.t ? window.t('Did you pray Witr?') : 'Did you pray Witr?'}</div>
                <div class="salah-options-grid" style="grid-template-columns: repeat(2, 1fr);">
                   <button class="salah-option-btn" data-nafl="witr" data-action="prayed" style="border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05);">
                     <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(52,211,153,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#34d399"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg></span>
-                    <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">Prayed</span>
-                    <span class="salah-opt-desc">3 Rakat Wajib</span>
-                    <span class="salah-opt-pts">+2 pts</span>
+                    <span class="salah-opt-label" style="color: #34d399; margin-top:4px;">${window.t ? window.t('Prayed') : 'Prayed'}</span>
+                    <span class="salah-opt-desc">${window.t ? window.t('3 Rakat Wajib') : '3 Rakat Wajib'}</span>
+                    <span class="salah-opt-pts">+${window.n ? window.n(2) : 2} ${window.t ? window.t('Points') : 'pts'}</span>
                   </button>
                   <button class="salah-option-btn" data-nafl="witr" data-action="missed" style="border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.05);">
                     <span class="salah-opt-icon" style="filter: drop-shadow(0 0 8px rgba(248,81,73,0.5)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#f85149"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
-                    <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">Missed</span>
-                    <span class="salah-opt-desc">Not prayed</span>
-                    <span class="salah-opt-pts">+0 pts</span>
+                    <span class="salah-opt-label" style="color: #f85149; margin-top:4px;">${window.t ? window.t('Missed') : 'Missed'}</span>
+                    <span class="salah-opt-desc">${window.t ? window.t('Not prayed') : 'Not prayed'}</span>
+                    <span class="salah-opt-pts">+${window.n ? window.n(0) : 0} ${window.t ? window.t('Points') : 'pts'}</span>
                   </button>
                </div>
              </div>`
@@ -572,7 +612,7 @@ const Goals = {
 
   toggleWitr() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
@@ -588,7 +628,7 @@ const Goals = {
 
   toggleWitrMissed() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
@@ -603,19 +643,19 @@ const Goals = {
 
   unlockWitr() {
     if (this.currentDate > Utils.todayStr()) {
-      Utils.toast("Cannot edit future dates", "error");
+      Utils.toast(window.t ? window.t("Cannot edit future dates") : "Cannot edit future dates", "error");
       return;
     }
     const data = DB.getSalah(this.currentDate);
     Utils.confirm(
-      'Unlock Witr',
-      'Unlock and reset Witr status?',
+      window.t ? window.t('Unlock Witr') : 'Unlock Witr',
+      window.t ? window.t('Unlock and reset Witr status?') : 'Unlock and reset Witr status?',
       () => {
         data.witr = 0;
         DB.setSalah(this.currentDate, data);
         window.dispatchEvent(new CustomEvent('lamim:data-updated'));
         this.render(true);
-        Utils.toast('Witr unlocked', 'info');
+        Utils.toast(window.t ? window.t('Witr unlocked') : 'Witr unlocked', 'info');
       },
       'warning'
     );
@@ -703,9 +743,12 @@ const Goals = {
     const TOTAL_MAX = trackingDays * MAX_PTS_PER_DAY;
     const completion = TOTAL_MAX > 0 ? ((totalPoints / TOTAL_MAX) * 100).toFixed(1) : '0.0';
 
-    document.getElementById('h-sum-total').textContent = totalRakat + ' RK';
-    document.getElementById('h-sum-streak').textContent = streak + 'd';
-    document.getElementById('h-sum-avg').textContent = completion + '%';
+    const labelRK = window.t ? window.t('RK') : 'RK';
+    const labelDays = window.t ? window.t('d') : 'd';
+    
+    document.getElementById('h-sum-total').textContent = (window.n ? window.n(totalRakat) : totalRakat) + ' ' + labelRK;
+    document.getElementById('h-sum-streak').textContent = (window.n ? window.n(streak) : streak) + labelDays;
+    document.getElementById('h-sum-avg').textContent = (window.n ? window.n(completion) : completion) + '%';
 
     list.innerHTML = history.map(day => {
       const isPastDay = day.date !== Utils.todayStr();
@@ -717,11 +760,12 @@ const Goals = {
         Object.keys(day.data.sunnah).forEach(id => {
           const item = this.sunnahList.find(s => s.id === id);
           if (item) {
+            const labelTrans = window.t ? window.t(item.label) : item.label;
             if (day.data.sunnah[id] === true || day.data.sunnah[id] === 'prayed') {
-              sunnahDone.push(item.label);
+              sunnahDone.push(labelTrans);
               dayRakat += item.rakat;
             } else if (day.data.sunnah[id] === 'missed' || isPastDay) {
-              sunnahMissed.push(item.label);
+              sunnahMissed.push(labelTrans);
             }
           }
         });
@@ -730,7 +774,8 @@ const Goals = {
       if (isPastDay) {
         this.sunnahList.forEach(s => {
           if (!day.data.sunnah || day.data.sunnah[s.id] === undefined) {
-            sunnahMissed.push(s.label);
+            const labelTrans = window.t ? window.t(s.label) : s.label;
+            sunnahMissed.push(labelTrans);
           }
         });
       }
@@ -742,21 +787,25 @@ const Goals = {
 
       if (total === 0 && sunnahDone.length === 0 && sunnahMissed.length === 0) return '';
 
+      const labelTahajjud = window.t ? window.t('Tahajjud') : 'Tahajjud';
+      const labelWitr = window.t ? window.t('Witr') : 'Witr';
+      const dateText = day.date === Utils.todayStr() ? (window.t ? window.t('Today') : 'Today') : Utils.formatDate(new Date(day.date), { day: 'numeric', month: 'short' });
+
       return `
         <div class="history-item-modern ${allSunnahMissed ? 'all-missed' : ''}">
-          <div class="h-item-date">${day.date === Utils.todayStr() ? 'Today' : Utils.formatDate(new Date(day.date), { day: 'numeric', month: 'short' })}</div>
+          <div class="h-item-date">${dateText}</div>
           <div class="h-item-content">
             <div class="h-item-main">
                ${sunnahDone.map(name => `<div class="h-pill"><span class="dot" style="background:#34d399"></span>${name}</div>`).join('')}
                ${sunnahMissed.map(name => `<div class="h-pill missed"><span class="dot" style="background:rgba(255,255,255,0.15)"></span>${name}</div>`).join('')}
-               ${tRakat > 0 ? `<div class="h-pill"><span class="dot" style="background:#818cf8"></span>Tahajjud (${tRakat})</div>` : ''}
-               ${wRakat > 0 ? `<div class="h-pill"><span class="dot" style="background:#fbbf24"></span>Witr (${wRakat})</div>` : ''}
+               ${tRakat > 0 ? `<div class="h-pill"><span class="dot" style="background:#818cf8"></span>${labelTahajjud} (${window.n ? window.n(tRakat) : tRakat})</div>` : ''}
+               ${wRakat > 0 ? `<div class="h-pill"><span class="dot" style="background:#fbbf24"></span>${labelWitr} (${window.n ? window.n(wRakat) : wRakat})</div>` : ''}
             </div>
           </div>
-          <div class="h-item-total">${total}<small>RK</small></div>
+          <div class="h-item-total">${window.n ? window.n(total) : total}<small>${labelRK}</small></div>
         </div>
       `;
-    }).join('') || '<div class="empty-state">No history recorded yet.</div>';
+    }).join('') || `<div class="empty-state">${window.t ? window.t('No history recorded yet.') : 'No history recorded yet.'}</div>`;
 
     Utils.openModal(modal);
   },

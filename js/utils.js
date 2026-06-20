@@ -285,6 +285,12 @@ const Utils = {
       return;
     }
 
+    const cancelBtn = modal.querySelector('.confirm-btn.cancel');
+    if (cancelBtn) {
+      cancelBtn.textContent = window.t ? window.t('Cancel') : 'Cancel';
+    }
+    btn.textContent = window.t ? window.t('Yes, Proceed') : 'Yes, Proceed';
+
     const types = {
       danger: { icon: '🗑️', color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.1)', btn: '#ff3b30' },
       warning: { icon: '⚠️', color: '#ff9500', bg: 'rgba(255, 149, 0, 0.1)', btn: '#ff9500' },
