@@ -255,7 +255,7 @@ const Finance = {
           }
         }
       }
-    } catch (e) { console.warn('Exchange rate fetch failed:', e); }
+    } catch (e) { console.warn('Exchange rate fetch failed:', e); Utils.toast('Could not fetch exchange rates. Using last known rate.', 'warn'); }
   },
 
   getSymbol() { return DB.getSettings().currency === 'BDT' ? '৳' : '$'; },
@@ -1301,6 +1301,7 @@ const Finance = {
     ].sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const win = window.open('', '_blank');
+    if (!win) { Utils.toast('Popup blocked. Allow popups or try again.', 'error'); return; }
     win.document.write(`
       <html>
         <head>

@@ -8,6 +8,8 @@ const Translations = {
   'Islamic Finance': 'ইসলামিক ফাইন্যান্স',
   'Analysis': 'বিশ্লেষণ',
   'Profile': 'প্রোফাইল',
+  'Year in Review': 'বার্ষিক পর্যালোচনা',
+  'Year Review': 'বার্ষিক পর্যালোচনা',
   // Dashboard & Home
   'Today': 'আজ',
   '📋 Today': '📋 আজকে',
