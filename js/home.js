@@ -191,13 +191,13 @@ const Home = {
       const isAchieved = idx < curIdx;
       const isCurrent = idx === curIdx;
       const isFuture = idx > curIdx;
-      const starR = isAchieved ? 10 : isCurrent ? 11 : 7;
+      const starR = isAchieved ? 7 : isCurrent ? 8 : 5;
       return `
         <g class="ihsan-star ${isAchieved ? 'ihsan-star-achieved' : isCurrent ? 'ihsan-star-current' : 'ihsan-star-future'}">
           <circle cx="${x}" cy="${y}" r="${starR}" fill="${isAchieved || isCurrent ? color : 'none'}"
-            stroke="${isAchieved || isCurrent ? color : 'var(--color-divider-subtle)'}" stroke-width="2"/>
-          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="16" fill="none" stroke="${color}" stroke-width="2" opacity="0.35" class="ihsan-pulse-ring"/>` : ''}
-          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="22" fill="none" stroke="${color}" stroke-width="1" opacity="0.15" class="ihsan-pulse-ring-outer"/>` : ''}
+            stroke="${isAchieved || isCurrent ? color : 'var(--color-divider-subtle)'}" stroke-width="1.5"/>
+          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="12" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.3" class="ihsan-pulse-ring"/>` : ''}
+          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="17" fill="none" stroke="${color}" stroke-width="1" opacity="0.12" class="ihsan-pulse-ring-outer"/>` : ''}
           <text x="${x}" y="${y + 22}" text-anchor="middle" font-size="9" font-weight="${isCurrent ? '800' : '600'}"
             fill="${isAchieved || isCurrent ? 'var(--color-text-primary)' : 'var(--color-text-muted)'}" opacity="${isFuture ? 0.35 : 1}">${r.label}</text>
         </g>`;
@@ -220,8 +220,8 @@ const Home = {
         </div>
         <div class="ihsan-galaxy-scroll">
           <svg class="ihsan-galaxy-svg" viewBox="0 0 660 140" width="660" height="140">
-            <polyline points="${allPoints}" fill="none" stroke="var(--color-divider-subtle)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
-            <polyline points="${allPoints}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${totalConnLen}" stroke-dashoffset="${fillOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.34, 1.56, 0.64, 1);"/>
+            <polyline points="${allPoints}" fill="none" stroke="var(--color-divider-subtle)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+            <polyline points="${allPoints}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${totalConnLen}" stroke-dashoffset="${fillOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.34, 1.56, 0.64, 1);"/>
             ${starsHtml}
           </svg>
         </div>
