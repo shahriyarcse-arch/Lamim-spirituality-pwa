@@ -660,7 +660,7 @@ const Home = {
     let lastDoneIdx = -1;
     for (let i = 0; i < prayers.length; i++) {
       let st = today[prayers[i]];
-      if (st && st !== 'missed') lastDoneIdx = i;
+      if (st) lastDoneIdx = i;
     }
     const progressPct = lastDoneIdx >= 0 ? (lastDoneIdx / (prayers.length - 1)) * 100 : 0;
     

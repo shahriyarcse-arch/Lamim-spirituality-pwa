@@ -5,18 +5,18 @@
 
 :root {
   /* === COLORS === */
-  /* BACKGROUNDS (Dark Mode - Crisp OLED Black & Dark Gray) */
-  --color-bg-primary:    #030712; /* Gray 950 - Almost Black */
-  --color-bg-secondary:  #111827; /* Gray 900 */
-  --color-bg-tertiary:   #1F2937; /* Gray 800 */
-  --color-bg-elevated:   #374151; /* Gray 700 */
+  /* BACKGROUNDS (Dark Mode - Crisp OLED Black & Deep Midnight Blue) */
+  --color-bg-primary:    #050814; /* Deep Midnight Blue-Black - Spiritual & Premium */
+  --color-bg-secondary:  #0a0e1c; /* Deep slate blue */
+  --color-bg-tertiary:   #12182d; /* Elevated dark blue */
+  --color-bg-elevated:   #1c2541; /* High elevation */
 
   /* AUTH THEME */
-  --auth-bg-color:        #030712;
+  --auth-bg-color:        #050814;
   --auth-radial-1:        rgba(16, 185, 129, 0.1); 
   --auth-radial-2:        rgba(59, 130, 246, 0.1); 
   --auth-radial-3:        transparent;
-  --auth-card-bg:         #111827; 
+  --auth-card-bg:         #0a0e1c; 
   --auth-text-color:      #F9FAFB;
   --auth-title-gradient:  linear-gradient(135deg, #10B981, #3B82F6); 
   --auth-btn-bg:          linear-gradient(135deg, #10B981, #059669);
@@ -50,37 +50,37 @@
   --heatmap-level-3: #34D399;
   --heatmap-level-2: #FBBF24;
   --heatmap-level-1: #FB7185;
-  --heatmap-level-0: #1F2937; /* Visible empty cells */
+  --heatmap-level-0: #12182d; /* Visible empty cells */
 
   /* TEXT - Extremely Crisp Contrast */
   --color-text-primary:   #F9FAFB; /* Gray 50 */
   --color-text-secondary: #D1D5DB; /* Gray 300 - Clearly visible */
   --color-text-muted:     #9CA3AF; /* Gray 400 - Clearly visible */
-  --color-text-inverse:   #030712;
+  --color-text-inverse:   #050814;
 
   /* BORDERS - Strong visibility */
-  --color-border:         #374151; /* Gray 700 */
-  --color-border-muted:   #1F2937; /* Gray 800 */
+  --color-border:         rgba(99, 102, 241, 0.12); /* Subtle indigo border */
+  --color-border-muted:   rgba(99, 102, 241, 0.06);
   --color-border-active:  #10B981;
 
   /* GLASS - Solid colors for sharp clarity */
-  --color-glass:          #111827;
-  --color-glass-hover:    #1F2937;
-  --color-glass-active:   #374151;
+  --color-glass:          rgba(10, 14, 28, 0.75);
+  --color-glass-hover:    rgba(18, 24, 45, 0.85);
+  --color-glass-active:   rgba(28, 37, 65, 0.95);
 
   /* SEMANTIC TOKENS */
-  --color-surface-card:     #111827;
-  --color-surface-nested:   #1F2937;
-  --color-surface-hollow:   #030712;
-  --color-divider-subtle:   #1F2937;
-  --color-divider-strong:   #374151;
+  --color-surface-card:     #0a0e1c;
+  --color-surface-nested:   #12182d;
+  --color-surface-hollow:   #050814;
+  --color-divider-subtle:   #12182d;
+  --color-divider-strong:   #1c2541;
   --color-text-subtitle:    #D1D5DB; /* Gray 300 */
   --color-text-placeholder: #9CA3AF; /* Gray 400 */
-  --radar-grid-stroke:      #374151;
-  --radar-axis-stroke:      #4B5563; /* Gray 600 */
+  --radar-grid-stroke:      #1c2541;
+  --radar-axis-stroke:      #374151; /* Gray 600 */
   
   --shadow-premium:         0 10px 25px rgba(0,0,0,0.8);
-  --color-loader-track:     #374151;
+  --color-loader-track:     #1c2541;
   --color-loader-fill:      #10B981;
   --shadow-logo-glow:       0 0 20px rgba(16, 185, 129, 0.4);
 
@@ -92,10 +92,10 @@
   --gradient-gold:    linear-gradient(135deg, #FBBF24, #D97706);
   --gradient-blue:    linear-gradient(135deg, #3B82F6, #1D4ED8);
   --gradient-green:   linear-gradient(135deg, #10B981, #047857);
-  --gradient-dark:    linear-gradient(135deg, #111827, #030712);
-  --gradient-card:    linear-gradient(135deg, #1F2937, #111827);
-  --gradient-header:  linear-gradient(180deg, #030712 0%, transparent 100%);
-  --gradient-hero:    radial-gradient(ellipse at top, rgba(16, 185, 129, 0.1) 0%, #030712 80%);
+  --gradient-dark:    linear-gradient(135deg, #0a0e1c, #050814);
+  --gradient-card:    linear-gradient(135deg, #12182d, #0a0e1c);
+  --gradient-header:  linear-gradient(180deg, #050814 0%, transparent 100%);
+  --gradient-hero:    radial-gradient(ellipse at top, rgba(16, 185, 129, 0.1) 0%, #050814 80%);
   --gradient-stat-text: linear-gradient(135deg, #34D399, #10B981);
   --gradient-brand-text: linear-gradient(135deg, #10B981, #3B82F6);
 
@@ -107,8 +107,8 @@
   --fin-orange: #F97316;
   --fin-gold: #F59E0B;
   
-  --fin-surface: #111827;
-  --fin-border: #374151;
+  --fin-surface: #0a0e1c;
+  --fin-border: rgba(99, 102, 241, 0.12);
   --fin-glass: none;
 
   /* === TYPOGRAPHY === */
@@ -19009,4 +19009,20 @@ div#nafl-night-grid .salah-options-grid {
   .yr-stats-grid {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+/* === CUSTOM OVERRIDES === */
+.greeting-text {
+  font-size: var(--text-3xl);
+  font-weight: var(--fw-extrabold);
+  background: linear-gradient(135deg, #10B981, #3B82F6, #8B5CF6, #10B981);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerText 8s linear infinite;
+  text-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

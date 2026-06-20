@@ -17,10 +17,13 @@
 .greeting-text {
   font-size: var(--text-3xl);
   font-weight: var(--fw-extrabold);
-  background: var(--gradient-brand-text);
+  background: linear-gradient(135deg, #10B981, #3B82F6, #8B5CF6, #10B981);
+  background-size: 300% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: shimmerText 8s linear infinite;
+  text-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
