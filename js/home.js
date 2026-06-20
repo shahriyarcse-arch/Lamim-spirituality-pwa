@@ -62,13 +62,21 @@ const Home = {
 
     const el = document.getElementById('home-greeting');
     if (el) el.innerHTML = `
-      <div class="home-greeting-card fluid-gradient-hero" style="display: flex; flex-direction: column; gap: 2px; padding: 18px 20px;">
-        <h2 style="font-size: 1.35rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--home-salam-color); letter-spacing: -0.3px;">
-          ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-        </h2>
-        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--color-accent-primary);">
-          ${window.t ? window.t(greet) : greet}
+      <div class="home-hero-card">
+        <div class="home-hero-left">
+          <div class="home-hero-waqt-badge">
+            <span class="home-hero-waqt-dot"></span>
+            ${window.t ? window.t(greet) : greet}
+          </div>
+          <h2 class="home-hero-salam">
+            ${window.t ? window.t('As-salamu alaykum,') : 'As-salamu alaykum,'}
+          </h2>
+          <div class="home-hero-name">${safeLastName}</div>
+        </div>
+        <div class="home-hero-right">
+          <div id="live-time-val" class="home-hero-time">--:--</div>
+          <div id="live-date-en-val" class="home-hero-date-en"></div>
+          <div id="live-date-hj-val" class="home-hero-date-hj"></div>
         </div>
       </div>
     `;
@@ -79,32 +87,28 @@ const Home = {
     // FIX #4: Compute SHS once and cache for sub-functions
     this._cachedSHS = typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : 0;
 
-    // Date bar (Streaks + LSS Score Aura on the far right)
+    // Date bar (Streaks + LSS Score + Pulse)
     const db = document.getElementById('home-date-bar');
     if (db) {
       const shs = this._cachedSHS;
-      db.style.display = 'flex';
-      db.style.justifyContent = 'space-between';
-      db.style.alignItems = 'center';
       
       db.innerHTML = `
-        <div style="display:flex; gap:var(--space-10); align-items: center; margin-top: -10px;">
-          <div class="streak-badge" style="background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.2);">
-            <div class="badge-icon-animated">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-accent-gold)">
-                <path d="M12 2c0 0-4.5 5.5-4.5 10s3.5 8 4.5 8 4.5-3.5 4.5-8-4.5-10-4.5-10zm0 15c-1.5 0-2.5-1.5-2.5-3.5s1-3.5 2.5-3.5 2.5 1.5 2.5 3.5-1 3.5-2.5 3.5z"/>
-                <path d="M12 22c5.523 0 10-4.477 10-10 0-1.657-.403-3.219-1.11-4.593L12 22z" opacity="0.2"/>
-              </svg>
-            </div>
-            <span style="font-size: 12px; font-weight: 800; color: var(--color-accent-gold);">${window.n ? window.n(DB.getSalahStreak().perfect) : DB.getSalahStreak().perfect}d ${window.t ? window.t('Perfect') : 'Perfect'}</span>
+        <div class="home-stats-row">
+          <div class="home-stat-chip home-stat-streak">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--color-accent-gold)">
+              <path d="M12 2c0 0-4.5 5.5-4.5 10s3.5 8 4.5 8 4.5-3.5 4.5-8-4.5-10-4.5-10zm0 15c-1.5 0-2.5-1.5-2.5-3.5s1-3.5 2.5-3.5 2.5 1.5 2.5 3.5-1 3.5-2.5 3.5z"/>
+            </svg>
+            <span class="home-stat-value" style="color: var(--color-accent-gold);">${window.n ? window.n(DB.getSalahStreak().perfect) : DB.getSalahStreak().perfect}d</span>
+            <span class="home-stat-label">${window.t ? window.t('Streak') : 'Streak'}</span>
           </div>
-          <div class="shs-mini-aura-container" style="display: flex; align-items: center; justify-content: center;">
-            <div class="shs-aura mini" style="--aura-color: ${shs.rating.color}; box-shadow: 0 0 40px ${shs.rating.color}60;">
-              <div class="shs-val" style="font-size: 28px; font-weight: 900;">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</div>
+          <div class="home-stat-chip home-stat-shs" style="--stat-color: ${shs.rating.color};">
+            <div class="home-stat-shs-orb" style="background: ${shs.rating.color};">
+              <span>${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
             </div>
+            <span class="home-stat-label">SHS</span>
           </div>
+          <div class="home-stat-chip home-stat-pulse" id="shs-pulse-graph-spot"></div>
         </div>
-        <div id="shs-pulse-graph-spot" style="display: flex; align-items: center; justify-content: center; min-width: 80px; margin-right: 10px;"></div>
       `;
     }
 
@@ -485,26 +489,14 @@ const Home = {
 
   /* ---- Live Date Time (using rAF for zero lag) ---- */
   startLiveDateTime() {
-    const el = document.getElementById('home-live-datetime');
-    if (!el) return;
-
     // Cancel previous loop to prevent resource leaks
     if (this.dateTimeRAF) cancelAnimationFrame(this.dateTimeRAF);
-
-    // Initial skeleton/structure if empty
-    if (!el.innerHTML.includes('live-time-val')) {
-      el.innerHTML = `
-        <div style="margin-top: 10px;">
-          <div id="live-time-val" style="font-size: 1.8rem; font-weight: 800; color: var(--home-time-color); line-height: 1;">--:--:--</div>
-          <div id="live-date-en-val" style="font-size: 12px; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; margin-top: 2px;"></div>
-          <div id="live-date-hj-val" style="font-size: 11px; font-weight: 700; color: var(--home-name-color); margin-top: 1px;"></div>
-        </div>
-      `;
-    }
 
     const timeVal = document.getElementById('live-time-val');
     const enVal = document.getElementById('live-date-en-val');
     const hjVal = document.getElementById('live-date-hj-val');
+
+    if (!timeVal) return;
 
     let lastSec = -1;
     const tick = () => {

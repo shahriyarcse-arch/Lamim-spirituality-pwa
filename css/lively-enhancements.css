@@ -1022,3 +1022,208 @@
 .ihsan-star-future circle {
   filter: none;
 }
+
+/* =============================================
+   UNIFIED HOME HERO & MODERN HEADER
+   ============================================= */
+.home-hero-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--card-radius);
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+  gap: var(--space-4);
+}
+
+.home-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.home-hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+}
+
+.home-hero-waqt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-accent-primary);
+}
+
+.home-hero-waqt-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-accent-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-accent-primary);
+  animation: waqtBadgePulse 2s infinite ease-in-out;
+}
+
+@keyframes waqtBadgePulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+.home-hero-salam {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin: 4px 0 0 0;
+  letter-spacing: -0.1px;
+}
+
+.home-hero-name {
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  background: var(--gradient-brand-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: -2px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.home-hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.home-hero-time {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.home-hero-date-en {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.home-hero-date-hj {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-accent-gold);
+}
+
+/* Home stats row */
+.home-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.home-stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-nested);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+  justify-content: center;
+  min-height: 40px;
+}
+
+.home-stat-streak {
+  border-color: rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.03);
+}
+
+.home-stat-shs {
+  border-color: color-mix(in srgb, var(--stat-color, var(--color-accent-primary)) 25%, transparent);
+  background: color-mix(in srgb, var(--stat-color, var(--color-accent-primary)) 3%, transparent);
+}
+
+.home-stat-shs-orb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--stat-color, var(--color-accent-primary)) 40%, transparent);
+}
+
+.home-stat-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-muted);
+}
+
+.home-stat-value {
+  font-weight: 800;
+}
+
+.home-stat-pulse {
+  padding: 0 var(--space-1);
+}
+
+@media (max-width: 768px) {
+  .home-hero-card {
+    padding: var(--space-4);
+  }
+  .home-hero-time {
+    font-size: 1.6rem;
+  }
+  .home-hero-name {
+    font-size: 1.6rem;
+  }
+  .home-stat-chip {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  .home-stat-label {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+  }
+}
+
