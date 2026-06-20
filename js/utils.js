@@ -452,6 +452,7 @@ const UI = {
     }
   }
 };
+Utils.sparkle = UI.sparkle.bind(UI);
+Utils.confetti = UI.confetti.bind(UI);
 Utils.openModal = UI.openModal.bind(UI);
 Utils.closeModal = UI.closeModal.bind(UI);
-

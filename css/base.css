@@ -166,7 +166,6 @@ p { color: var(--color-text-secondary); }
   transition: margin-left var(--transition-fast);
   overflow-x: hidden;
   max-width: 100%;
-  position: relative;
 }
 
 @media (max-width: 1024px) {
@@ -203,24 +202,8 @@ p { color: var(--color-text-secondary); }
   animation: sectionIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .section-panel.out {
-  display: block !important;
-  position: absolute;
-  left: var(--space-6);
-  right: var(--space-6);
+  animation: sectionOut 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
   pointer-events: none;
-  animation: sectionOut 0.18s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-@media (max-width: 1024px) {
-  .section-panel.out {
-    left: var(--space-4);
-    right: var(--space-4);
-  }
-}
-@media (max-width: 480px) {
-  .section-panel.out {
-    left: var(--space-3);
-    right: var(--space-3);
-  }
 }
 
 /* Grid */

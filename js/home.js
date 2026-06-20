@@ -5,17 +5,14 @@ const Home = {
   insightTimeout: null,
   _cachedSHS: null,
   _lastPrayerName: null,
-  _cardObserver: null,
 
   init() { 
     this.render(); 
-    this._observeCards();
     // Listen for local data updates to refresh dashboard live
     if (!this._boundDataUpdated) {
       window.addEventListener('lamim:data-updated', () => {
         if (document.getElementById('section-home')?.classList.contains('active')) {
           this.render();
-          this._observeCards();
         }
       });
       this._boundDataUpdated = true;
@@ -28,7 +25,6 @@ const Home = {
     if (this.dateTimeRAF)  { cancelAnimationFrame(this.dateTimeRAF);  this.dateTimeRAF = null; }
     if (this.insightInterval) { clearInterval(this.insightInterval); this.insightInterval = null; }
     if (this.insightTimeout) { clearTimeout(this.insightTimeout); this.insightTimeout = null; }
-    if (this._cardObserver) { this._cardObserver.disconnect(); this._cardObserver = null; }
   },
 
   render() {
@@ -47,12 +43,11 @@ const Home = {
     const isha = Utils.timeToMin(times[4].time);
 
     let greet = 'Good Night 🌙';
-    let greetClass = 'greeting-night';
-    if (nowTime >= fajr && nowTime < dhuhr) { greet = 'Fajr Mubarak 🌅'; greetClass = 'greeting-fajr'; }
-    else if (nowTime >= dhuhr && nowTime < asr) { greet = 'Blessed Noon ☀️'; greetClass = 'greeting-dhuhr'; }
-    else if (nowTime >= asr && nowTime < maghrib) { greet = 'Asr Barakah 🌤️'; greetClass = 'greeting-asr'; }
-    else if (nowTime >= maghrib && nowTime < isha) { greet = 'Maghrib Light 🌆'; greetClass = 'greeting-maghrib'; }
-    else if (nowTime >= isha) { greet = 'Isha Peace 🌙'; greetClass = 'greeting-isha'; }
+    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak 🌅';
+    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon ☀️';
+    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah 🌤️';
+    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light 🌆';
+    else if (nowTime >= isha) greet = 'Isha Peace 🌙';
 
     // Get Last Name (with safety)
     const rawName = (user && typeof user.name === 'string') ? user.name : 'User';
@@ -64,20 +59,13 @@ const Home = {
 
     const el = document.getElementById('home-greeting');
     if (el) el.innerHTML = `
-      <div class="home-greeting-card fluid-gradient-hero home-reveal home-reveal-from-top ${greetClass}" style="display: flex; align-items: center; gap: 14px; padding: 18px 20px;">
-        <div class="user-avatar-initial">${safeLastName.charAt(0).toUpperCase()}</div>
-        <div class="greeting-icon-box greeting-icon-${greetClass}">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            ${greetClass === 'greeting-fajr' ? '<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="M17.66 12.34l1.41-1.41"/><path d="M22 22H2"/><path d="M8 22l4-4 4 4"/>' : greetClass === 'greeting-dhuhr' ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/>' : greetClass === 'greeting-asr' ? '<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6.13"/>' : greetClass === 'greeting-maghrib' ? '<path d="M17 18a5 5 0 0 0-10 0"/><path d="M12 2v7"/><polyline points="16 5 12 9 8 5"/><path d="M23 22H1"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'}
-          </svg>
-        </div>
-        <div style="flex:1; min-width:0;">
-          <h2 style="font-size: 1.15rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--home-salam-color); letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
-          </h2>
-          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--color-accent-primary); margin-top: 1px;">
-            ${window.t ? window.t(greet) : greet}
-          </div>
+      <div class="home-greeting-card fluid-gradient-hero" style="display: flex; flex-direction: column; gap: 2px; padding: 18px 20px;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; line-height: 1.2; margin: 0; color: var(--home-salam-color); letter-spacing: -0.3px;">
+          ${window.t ? window.t('As-salamu alaykum, ') : 'As-salamu alaykum, '}<span style="color: var(--home-name-color);">${safeLastName}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        </h2>
+        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--color-accent-primary);">
+          ${window.t ? window.t(greet) : greet}
         </div>
       </div>
     `;
@@ -119,6 +107,9 @@ const Home = {
 
     // Next prayer banner
     // Wrap in reveal container
+    const npContainer = document.getElementById('home-next-prayer');
+    if (npContainer) npContainer.classList.add('home-reveal', 'revealed');
+
     this.startNextPrayerCountdown();
 
     // Salah ring (inside the card - add reveal to the parent)
@@ -126,7 +117,7 @@ const Home = {
 
     // 1. Path to Ihsan (Level Progress Bar)
     const lvlContainer = document.getElementById('home-level-progress-container');
-    if (lvlContainer) lvlContainer.classList.add('home-reveal', 'home-reveal-from-bottom');
+    if (lvlContainer) lvlContainer.classList.add('home-reveal', 'revealed', 'home-reveal-delay-2');
 
     this.renderIhsanLevel();
 
@@ -286,7 +277,7 @@ const Home = {
            box-shadow: 0 0 25px rgba(167,139,250,0.6) !important;
         }
       </style>
-      <div class="card ai-insight-premium home-reveal home-reveal-from-bottom" style="background:linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(192,132,252,0.03) 100%); padding:18px 20px; display:flex; align-items:center; gap:16px;">
+      <div class="card ai-insight-premium home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(192,132,252,0.03) 100%); padding:18px 20px; display:flex; align-items:center; gap:16px;">
         <div id="home-insight-icon" class="ai-insight-icon-wrap" style="width:38px; height:38px; background:linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-teal)); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 20px rgba(167,139,250,0.25);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg-primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         </div>
@@ -384,7 +375,7 @@ const Home = {
       : '🤲 You\'re doing great. Small steps lead to big transformations.';
 
     container.innerHTML = `
-      <div class="card home-reveal home-reveal-from-bottom" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
+      <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
         <div style="display:flex; align-items:center; gap:12px;">
           <div class="ai-insight-icon-wrap" style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#6366f1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 16px rgba(16,185,129,0.2);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
@@ -414,7 +405,7 @@ const Home = {
     const active = DuaBoard.getActiveCount();
     const answered = DuaBoard.getAnsweredCount();
     container.innerHTML = `
-      <div class="home-dua-card home-reveal home-reveal-from-bottom" onclick="DuaBoard.showModal()">
+      <div class="home-dua-card home-reveal revealed home-reveal-delay-4" onclick="DuaBoard.showModal()">
         <div class="home-dua-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
         </div>
@@ -520,7 +511,7 @@ const Home = {
 
     // Ensure structure is always fresh and premium
     el.innerHTML = `
-      <div class="card next-prayer-premium home-reveal home-reveal-from-bottom" style="margin-bottom:var(--space-6); padding: 20px 22px;">
+      <div class="card next-prayer-premium home-reveal revealed" style="margin-bottom:var(--space-6); padding: 20px 22px;">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
           <div style="display:flex; align-items:center; gap:4px; font-size:9px; font-weight:700; color:var(--color-accent-gold);">
@@ -536,15 +527,9 @@ const Home = {
               ${window.n ? window.n(nextLabel) : nextLabel}
             </div>
           </div>
-          <div style="display:flex; flex-direction:column; align-items:center; position:relative; width:88px; height:88px;">
-            <svg width="88" height="88" viewBox="0 0 88 88">
-              <circle cx="44" cy="44" r="36" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
-              <circle id="home-countdown-ring" cx="44" cy="44" r="36" stroke="var(--color-accent-primary)" stroke-width="4" fill="none" stroke-dasharray="226.2" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 44 44)"/>
-            </svg>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-              <div id="home-countdown" class="countdown-premium" style="font-size:1rem;font-weight:900;line-height:1.1;">--:--:--</div>
-              <div style="font-size:7px;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
-            </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div id="home-countdown" class="countdown-premium" style="font-size: 2rem; font-weight: 900; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
+            <div style="font-size: 9px; font-weight: 700; color: var(--color-text-muted); margin-top: 6px; text-transform:uppercase; letter-spacing:0.8px;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
           </div>
         </div>
         <!-- Countdown progress bar -->
@@ -604,12 +589,6 @@ const Home = {
           lastPct = pct;
           const bar = document.getElementById('home-countdown-bar');
           if (bar) bar.style.width = pct + '%';
-          const ring = document.getElementById('home-countdown-ring');
-          if (ring) {
-            const circ = 226.2;
-            ring.style.strokeDashoffset = circ * (1 - pct / 100);
-            ring.style.stroke = pct > 80 ? 'var(--color-accent-gold)' : pct > 40 ? 'var(--color-accent-primary)' : 'var(--color-accent-teal, #38bdf8)';
-          }
         }
       }
       this.countdownRAF = requestAnimationFrame(tickCountdown);
@@ -668,21 +647,5 @@ const Home = {
       bar.style.width = visualPct + '%';
       bar.style.background = color;
     }
-  },
-
-  /** IntersectionObserver: spring-entrance stagger for .home-reveal cards */
-  _observeCards() {
-    if (this._cardObserver) this._cardObserver.disconnect();
-    const cards = document.querySelectorAll('.home-reveal');
-    if (!cards.length) return;
-    this._cardObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('home-revealed');
-          this._cardObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
-    cards.forEach(card => this._cardObserver.observe(card));
   }
 };

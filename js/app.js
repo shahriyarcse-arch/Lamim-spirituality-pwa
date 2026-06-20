@@ -323,18 +323,13 @@ const App = {
     // Show panel with smooth transition
     const oldPanel = document.querySelector('.section-panel.active');
     const newPanel = document.getElementById('section-' + sectionId);
-    
-    document.querySelectorAll('.section-panel').forEach(p => {
-      if (p !== newPanel) p.classList.remove('active');
-      p.classList.remove('out');
-    });
-
     if (oldPanel && oldPanel !== newPanel) {
-      oldPanel.classList.add('out');
+      oldPanel.classList.add('leaving');
       setTimeout(() => {
-        oldPanel.classList.remove('out');
-      }, 180);
+        oldPanel.classList.remove('leaving', 'active');
+      }, 250);
     }
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     if (newPanel) newPanel.classList.add('active');
 
     // Section accent color
