@@ -1241,15 +1241,20 @@
   }
 }
 
-/* === SALAH DARK MODE — SOLID CLEAN BG FIX === */
+/* === SALAH & HOME DARK MODE — CONSISTENT BG WITH REST OF APP === */
 [data-theme="dark"] .salah-stat-card,
 [data-theme="dark"] .salah-prayer-card,
 [data-theme="dark"] .salah-option-btn,
 [data-theme="dark"] .salah-locked-result {
-  background: #111827 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
 }
 [data-theme="dark"] .salah-stat-card.stat-prayed .salah-stat-val { background: linear-gradient(135deg, #06b6d4, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 [data-theme="dark"] .salah-stat-card.stat-perfect .salah-stat-val { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 [data-theme="dark"] .salah-stat-card.stat-consistent .salah-stat-val { background: linear-gradient(135deg, #10b981, #3fb950); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 [data-theme="dark"] .salah-stat-card.stat-points .salah-stat-val { background: linear-gradient(135deg, #facc15, #d97706); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Home Waqt Orb card — same treatment */
+[data-theme="dark"] .waqt-orb-premium {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
 
