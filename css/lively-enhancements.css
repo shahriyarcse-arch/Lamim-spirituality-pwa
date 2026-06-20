@@ -176,8 +176,8 @@
 }
 
 @keyframes auraBreathe {
-  0%, 100% { box-shadow: 0 0 40px var(--aura-color, #a78bfa); }
-  50%      { box-shadow: 0 0 70px var(--aura-color, #a78bfa), 0 0 120px color-mix(in srgb, var(--aura-color, #a78bfa) 40%, transparent); }
+  0%, 100% { box-shadow: 0 0 12px var(--aura-color, #a78bfa); }
+  50%      { box-shadow: 0 0 24px var(--aura-color, #a78bfa), 0 0 30px color-mix(in srgb, var(--aura-color, #a78bfa) 40%, transparent); }
 }
 
 

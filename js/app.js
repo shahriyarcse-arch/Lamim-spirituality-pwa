@@ -88,7 +88,7 @@ const App = {
   // Section labels for the topbar
   sectionLabels: {
     en: { home: 'Home', salah: 'Salah Tracker', dhikr: 'Dhikr Counter', nafl: 'Nafl Salah', mujahid: 'Mujahid', finance: 'Islamic Finance', analysis: 'Analysis', profile: 'Profile' },
-    bn: { home: 'হোম', salah: 'সালাত ট্র্যাকার', dhikr: 'যিকির কাউন্টার', nafl: 'নফল সালাত', mujahid: 'মুজাহিদ', finance: 'ইসলামিক অর্থনীতি', analysis: 'বিশ্লেষণ', profile: 'প্রোফাইল' }
+    bn: { home: 'হোম', salah: 'সালাত ট্র্যাকার', dhikr: 'যিকির কাউন্টার', nafl: 'নফল সালাত', mujahid: 'মুজাহিদ', finance: 'ইসলামিক ফাইন্যান্স', analysis: 'বিশ্লেষণ', profile: 'প্রোফাইল' }
   },
 
   async init() {
@@ -98,7 +98,7 @@ const App = {
     // 0. AGGRESSIVE RECOVERY & CACHE BUSTING CHECK
     if (DB.rawGet('lamim_needs_reload')) {
       DB.remove('lamim_needs_reload');
-      window.location.reload(true);
+      window.location.reload();
     }
     
     // Force clear old service workers and caches ONCE to ensure the bug fix applies
@@ -117,7 +117,7 @@ const App = {
           keys.forEach(key => { try { caches.delete(key); } catch(e) {} });
         });
       }
-      setTimeout(() => window.location.reload(true), 500);
+      setTimeout(() => window.location.reload(), 500);
       return; // Stop initialization until reload
     }
 

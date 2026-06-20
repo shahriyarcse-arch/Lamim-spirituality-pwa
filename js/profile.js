@@ -473,7 +473,7 @@ const Profile = {
         }
         
         Utils.toast('App reset successfully! Reloading...', 'success');
-        setTimeout(() => window.location.reload(true), 1500);
+        setTimeout(() => window.location.reload(), 1500);
       }
     );
   },
@@ -511,6 +511,7 @@ const Profile = {
   },
 
   importData(event) {
+    if (!event || !event.target) return;
     const file = event.target.files[0];
     if (!file) return;
 
@@ -575,6 +576,7 @@ const Profile = {
   },
 
   async handleAvatarUpload(e) {
+    if (!e || !e.target) return;
     const file = e.target.files[0];
     if (!file) return;
     
