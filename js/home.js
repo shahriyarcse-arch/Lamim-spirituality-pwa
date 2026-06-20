@@ -258,7 +258,7 @@ const Home = {
   renderAIInsight() {
     const container = document.getElementById('home-ai-insight-container');
     if (!container) return;
-    
+
     const quotes = [
       "Small consistent deeds are most beloved to Allah. You are building something beautiful.",
       "The sweetness of faith is found in the stillness of Salah. Breathe and focus today.",
@@ -288,6 +288,19 @@ const Home = {
     ];
     let qIdx = Math.floor(Math.random() * quotes.length);
 
+    const history = DB.getSalahHistory(7);
+    let totalPrayed = 0;
+    history.forEach(day => { totalPrayed += Utils.salahScore(day.data).done; });
+    const avgPrayed = history.length > 0 ? totalPrayed / history.length : 0;
+
+    let mood;
+    if (avgPrayed >= 4) mood = { label: 'Radiant', emoji: '✨', color: '#fbbf24', bg: 'rgba(251,191,36,0.08)', border: 'rgba(251,191,36,0.2)', grad: '135deg, rgba(251,191,36,0.08), rgba(251,191,36,0.03)' };
+    else if (avgPrayed >= 2) mood = { label: 'Growing', emoji: '🌱', color: '#34d399', bg: 'rgba(52,211,153,0.08)', border: 'rgba(52,211,153,0.2)', grad: '135deg, rgba(52,211,153,0.08), rgba(99,102,241,0.03)' };
+    else mood = { label: 'Resting', emoji: '🌙', color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)', grad: '135deg, rgba(167,139,250,0.08), rgba(192,132,252,0.03)' };
+
+    const shs = this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { total: 50 });
+    const needleAngle = -90 + (shs.total / 100) * 180;
+
     container.innerHTML = `
       <style>
         .ai-insight-text {
@@ -312,15 +325,28 @@ const Home = {
         }
         .ai-insight-icon-wrap.pulse {
            transform: scale(1.1) rotate(5deg);
-           box-shadow: 0 0 25px rgba(167,139,250,0.6) !important;
+           box-shadow: 0 0 25px ${mood.color}80 !important;
+        }
+        .qalb-needle {
+           transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+           transform-origin: 12px 12px;
         }
       </style>
-      <div class="card ai-insight-premium home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(192,132,252,0.03) 100%); padding:18px 20px; display:flex; align-items:center; gap:16px;">
-        <div id="home-insight-icon" class="ai-insight-icon-wrap" style="width:38px; height:38px; background:linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-teal)); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 20px rgba(167,139,250,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg-primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <div class="card ai-insight-premium home-reveal revealed home-reveal-delay-3 qalb-${mood.label.toLowerCase()}" style="background:linear-gradient(${mood.grad}); padding:18px 20px; display:flex; align-items:center; gap:16px; border-color:${mood.border};">
+        <div id="home-insight-icon" class="ai-insight-icon-wrap" style="width:38px; height:38px; background:linear-gradient(135deg, ${mood.color}, var(--color-accent-teal)); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 20px ${mood.color}40;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="${mood.color}" stroke-width="1.5" opacity="0.3"/>
+            <circle cx="12" cy="12" r="2" fill="#fff"/>
+            <g class="qalb-needle">
+              <polygon points="12,4 10,13 14,13" fill="#fff"/>
+            </g>
+          </svg>
         </div>
         <div style="display:flex; flex-direction:column; gap:3px; flex: 1;">
-          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-accent-primary)">${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</span>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:${mood.color}">${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</span>
+            <span style="font-size:9px; font-weight:800; color:${mood.color};">${mood.emoji} ${mood.label}</span>
+          </div>
           <div style="min-height: 34px; display: flex; align-items: center;">
             <p id="home-insight-text" class="ai-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.45; color:var(--color-text-secondary)">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
           </div>
@@ -328,7 +354,9 @@ const Home = {
       </div>
     `;
 
-    // Clear existing interval and timeout to prevent overlapping transitions
+    const needleEl = container.querySelector('.qalb-needle');
+    if (needleEl) { needleEl.style.transform = `rotate(${needleAngle}deg)`; needleEl.style.transformOrigin = '12px 12px'; }
+
     if (this.insightInterval) clearInterval(this.insightInterval);
     if (this.insightTimeout) clearTimeout(this.insightTimeout);
     if (this._insightPulseTimeout) clearTimeout(this._insightPulseTimeout);
@@ -663,51 +691,42 @@ const Home = {
     const score = Utils.salahScore(today);
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
-    const visualPct = (score.done / 5) * 100;
-    const circumference = 2 * Math.PI * 62;
-    const offset = circumference - (visualPct / 100) * circumference;
-    const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
-    // Ensure structure is always fresh
+    const done = score.done;
+    const color = done === 5 ? '#34d399' : done >= 3 ? '#fbbf24' : '#f87171';
+
+    const petalPath = "M0,0 C-14,-18 -10,-42 0,-48 C10,-42 14,-18 0,0 Z";
+    let petals = '';
+    for (let i = 0; i < 5; i++) {
+      const isBloomed = i < done;
+      const isCurrent = i === done && done < 5;
+      const scale = isBloomed ? 1 : isCurrent ? 0.35 : 0.12;
+      const fill = isBloomed ? color : 'var(--color-divider-subtle)';
+      const stroke = isBloomed ? color : 'var(--color-border)';
+      const opacity = isBloomed ? 1 : isCurrent ? 0.5 : 0.15;
+      petals += `<path d="${petalPath}" fill="${fill}" stroke="${stroke}" stroke-width="1"
+        opacity="${opacity}" transform="rotate(${i * 72}) scale(${scale})"
+        style="transition:transform 0.7s cubic-bezier(0.34,1.56,0.64,1), fill 0.5s ease, opacity 0.5s ease;"/>`;
+    }
+
     el.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div class="salah-ring-premium ring-chart" style="width:160px;height:160px">
-          <svg width="160" height="160" viewBox="0 0 160 160">
-            <circle class="ring-chart-bg" cx="80" cy="80" r="62" stroke-width="14"/>
-            <circle class="ring-chart-fill" id="salah-ring-fill" cx="80" cy="80" r="62" stroke-width="14"
-              stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)"/>
+        <div class="salah-bloom-ring ${done === 5 ? 'full-bloom' : ''}" style="width:160px;height:160px;display:flex;align-items:center;justify-content:center;">
+          <svg width="140" height="140" viewBox="-60 -60 120 120" style="overflow:visible;">
+            ${petals}
+            <circle r="8" fill="var(--color-bg-elevated)" stroke="${color}" stroke-width="2" style="transition:stroke 0.5s ease;"/>
+            <circle r="3" fill="${color}" opacity="0.6" style="transition:fill 0.5s ease;"/>
           </svg>
-          <div class="ring-chart-label">
-            <div id="salah-ring-count" style="font-size:2.4rem;font-weight:900;line-height:1">0</div>
-            <div style="font-size:0.7rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
-          </div>
         </div>
         <div style="text-align:center;width:100%;">
           <div style="font-size:var(--text-md);font-weight:800;letter-spacing:-0.3px;">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
-          <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px;font-weight:500;">${window.n ? window.n('0/5') : '0/5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
+          <div style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px;font-weight:500;">
+            ${window.n ? window.n(done) : done}/5 ${window.t ? window.t('prayers completed') : 'prayers completed'}
+          </div>
           <div class="progress-bar mt-2" style="width:140px;margin:10px auto 0;">
-            <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>
+            <div class="progress-fill" style="width:${(done/5)*100}%;background:${color};transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;"></div>
           </div>
         </div>
       </div>
     `;
-
-    const fill = document.getElementById('salah-ring-fill');
-    const count = document.getElementById('salah-ring-count');
-    const desc = document.getElementById('salah-ring-desc');
-    const bar = document.getElementById('salah-ring-bar');
-
-    if (fill) {
-      fill.setAttribute('stroke', color);
-      fill.style.strokeDashoffset = offset;
-    }
-    if (count) {
-      count.textContent = window.n ? window.n(score.done) : score.done;
-      count.style.color = color;
-    }
-    if (desc) desc.textContent = `${window.n ? window.n(score.done) : score.done}/${window.n ? window.n('5') : '5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}`;
-    if (bar) {
-      bar.style.width = visualPct + '%';
-      bar.style.background = color;
-    }
-  }
+  },
 };
