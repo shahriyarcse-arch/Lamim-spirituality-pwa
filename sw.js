@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lamim-v133';
+const CACHE_NAME = 'lamim-v132';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,6 @@ const ASSETS = [
   './assets/icon-180x180.png',
   './assets/icon-192x192.png',
   './assets/icon-512x512.png',
-  './js/icons.js',
   './js/lang.js',
   './js/utils.js',
   './js/db.js',

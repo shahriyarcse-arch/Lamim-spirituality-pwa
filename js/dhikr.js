@@ -125,7 +125,7 @@ const Dhikr = {
       const isActive = this.currentId === sug.preset;
       sugEl.innerHTML = `
         <div class="dhikr-suggestion-badge" style="${isActive ? 'opacity:0.5' : ''}">
-          <span>${Icons.lightbulb}</span>
+          <span>💡</span>
           <span>${sug.hint}</span>
           ${!isActive ? `<button class="dhikr-suggestion-apply" onclick="Dhikr.selectDhikr('${sug.preset}')">Try</button>` : ''}
         </div>
@@ -367,7 +367,7 @@ const Dhikr = {
 
     if (dates.length === 0) {
       body.innerHTML = `<div class="empty-state" style="padding:var(--space-6)">
-        <div class="empty-icon" style="font-size:2rem; color:var(--color-text-muted); margin-bottom: 10px;">${Icons.clock}</div>
+        <div class="empty-icon" style="font-size:2rem; color:var(--color-text-muted); margin-bottom: 10px;">🕒</div>
         <p>${this.getLang() === 'bn' ? 'কোনো ইতিহাস নেই' : 'No history found'}</p>
       </div>`;
     } else {

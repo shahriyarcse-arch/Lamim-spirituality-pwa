@@ -380,6 +380,7 @@ const Mujahid = {
       '📱': this.defaultHabits.find(h => h.id === 'social_media').icon,
       '🎮': this.defaultHabits.find(h => h.id === 'gaming').icon,
       '🍔': this.defaultHabits.find(h => h.id === 'overeating').icon,
+      '🎯': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 8-8 8"/><path d="m8 8 8 8"/></svg>'
     };
 
     let changed = false;
@@ -431,7 +432,7 @@ const Mujahid = {
             const oldBadge = lastKnownDays > 0 ? this.getBadgeForDays(lastKnownDays) : null;
             const newBadge = this.getBadgeForDays(timeStats.days);
             if (newBadge && (!oldBadge || newBadge.days > oldBadge.days)) {
-              Utils.toast(`RANK ADVANCEMENT: You have achieved the rank of "${newBadge.name}"!`, 'success');
+              Utils.toast(`RANK ADVANCEMENT: You have achieved the rank of "${newBadge.name}"! 🛡️✨`, 'success');
             }
             this.render();
           }
@@ -736,8 +737,8 @@ const Mujahid = {
       html += `<div class="${classes}">
         <div class="mujahid-week-day-name">${dayNames[i]}</div>
         <div class="mujahid-week-day-num">${day.getDate()}</div>
-${dayData === 'clean' ? '<span class="mujahid-week-check">' + Icons.check + '</span>' : ''}
-${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span>' : ''}
+        ${dayData === 'clean' ? '<span class="mujahid-week-check">✓</span>' : ''}
+        ${dayData === 'slip' ? '<span class="mujahid-week-x">✗</span>' : ''}
       </div>`;
     }
     html += '</div>';
@@ -1062,7 +1063,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     // Reset Custom Date & Time UI
     const dtDisplay = document.getElementById('mujahid-dt-display');
     if (dtDisplay) {
-      dtDisplay.innerHTML = `${Icons.clock} Starting: Right Now`;
+      dtDisplay.innerText = '🕒 Starting: Right Now';
       dtDisplay.style.color = '#10b981';
     }
     const customControls = document.getElementById('mujahid-custom-dt-controls');
@@ -1196,7 +1197,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
       // Render and notify
       this.render(true);
       if (input) input.value = '';
-      Utils.toast('Habit forged! Your journey begins!', 'success');
+      Utils.toast('Habit forged! Your journey begins ⚔️', 'success');
       console.log('Mujahid: Habit forged successfully:', habit.id);
 
     } catch (error) {
@@ -1226,7 +1227,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
       // Right Now
       startInput.value = '';
       if (dtDisplay) {
-        dtDisplay.innerHTML = `${Icons.clock} Starting: Right Now`;
+        dtDisplay.innerText = '🕒 Starting: Right Now';
         dtDisplay.style.color = '#10b981';
       }
     } else {
@@ -1245,7 +1246,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
       if (dtDisplay) {
         const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
         const formatted = date.toLocaleString('en-US', options);
-        dtDisplay.innerHTML = `${Icons.clock} Starting: ${formatted}`;
+        dtDisplay.innerText = `🕒 Starting: ${formatted}`;
         dtDisplay.style.color = 'var(--theme-color, #6366f1)';
       }
     }
@@ -1357,7 +1358,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     const dtDisplay = document.getElementById('mujahid-dt-display');
     if (dtDisplay) {
       const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-      dtDisplay.innerHTML = `${Icons.clock} Starting: ${date.toLocaleString('en-US', options)}`;
+      dtDisplay.innerText = `🕒 Starting: ${date.toLocaleString('en-US', options)}`;
       dtDisplay.style.color = 'var(--theme-color, #6366f1)';
     }
   },
@@ -1377,7 +1378,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     this.habits.push(newHabit);
     this.saveHabits();
     this.render(true);
-    Utils.toast(`Added: ${Utils.escapeHTML(habit.label)} - Stay strong!`, 'success');
+    Utils.toast(`Added: ${Utils.escapeHTML(habit.label)} - Stay strong! 💪`, 'success');
   },
 
   showRelapseModal(habitId) {
@@ -1436,7 +1437,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
 
     this.saveHabits();
     this.render(true);
-    Utils.toast('Relapse Undone! Your streak is restored!', 'success');
+    Utils.toast('Relapse Undone! Your streak is restored. 🛡️✨', 'success');
   },
 
   confirmRelapse() {
@@ -1457,10 +1458,10 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     const existingToday = habit.history.find(h => h.date === today);
     if (existingToday) {
       existingToday.clean = true;
-      Utils.toast('Great job! Stay strong!', 'success');
+      Utils.toast('Great job! Stay strong! 💪', 'success');
     } else {
       habit.history.push({ date: today, clean: true });
-      Utils.toast('Day marked as clean! Keep going!', 'success');
+      Utils.toast('Day marked as clean! Keep going! 🎉', 'success');
     }
 
     this.saveHabits();
@@ -1471,7 +1472,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     if (streak > 0 && streak % 7 === 0) {
       setTimeout(() => {
         Utils.confetti(30);
-        Utils.toast(`${streak}-day streak! MashaAllah!`, 'success');
+        Utils.toast(`🎉 ${streak}-day streak! MashaAllah!`, 'success');
       }, 400);
     }
   },
@@ -1502,7 +1503,7 @@ ${dayData === 'slip' ? '<span class="mujahid-week-x">' + Icons.xCircle + '</span
     let html = '';
     
     if (slips.length === 0) {
-      html += `<div style="text-align:center;color:var(--color-text-muted);padding:20px;">No relapses recorded! Keep up the great work!</div>`;
+      html += `<div style="text-align:center;color:var(--color-text-muted);padding:20px;">No relapses recorded! Keep up the great work! 🎉</div>`;
     } else {
       html += slips.map(s => {
         const d = new Date(s.timestamp || s.date);

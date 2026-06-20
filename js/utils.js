@@ -226,7 +226,7 @@ const Utils = {
 
   // Toast
   toast(msg, type = 'info', duration = 3000) {
-    const icons = { success: Icons.checkCircle, error: Icons.xCircle, info: Icons.info, warning: Icons.alertTriangle };
+    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
     const container = document.getElementById('toast-container');
     if (!container) return;
     const el = document.createElement('div');
@@ -286,9 +286,9 @@ const Utils = {
     }
 
     const types = {
-      danger: { icon: Icons.trash, color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.1)', btn: '#ff3b30' },
-      warning: { icon: Icons.alertTriangle, color: '#ff9500', bg: 'rgba(255, 149, 0, 0.1)', btn: '#ff9500' },
-      info: { icon: Icons.info, color: '#007aff', bg: 'rgba(0, 122, 255, 0.1)', btn: '#007aff' }
+      danger: { icon: '🗑️', color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.1)', btn: '#ff3b30' },
+      warning: { icon: '⚠️', color: '#ff9500', bg: 'rgba(255, 149, 0, 0.1)', btn: '#ff9500' },
+      info: { icon: 'ℹ️', color: '#007aff', bg: 'rgba(0, 122, 255, 0.1)', btn: '#007aff' }
     };
 
     const config = types[type] || types.warning;
@@ -296,7 +296,7 @@ const Utils = {
     titleEl.textContent = title;
     msgEl.textContent = msg;
     if (iconEl) {
-      iconEl.innerHTML = config.icon;
+      iconEl.textContent = config.icon;
       iconEl.style.color = config.color;
       iconEl.style.background = config.bg;
     }

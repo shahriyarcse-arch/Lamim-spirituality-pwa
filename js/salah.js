@@ -225,7 +225,7 @@ const Salah = {
       <div class="salah-cards-container">
         ${isFuture ? `
           <div class="salah-empty-stats anim-fade-in" style="grid-column: 1 / -1; margin: 0;">
-            <div class="salah-empty-title">${Icons.lock} Future Date Locked</div>
+            <div class="salah-empty-title">🔒 Future Date Locked</div>
             <div class="salah-empty-subtitle">You can only record prayers for today or past dates.</div>
           </div>
         ` : ''}
@@ -263,7 +263,7 @@ const Salah = {
                          <span>${statusInfo.icon}</span> ${statusInfo.label}
                        </div>`
                     : `<div class="salah-status-chip salah-status-pending">
-                          <span>${Icons.clock}</span> Pending
+                         <span>⏳</span> Pending
                        </div>`
                   }
                 </div>
@@ -360,13 +360,13 @@ const Salah = {
     if (statScore.length >= 5) statScore[4].textContent = `${newScore.pct}%`;
 
     const sm2 = this.statusMeta[status];
-    const result2 = sm2.result === 'successful' ? Icons.checkCircle : sm2.result === 'qaza' ? Icons.clock : Icons.xCircle;
+    const result2 = sm2.result === 'successful' ? '✅' : sm2.result === 'qaza' ? '⏰' : '❌';
 
     // Celebrate all 5 done
     const score = Utils.salahScore(DB.getSalah(date));
     if (score.done === 5) {
       setTimeout(() => {
-        Utils.toast('MashaAllah! All 5 farz prayers logged!', 'success');
+        Utils.toast('🎉 MashaAllah! All 5 farz prayers logged!', 'success');
         Utils.confetti();
       }, 500);
     }
@@ -819,7 +819,7 @@ const Salah = {
           sColor = 'var(--color-text-muted)';
         }
 
-        const emojis = { fajr: Icons.sunrise, dhuhr: Icons.sun, asr: Icons.cloudSun, maghrib: Icons.sunset, isha: Icons.moon };
+        const emojis = { fajr:'🌅', dhuhr:'☀️', asr:'🌤️', maghrib:'🌇', isha:'🌌' };
         
         html += `
           <div class="tt-row">

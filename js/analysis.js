@@ -227,7 +227,7 @@ const Analysis = {
           <div class="shs-rating-badge" id="shs-rating-badge" style="background: ${rating.color}20; color: ${rating.color}; border: 1px solid ${rating.color}40">
             ${rating.label}
           </div>
-          <p class="shs-desc date-desc" style="font-size:11px; opacity:0.8; margin-bottom: 2px;">${scoreSubLabel}</p>
+          <p class="shs-desc date-desc" style="font-size:11px; opacity:0.8; margin-bottom: 2px;">📅 ${scoreSubLabel}</p>
           <p class="shs-desc rating-desc">${rating.desc}</p>
         </div>
 
@@ -385,7 +385,7 @@ const Analysis = {
     const dateObj = new Date(y, m - 1, d);
     const scoreSubLabel = dateObj.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     const dateDesc = document.querySelector('.date-desc');
-    if (dateDesc) dateDesc.innerHTML = `${scoreSubLabel}`;
+    if (dateDesc) dateDesc.innerHTML = `📅 ${scoreSubLabel}`;
     
     const ratingDesc = document.querySelector('.rating-desc');
     if (ratingDesc) ratingDesc.innerText = rating.desc;

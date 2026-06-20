@@ -129,10 +129,10 @@ const Goals = {
 
     const mEl = document.getElementById('home-mentor-message');
     if (mEl) {
-      let msg = "Start your day with Bismillah...";
-      if (activeDays >= 6) msg = "Excellent consistency this week!";
-      else if (activeDays >= 3) msg = "You're building a strong habit. Keep it up!";
-      else if (activeDays > 0) msg = "Every prayer is a step closer to peace.";
+      let msg = "Start your day with Bismillah... ✨";
+      if (activeDays >= 6) msg = "Excellent consistency this week! 🌟";
+      else if (activeDays >= 3) msg = "You're building a strong habit. Keep it up! 🤍";
+      else if (activeDays > 0) msg = "Every prayer is a step closer to peace. 🕊️";
       mEl.textContent = `"${msg}"`;
     }
   },

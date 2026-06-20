@@ -4,192 +4,192 @@
 const Finance = {
   categories: [
     /* --- 220+ MASTER CATEGORIES DATABASE --- */
-    { id: 'bazar', name: 'Kacha Bazar', color: '#34C759', section: 'Bazar & Food' },
-    { id: 'fish', name: 'Fish (Maach)', color: '#007AFF', section: 'Bazar & Food' },
-    { id: 'meat', name: 'Meat (Goru/Khashi)', color: '#FF2D55', section: 'Bazar & Food' },
-    { id: 'chicken', name: 'Chicken (Murgi)', color: '#FF9500', section: 'Bazar & Food' },
-    { id: 'grocery', name: 'Grocery (Mudi)', color: '#5856D6', section: 'Bazar & Food' },
-    { id: 'rice', name: 'Rice (Chaal)', color: '#FFD60A', section: 'Bazar & Food' },
-    { id: 'oil', name: 'Oil & Spices', color: '#FF3B30', section: 'Bazar & Food' },
-    { id: 'dal', name: 'Dal / Lentils', color: '#FFCC00', section: 'Bazar & Food' },
-    { id: 'salt_sugar', name: 'Salt & Sugar', color: '#8E8E93', section: 'Bazar & Food' },
-    { id: 'snacks', name: 'Snacks (Chanachur)', color: '#AF52DE', section: 'Bazar & Food' },
-    { id: 'tea', name: 'Tea & Biscuits', color: '#8E8E93', section: 'Bazar & Food' },
-    { id: 'sweet', name: 'Sweets (Misti)', color: '#FFCC00', section: 'Bazar & Food' },
-    { id: 'fruit', name: 'Fruits (Phol)', color: '#34C759', section: 'Bazar & Food' },
-    { id: 'milk', name: 'Milk & Dairy', color: '#5AC8FA', section: 'Bazar & Food' },
-    { id: 'yogurt', name: 'Yogurt (Doi)', color: '#F1F5F9', section: 'Bazar & Food' },
-    { id: 'egg', name: 'Eggs (Dim)', color: '#FFD60A', section: 'Bazar & Food' },
-    { id: 'bread', name: 'Bread & Bakery', color: '#FF9500', section: 'Bazar & Food' },
-    { id: 'baby_food', name: 'Baby Food / Cerelac', color: '#5AC8FA', section: 'Bazar & Food' },
-    { id: 'frozen_food', name: 'Frozen Food', color: '#AF52DE', section: 'Bazar & Food' },
-    { id: 'baking', name: 'Baking Items', color: '#FFD60A', section: 'Bazar & Food' },
-    { id: 'water', name: 'Mineral Water', color: '#007AFF', section: 'Bazar & Food' },
-    { id: 'juice', name: 'Juice / Drinks', color: '#FF2D55', section: 'Bazar & Food' },
-    { id: 'streetfood', name: 'Street Food', color: '#FF3B30', section: 'Bazar & Food' },
-    { id: 'fuchka', name: 'Fuchka / Chotpoti', color: '#AF52DE', section: 'Bazar & Food' },
-    { id: 'restaurant', name: 'Restaurant', color: '#FF2D55', section: 'Bazar & Food' },
-    { id: 'cafe', name: 'Cafe / Coffee', color: '#AF52DE', section: 'Bazar & Food' },
-    { id: 'fastfood', name: 'Burger / Pizza', color: '#FF9500', section: 'Bazar & Food' },
-    { id: 'biryani', name: 'Biryani / Tehari', color: '#FF3B30', section: 'Bazar & Food' },
+    { id: 'bazar', name: 'Kacha Bazar', icon: '🥦', color: '#34C759', section: 'Bazar & Food' },
+    { id: 'fish', name: 'Fish (Maach)', icon: '🐟', color: '#007AFF', section: 'Bazar & Food' },
+    { id: 'meat', name: 'Meat (Goru/Khashi)', icon: '🍖', color: '#FF2D55', section: 'Bazar & Food' },
+    { id: 'chicken', name: 'Chicken (Murgi)', icon: '🍗', color: '#FF9500', section: 'Bazar & Food' },
+    { id: 'grocery', name: 'Grocery (Mudi)', icon: '🛒', color: '#5856D6', section: 'Bazar & Food' },
+    { id: 'rice', name: 'Rice (Chaal)', icon: '🌾', color: '#FFD60A', section: 'Bazar & Food' },
+    { id: 'oil', name: 'Oil & Spices', icon: '🌶️', color: '#FF3B30', section: 'Bazar & Food' },
+    { id: 'dal', name: 'Dal / Lentils', icon: '🍲', color: '#FFCC00', section: 'Bazar & Food' },
+    { id: 'salt_sugar', name: 'Salt & Sugar', icon: '🧂', color: '#8E8E93', section: 'Bazar & Food' },
+    { id: 'snacks', name: 'Snacks (Chanachur)', icon: '🥨', color: '#AF52DE', section: 'Bazar & Food' },
+    { id: 'tea', name: 'Tea & Biscuits', icon: '☕', color: '#8E8E93', section: 'Bazar & Food' },
+    { id: 'sweet', name: 'Sweets (Misti)', icon: '🍭', color: '#FFCC00', section: 'Bazar & Food' },
+    { id: 'fruit', name: 'Fruits (Phol)', icon: '🍎', color: '#34C759', section: 'Bazar & Food' },
+    { id: 'milk', name: 'Milk & Dairy', icon: '🥛', color: '#5AC8FA', section: 'Bazar & Food' },
+    { id: 'yogurt', name: 'Yogurt (Doi)', icon: '🥣', color: '#F1F5F9', section: 'Bazar & Food' },
+    { id: 'egg', name: 'Eggs (Dim)', icon: '🥚', color: '#FFD60A', section: 'Bazar & Food' },
+    { id: 'bread', name: 'Bread & Bakery', icon: '🍞', color: '#FF9500', section: 'Bazar & Food' },
+    { id: 'baby_food', name: 'Baby Food / Cerelac', icon: '🍼', color: '#5AC8FA', section: 'Bazar & Food' },
+    { id: 'frozen_food', name: 'Frozen Food', icon: '🧊', color: '#AF52DE', section: 'Bazar & Food' },
+    { id: 'baking', name: 'Baking Items', icon: '🧁', color: '#FFD60A', section: 'Bazar & Food' },
+    { id: 'water', name: 'Mineral Water', icon: '🥤', color: '#007AFF', section: 'Bazar & Food' },
+    { id: 'juice', name: 'Juice / Drinks', icon: '🧃', color: '#FF2D55', section: 'Bazar & Food' },
+    { id: 'streetfood', name: 'Street Food', icon: '🥙', color: '#FF3B30', section: 'Bazar & Food' },
+    { id: 'fuchka', name: 'Fuchka / Chotpoti', icon: '🥣', color: '#AF52DE', section: 'Bazar & Food' },
+    { id: 'restaurant', name: 'Restaurant', icon: '🍱', color: '#FF2D55', section: 'Bazar & Food' },
+    { id: 'cafe', name: 'Cafe / Coffee', icon: '☕', color: '#AF52DE', section: 'Bazar & Food' },
+    { id: 'fastfood', name: 'Burger / Pizza', icon: '🍔', color: '#FF9500', section: 'Bazar & Food' },
+    { id: 'biryani', name: 'Biryani / Tehari', icon: '🍛', color: '#FF3B30', section: 'Bazar & Food' },
 
-    { id: 'rickshaw', name: 'Rickshaw Fare', color: '#34C759', section: 'Transport' },
-    { id: 'cng', name: 'CNG Fare', color: '#007AFF', section: 'Transport' },
-    { id: 'bus', name: 'Bus Fare', color: '#AF52DE', section: 'Transport' },
-    { id: 'uber', name: 'Uber / Pathao', color: '#000000', section: 'Transport' },
-    { id: 'fuel', name: 'Fuel (Octane/LPG)', color: '#FF3B30', section: 'Transport' },
-    { id: 'cng_refill', name: 'CNG Refill', color: '#5AC8FA', section: 'Transport' },
-    { id: 'engineoil', name: 'Engine Oil / Lube', color: '#FF9500', section: 'Transport' },
-    { id: 'carrepair', name: 'Car/Bike Repair', color: '#8E8E93', section: 'Transport' },
-    { id: 'carwash', name: 'Car Wash', color: '#007AFF', section: 'Transport' },
-    { id: 'tyre', name: 'Tyres / Parts', color: '#333333', section: 'Transport' },
-    { id: 'battery', name: 'Car/Bike Battery', color: '#FFD60A', section: 'Transport' },
-    { id: 'parking', name: 'Parking Fee', color: '#5AC8FA', section: 'Transport' },
-    { id: 'toll', name: 'Bridge Toll', color: '#5856D6', section: 'Transport' },
-    { id: 'fitness', name: 'Vehicle Fitness', color: '#5856D6', section: 'Transport' },
-    { id: 'tax_token', name: 'Tax Token', color: '#FF3B30', section: 'Transport' },
-    { id: 'route_permit', name: 'Route Permit', color: '#34C759', section: 'Transport' },
-    { id: 'driving_license', name: 'Driving License', color: '#AF52DE', section: 'Transport' },
-    { id: 'launch', name: 'Launch / Steamer', color: '#007AFF', section: 'Transport' },
-    { id: 'train', name: 'Train Fare', color: '#5856D6', section: 'Transport' },
-    { id: 'flight', name: 'Flight Ticket', color: '#AF52DE', section: 'Transport' },
+    { id: 'rickshaw', name: 'Rickshaw Fare', icon: '🚲', color: '#34C759', section: 'Transport' },
+    { id: 'cng', name: 'CNG Fare', icon: '🛺', color: '#007AFF', section: 'Transport' },
+    { id: 'bus', name: 'Bus Fare', icon: '🚌', color: '#AF52DE', section: 'Transport' },
+    { id: 'uber', name: 'Uber / Pathao', icon: '🚗', color: '#000000', section: 'Transport' },
+    { id: 'fuel', name: 'Fuel (Octane/LPG)', icon: '⛽', color: '#FF3B30', section: 'Transport' },
+    { id: 'cng_refill', name: 'CNG Refill', icon: '💨', color: '#5AC8FA', section: 'Transport' },
+    { id: 'engineoil', name: 'Engine Oil / Lube', icon: '🧴', color: '#FF9500', section: 'Transport' },
+    { id: 'carrepair', name: 'Car/Bike Repair', icon: '🔧', color: '#8E8E93', section: 'Transport' },
+    { id: 'carwash', name: 'Car Wash', icon: '🚿', color: '#007AFF', section: 'Transport' },
+    { id: 'tyre', name: 'Tyres / Parts', icon: '🔘', color: '#333333', section: 'Transport' },
+    { id: 'battery', name: 'Car/Bike Battery', icon: '🔋', color: '#FFD60A', section: 'Transport' },
+    { id: 'parking', name: 'Parking Fee', icon: '🅿️', color: '#5AC8FA', section: 'Transport' },
+    { id: 'toll', name: 'Bridge Toll', icon: '🌉', color: '#5856D6', section: 'Transport' },
+    { id: 'fitness', name: 'Vehicle Fitness', icon: '📜', color: '#5856D6', section: 'Transport' },
+    { id: 'tax_token', name: 'Tax Token', icon: '🎫', color: '#FF3B30', section: 'Transport' },
+    { id: 'route_permit', name: 'Route Permit', icon: '🛣️', color: '#34C759', section: 'Transport' },
+    { id: 'driving_license', name: 'Driving License', icon: '🪪', color: '#AF52DE', section: 'Transport' },
+    { id: 'launch', name: 'Launch / Steamer', icon: '🚢', color: '#007AFF', section: 'Transport' },
+    { id: 'train', name: 'Train Fare', icon: '🚆', color: '#5856D6', section: 'Transport' },
+    { id: 'flight', name: 'Flight Ticket', icon: '✈️', color: '#AF52DE', section: 'Transport' },
 
-    { id: 'rent', name: 'House Rent', color: '#5856D6', section: 'Household' },
-    { id: 'electricity', name: 'Electricity Bill', color: '#FFD60A', section: 'Household' },
-    { id: 'wasa', name: 'WASA Bill', color: '#007AFF', section: 'Household' },
-    { id: 'gas', name: 'Titas Gas Bill', color: '#FF3B30', section: 'Household' },
-    { id: 'lp_gas', name: 'LP Gas Cylinder', color: '#FF9500', section: 'Household' },
-    { id: 'internet', name: 'Broadband', color: '#5AC8FA', section: 'Household' },
-    { id: 'cabletv', name: 'Cable TV / Dish', color: '#FF2D55', section: 'Household' },
-    { id: 'garbage', name: 'Garbage Bill', color: '#8E8E93', section: 'Household' },
-    { id: 'maid', name: 'Maid Salary', color: '#AF52DE', section: 'Household' },
-    { id: 'guard', name: 'Security Guard', color: '#34C759', section: 'Household' },
-    { id: 'laundry', name: 'Laundry / Ironing', color: '#5856D6', section: 'Household' },
-    { id: 'homerepair', name: 'Home Repair', color: '#FF9500', section: 'Household' },
-    { id: 'kitchen', name: 'Kitchenware', color: '#FFCC00', section: 'Household' },
-    { id: 'cleaning_kit', name: 'Cleaning Kit', color: '#34C759', section: 'Household' },
-    { id: 'pest_control', name: 'Pest Control', color: '#FF3B30', section: 'Household' },
-    { id: 'furniture', name: 'Furniture', color: '#FF9500', section: 'Household' },
-    { id: 'bedding', name: 'Bedding / Curtains', color: '#AF52DE', section: 'Household' },
-    { id: 'plants', name: 'Plants / Garden', color: '#34C759', section: 'Household' },
-    { id: 'bulb', name: 'Bulbs / Electrical', color: '#FFD60A', section: 'Household' },
+    { id: 'rent', name: 'House Rent', icon: '🏠', color: '#5856D6', section: 'Household' },
+    { id: 'electricity', name: 'Electricity Bill', icon: '⚡', color: '#FFD60A', section: 'Household' },
+    { id: 'wasa', name: 'WASA Bill', icon: '💧', color: '#007AFF', section: 'Household' },
+    { id: 'gas', name: 'Titas Gas Bill', icon: '🔥', color: '#FF3B30', section: 'Household' },
+    { id: 'lp_gas', name: 'LP Gas Cylinder', icon: '⛽', color: '#FF9500', section: 'Household' },
+    { id: 'internet', name: 'Broadband', icon: '🌐', color: '#5AC8FA', section: 'Household' },
+    { id: 'cabletv', name: 'Cable TV / Dish', icon: '📺', color: '#FF2D55', section: 'Household' },
+    { id: 'garbage', name: 'Garbage Bill', icon: '🗑️', color: '#8E8E93', section: 'Household' },
+    { id: 'maid', name: 'Maid Salary', icon: '🧹', color: '#AF52DE', section: 'Household' },
+    { id: 'guard', name: 'Security Guard', icon: '👮', color: '#34C759', section: 'Household' },
+    { id: 'laundry', name: 'Laundry / Ironing', icon: '👕', color: '#5856D6', section: 'Household' },
+    { id: 'homerepair', name: 'Home Repair', icon: '🛠️', color: '#FF9500', section: 'Household' },
+    { id: 'kitchen', name: 'Kitchenware', icon: '🍳', color: '#FFCC00', section: 'Household' },
+    { id: 'cleaning_kit', name: 'Cleaning Kit', icon: '🧽', color: '#34C759', section: 'Household' },
+    { id: 'pest_control', name: 'Pest Control', icon: '🦟', color: '#FF3B30', section: 'Household' },
+    { id: 'furniture', name: 'Furniture', icon: '🪑', color: '#FF9500', section: 'Household' },
+    { id: 'bedding', name: 'Bedding / Curtains', icon: '🛌', color: '#AF52DE', section: 'Household' },
+    { id: 'plants', name: 'Plants / Garden', icon: '🪴', color: '#34C759', section: 'Household' },
+    { id: 'bulb', name: 'Bulbs / Electrical', icon: '💡', color: '#FFD60A', section: 'Household' },
 
-    { id: 'domain', name: 'Domain Name', color: '#007AFF', section: 'Tech & Freelance' },
-    { id: 'hosting', name: 'Web Hosting', color: '#5856D6', section: 'Tech & Freelance' },
-    { id: 'saas', name: 'SaaS Subscription', color: '#AF52DE', section: 'Tech & Freelance' },
-    { id: 'creative_cloud', name: 'Adobe / Design', color: '#FF2D55', section: 'Tech & Freelance' },
-    { id: 'github', name: 'GitHub / Coding', color: '#000000', section: 'Tech & Freelance' },
-    { id: 'chatgpt', name: 'AI / ChatGPT', color: '#10A37F', section: 'Tech & Freelance' },
-    { id: 'cloud_storage', name: 'Google/iCloud', color: '#007AFF', section: 'Tech & Freelance' },
-    { id: 'app_store', name: 'App / Play Store', color: '#AF52DE', section: 'Tech & Freelance' },
-    { id: 'freelance_fee', name: 'Upwork/Fiverr Fee', color: '#34C759', section: 'Tech & Freelance' },
-    { id: 'pc_hardware', name: 'PC Parts / GPU', color: '#5856D6', section: 'Tech & Freelance' },
-    { id: 'keyboard_mouse', name: 'Peripherals', color: '#8E8E93', section: 'Tech & Freelance' },
-    { id: 'monitor', name: 'Monitor / Display', color: '#007AFF', section: 'Tech & Freelance' },
-    { id: 'coworking', name: 'Coworking Space', color: '#FF9500', section: 'Tech & Freelance' },
-    { id: 'vpn', name: 'VPN Subscription', color: '#5AC8FA', section: 'Tech & Freelance' },
-    { id: 'software_lic', name: 'Software License', color: '#FFD60A', section: 'Tech & Freelance' },
+    { id: 'domain', name: 'Domain Name', icon: '🌐', color: '#007AFF', section: 'Tech & Freelance' },
+    { id: 'hosting', name: 'Web Hosting', icon: '🖥️', color: '#5856D6', section: 'Tech & Freelance' },
+    { id: 'saas', name: 'SaaS Subscription', icon: '☁️', color: '#AF52DE', section: 'Tech & Freelance' },
+    { id: 'creative_cloud', name: 'Adobe / Design', icon: '🎨', color: '#FF2D55', section: 'Tech & Freelance' },
+    { id: 'github', name: 'GitHub / Coding', icon: '💻', color: '#000000', section: 'Tech & Freelance' },
+    { id: 'chatgpt', name: 'AI / ChatGPT', icon: '🤖', color: '#10A37F', section: 'Tech & Freelance' },
+    { id: 'cloud_storage', name: 'Google/iCloud', icon: '☁️', color: '#007AFF', section: 'Tech & Freelance' },
+    { id: 'app_store', name: 'App / Play Store', icon: '🏪', color: '#AF52DE', section: 'Tech & Freelance' },
+    { id: 'freelance_fee', name: 'Upwork/Fiverr Fee', icon: '💸', color: '#34C759', section: 'Tech & Freelance' },
+    { id: 'pc_hardware', name: 'PC Parts / GPU', icon: '📟', color: '#5856D6', section: 'Tech & Freelance' },
+    { id: 'keyboard_mouse', name: 'Peripherals', icon: '⌨️', color: '#8E8E93', section: 'Tech & Freelance' },
+    { id: 'monitor', name: 'Monitor / Display', icon: '🖥️', color: '#007AFF', section: 'Tech & Freelance' },
+    { id: 'coworking', name: 'Coworking Space', icon: '🏢', color: '#FF9500', section: 'Tech & Freelance' },
+    { id: 'vpn', name: 'VPN Subscription', icon: '🛡️', color: '#5AC8FA', section: 'Tech & Freelance' },
+    { id: 'software_lic', name: 'Software License', icon: '🔑', color: '#FFD60A', section: 'Tech & Freelance' },
 
-    { id: 'wholesale', name: 'Wholesale Stock', color: '#FF9500', section: 'Business & Office' },
-    { id: 'shop_rent', name: 'Shop / Office Rent', color: '#5856D6', section: 'Business & Office' },
-    { id: 'staff_salary', name: 'Staff Salary', color: '#34C759', section: 'Business & Office' },
-    { id: 'staff_lunch', name: 'Staff Lunch', color: '#FF9500', section: 'Business & Office' },
-    { id: 'packaging', name: 'Packing Materials', color: '#AF52DE', section: 'Business & Office' },
-    { id: 'marketing', name: 'Ads / Marketing', color: '#007AFF', section: 'Business & Office' },
-    { id: 'trade_license', name: 'Trade License', color: '#FF3B30', section: 'Business & Office' },
-    { id: 'business_tax', name: 'VAT / Tax', color: '#FF3B30', section: 'Business & Office' },
-    { id: 'shop_repair', name: 'Shop Maintenance', color: '#8E8E93', section: 'Business & Office' },
-    { id: 'delivery_cost', name: 'Delivery / Courier', color: '#FF9500', section: 'Business & Office' },
-    { id: 'pos_software', name: 'POS / Bill App', color: '#5AC8FA', section: 'Business & Office' },
-    { id: 'notebooks', name: 'Notebooks / Pens', color: '#5856D6', section: 'Business & Office' },
-    { id: 'ink_toner', name: 'Ink / Toner', color: '#8E8E93', section: 'Business & Office' },
+    { id: 'wholesale', name: 'Wholesale Stock', icon: '📦', color: '#FF9500', section: 'Business & Office' },
+    { id: 'shop_rent', name: 'Shop / Office Rent', icon: '🏢', color: '#5856D6', section: 'Business & Office' },
+    { id: 'staff_salary', name: 'Staff Salary', icon: '💵', color: '#34C759', section: 'Business & Office' },
+    { id: 'staff_lunch', name: 'Staff Lunch', icon: '🍱', color: '#FF9500', section: 'Business & Office' },
+    { id: 'packaging', name: 'Packing Materials', icon: '🛍️', color: '#AF52DE', section: 'Business & Office' },
+    { id: 'marketing', name: 'Ads / Marketing', icon: '📢', color: '#007AFF', section: 'Business & Office' },
+    { id: 'trade_license', name: 'Trade License', icon: '📜', color: '#FF3B30', section: 'Business & Office' },
+    { id: 'business_tax', name: 'VAT / Tax', icon: '📊', color: '#FF3B30', section: 'Business & Office' },
+    { id: 'shop_repair', name: 'Shop Maintenance', icon: '🛠️', color: '#8E8E93', section: 'Business & Office' },
+    { id: 'delivery_cost', name: 'Delivery / Courier', icon: '🚚', color: '#FF9500', section: 'Business & Office' },
+    { id: 'pos_software', name: 'POS / Bill App', icon: '🧾', color: '#5AC8FA', section: 'Business & Office' },
+    { id: 'notebooks', name: 'Notebooks / Pens', icon: '🖊️', color: '#5856D6', section: 'Business & Office' },
+    { id: 'ink_toner', name: 'Ink / Toner', icon: '🖨️', color: '#8E8E93', section: 'Business & Office' },
 
-    { id: 'doctor', name: 'Doctor Visit', color: '#FF2D55', section: 'Medical' },
-    { id: 'medicine', name: 'Medicine', color: '#FF3B30', section: 'Medical' },
-    { id: 'diagnostic', name: 'Lab Test', color: '#AF52DE', section: 'Medical' },
-    { id: 'hospital_bill', name: 'Hospital Bill', color: '#FF3B30', section: 'Medical' },
-    { id: 'dental', name: 'Dental Care', color: '#5AC8FA', section: 'Medical' },
-    { id: 'optometry', name: 'Glasses / Eyes', color: '#5856D6', section: 'Medical' },
-    { id: 'physio', name: 'Physiotherapy', color: '#34C759', section: 'Medical' },
-    { id: 'scrubs', name: 'Scrubs / Lab Coat', color: '#007AFF', section: 'Medical' },
-    { id: 'med_journal', name: 'Medical Journal', color: '#5856D6', section: 'Medical' },
-    { id: 'stethoscope', name: 'Medical Equipment', color: '#8E8E93', section: 'Medical' },
-    { id: 'med_license', name: 'BMDC / License', color: '#34C759', section: 'Medical' },
+    { id: 'doctor', name: 'Doctor Visit', icon: '🩺', color: '#FF2D55', section: 'Medical' },
+    { id: 'medicine', name: 'Medicine', icon: '💊', color: '#FF3B30', section: 'Medical' },
+    { id: 'diagnostic', name: 'Lab Test', icon: '🔬', color: '#AF52DE', section: 'Medical' },
+    { id: 'hospital_bill', name: 'Hospital Bill', icon: '🏥', color: '#FF3B30', section: 'Medical' },
+    { id: 'dental', name: 'Dental Care', icon: '🦷', color: '#5AC8FA', section: 'Medical' },
+    { id: 'optometry', name: 'Glasses / Eyes', icon: '👓', color: '#5856D6', section: 'Medical' },
+    { id: 'physio', name: 'Physiotherapy', icon: '🧘', color: '#34C759', section: 'Medical' },
+    { id: 'scrubs', name: 'Scrubs / Lab Coat', icon: '🥼', color: '#007AFF', section: 'Medical' },
+    { id: 'med_journal', name: 'Medical Journal', icon: '📖', color: '#5856D6', section: 'Medical' },
+    { id: 'stethoscope', name: 'Medical Equipment', icon: '🩹', color: '#8E8E93', section: 'Medical' },
+    { id: 'med_license', name: 'BMDC / License', icon: '📜', color: '#34C759', section: 'Medical' },
 
-    { id: 'school_fee', name: 'School Fees', color: '#5AC8FA', section: 'Education' },
-    { id: 'coaching', name: 'Coaching / Tuition', color: '#AF52DE', section: 'Education' },
-    { id: 'books', name: 'Books / Stationery', color: '#FF9500', section: 'Education' },
-    { id: 'photocopy', name: 'Photocopy / Print', color: '#8E8E93', section: 'Education' },
-    { id: 'library', name: 'Library Membership', color: '#5856D6', section: 'Education' },
-    { id: 'project_mat', name: 'Project Materials', color: '#5856D6', section: 'Education' },
-    { id: 'canteen', name: 'Canteen / Tiffin', color: '#FFCC00', section: 'Education' },
-    { id: 'internship', name: 'Internship Cost', color: '#34C759', section: 'Education' },
-    { id: 'hostel_rent', name: 'Hostel / Mess', color: '#5856D6', section: 'Education' },
-    { id: 'admission_fee', name: 'Admission Fee', color: '#FF9500', section: 'Education' },
-    { id: 'exam_fee', name: 'Exam Fee', color: '#FF2D55', section: 'Education' },
+    { id: 'school_fee', name: 'School Fees', icon: '🏫', color: '#5AC8FA', section: 'Education' },
+    { id: 'coaching', name: 'Coaching / Tuition', icon: '✏️', color: '#AF52DE', section: 'Education' },
+    { id: 'books', name: 'Books / Stationery', icon: '📚', color: '#FF9500', section: 'Education' },
+    { id: 'photocopy', name: 'Photocopy / Print', icon: '📄', color: '#8E8E93', section: 'Education' },
+    { id: 'library', name: 'Library Membership', icon: '🔖', color: '#5856D6', section: 'Education' },
+    { id: 'project_mat', name: 'Project Materials', icon: '🧪', color: '#5856D6', section: 'Education' },
+    { id: 'canteen', name: 'Canteen / Tiffin', icon: '🥪', color: '#FFCC00', section: 'Education' },
+    { id: 'internship', name: 'Internship Cost', icon: '💼', color: '#34C759', section: 'Education' },
+    { id: 'hostel_rent', name: 'Hostel / Mess', icon: '🏢', color: '#5856D6', section: 'Education' },
+    { id: 'admission_fee', name: 'Admission Fee', icon: '📝', color: '#FF9500', section: 'Education' },
+    { id: 'exam_fee', name: 'Exam Fee', icon: '📑', color: '#FF2D55', section: 'Education' },
 
-    { id: 'seeds', name: 'Seeds / Saplings', color: '#34C759', section: 'Agro & Farming' },
-    { id: 'fertilizer', name: 'Fertilizer', color: '#FF9500', section: 'Agro & Farming' },
-    { id: 'pesticide', name: 'Pesticides', color: '#8E8E93', section: 'Agro & Farming' },
-    { id: 'irrigation', name: 'Irrigation / Water', color: '#007AFF', section: 'Agro & Farming' },
-    { id: 'feed', name: 'Cattle/Bird Feed', color: '#FFD60A', section: 'Agro & Farming' },
-    { id: 'vet_visit', name: 'Vet / Animal Med', color: '#FF2D55', section: 'Agro & Farming' },
-    { id: 'harvest_labor', name: 'Harvest Labor', color: '#FF9500', section: 'Agro & Farming' },
-    { id: 'farm_tools', name: 'Tool Repair', color: '#8E8E93', section: 'Agro & Farming' },
+    { id: 'seeds', name: 'Seeds / Saplings', icon: '🌱', color: '#34C759', section: 'Agro & Farming' },
+    { id: 'fertilizer', name: 'Fertilizer', icon: '🧪', color: '#FF9500', section: 'Agro & Farming' },
+    { id: 'pesticide', name: 'Pesticides', icon: '☠️', color: '#8E8E93', section: 'Agro & Farming' },
+    { id: 'irrigation', name: 'Irrigation / Water', icon: '🚿', color: '#007AFF', section: 'Agro & Farming' },
+    { id: 'feed', name: 'Cattle/Bird Feed', icon: '🌾', color: '#FFD60A', section: 'Agro & Farming' },
+    { id: 'vet_visit', name: 'Vet / Animal Med', icon: '🐕', color: '#FF2D55', section: 'Agro & Farming' },
+    { id: 'harvest_labor', name: 'Harvest Labor', icon: '👨‍🌾', color: '#FF9500', section: 'Agro & Farming' },
+    { id: 'farm_tools', name: 'Tool Repair', icon: '🔨', color: '#8E8E93', section: 'Agro & Farming' },
 
-    { id: 'art_supplies', name: 'Art Supplies', color: '#FF2D55', section: 'Creative' },
-    { id: 'camera_gear', name: 'Camera / Lens', color: '#000000', section: 'Creative' },
-    { id: 'lighting', name: 'Studio Lighting', color: '#FFD60A', section: 'Creative' },
-    { id: 'printing_large', name: 'Canvas / Print', color: '#5856D6', section: 'Creative' },
-    { id: 'memory_card', name: 'Memory Cards', color: '#8E8E93', section: 'Creative' },
-    { id: 'gallery_fee', name: 'Gallery / Exhibition', color: '#AF52DE', section: 'Creative' },
+    { id: 'art_supplies', name: 'Art Supplies', icon: '🎨', color: '#FF2D55', section: 'Creative' },
+    { id: 'camera_gear', name: 'Camera / Lens', icon: '📷', color: '#000000', section: 'Creative' },
+    { id: 'lighting', name: 'Studio Lighting', icon: '💡', color: '#FFD60A', section: 'Creative' },
+    { id: 'printing_large', name: 'Canvas / Print', icon: '🖼️', color: '#5856D6', section: 'Creative' },
+    { id: 'memory_card', name: 'Memory Cards', icon: '💾', color: '#8E8E93', section: 'Creative' },
+    { id: 'gallery_fee', name: 'Gallery / Exhibition', icon: '🏛️', color: '#AF52DE', section: 'Creative' },
 
-    { id: 'zakat', name: 'Zakat Payment', color: '#34C759', section: 'Social & Religious' },
-    { id: 'sadaqah', name: 'Sadaqah / Charity', color: '#5AC8FA', section: 'Social & Religious' },
-    { id: 'masjid_don', name: 'Masjid Donation', color: '#5856D6', section: 'Social & Religious' },
-    { id: 'madrasa_don', name: 'Madrasa Donation', color: '#FF9500', section: 'Social & Religious' },
-    { id: 'qurbani', name: 'Qurbani Expense', color: '#FF3B30', section: 'Social & Religious' },
-    { id: 'fitra', name: 'Fitra', color: '#FFCC00', section: 'Social & Religious' },
-    { id: 'wedding_gift', name: 'Wedding Gift', color: '#FF2D55', section: 'Social & Religious' },
-    { id: 'birthday_gift', name: 'Birthday Gift', color: '#FF9500', section: 'Social & Religious' },
-    { id: 'relatives', name: 'Family Support', color: '#5AC8FA', section: 'Social & Religious' },
-    { id: 'beggar', name: 'Poor / Beggar', color: '#8E8E93', section: 'Social & Religious' },
-    { id: 'iftar_party', name: 'Iftar Party', color: '#FF9500', section: 'Social & Religious' },
-    { id: 'mezbani', name: 'Mezbani', color: '#FF3B30', section: 'Social & Religious' },
+    { id: 'zakat', name: 'Zakat Payment', icon: '🕋', color: '#34C759', section: 'Social & Religious' },
+    { id: 'sadaqah', name: 'Sadaqah / Charity', icon: '🤲', color: '#5AC8FA', section: 'Social & Religious' },
+    { id: 'masjid_don', name: 'Masjid Donation', icon: '🕌', color: '#5856D6', section: 'Social & Religious' },
+    { id: 'madrasa_don', name: 'Madrasa Donation', icon: '📖', color: '#FF9500', section: 'Social & Religious' },
+    { id: 'qurbani', name: 'Qurbani Expense', icon: '🐄', color: '#FF3B30', section: 'Social & Religious' },
+    { id: 'fitra', name: 'Fitra', icon: '🌾', color: '#FFCC00', section: 'Social & Religious' },
+    { id: 'wedding_gift', name: 'Wedding Gift', icon: '🎁', color: '#FF2D55', section: 'Social & Religious' },
+    { id: 'birthday_gift', name: 'Birthday Gift', icon: '🎂', color: '#FF9500', section: 'Social & Religious' },
+    { id: 'relatives', name: 'Family Support', icon: '👨‍👩‍👧‍👦', color: '#5AC8FA', section: 'Social & Religious' },
+    { id: 'beggar', name: 'Poor / Beggar', icon: '🙌', color: '#8E8E93', section: 'Social & Religious' },
+    { id: 'iftar_party', name: 'Iftar Party', icon: '🌙', color: '#FF9500', section: 'Social & Religious' },
+    { id: 'mezbani', name: 'Mezbani', icon: '🍛', color: '#FF3B30', section: 'Social & Religious' },
 
-    { id: 'recharge', name: 'Mobile Recharge', color: '#34C759', section: 'Personal & Grooming' },
-    { id: 'mobile_data', name: 'Mobile Data', color: '#007AFF', section: 'Personal & Grooming' },
-    { id: 'clothing', name: 'Clothing / Dress', color: '#FF2D55', section: 'Personal & Grooming' },
-    { id: 'shoes', name: 'Shoes / Footwear', color: '#8E8E93', section: 'Personal & Grooming' },
-    { id: 'panjabi', name: 'Panjabi / Lungi', color: '#5856D6', section: 'Personal & Grooming' },
-    { id: 'sharee', name: 'Sharee / Salwar', color: '#AF52DE', section: 'Personal & Grooming' },
-    { id: 'tailoring', name: 'Tailoring Cost', color: '#FF3B30', section: 'Personal & Grooming' },
-    { id: 'saloon', name: 'Barber / Saloon', color: '#5AC8FA', section: 'Personal & Grooming' },
-    { id: 'parlor', name: 'Beauty Parlor', color: '#FF2D55', section: 'Personal & Grooming' },
-    { id: 'shaving_kit', name: 'Shaving / Deodorant', color: '#8E8E93', section: 'Personal & Grooming' },
-    { id: 'perfume', name: 'Perfume / Attar', color: '#AF52DE', section: 'Personal & Grooming' },
-    { id: 'gym', name: 'Gym / Fitness', color: '#34C759', section: 'Personal & Grooming' },
-    { id: 'supplements', name: 'Gym Supplements', color: '#FF9500', section: 'Personal & Grooming' },
-    { id: 'pet_food', name: 'Pet Food / Care', color: '#FF9500', section: 'Personal & Grooming' },
-    { id: 'paan', name: 'Paan / Supari', color: '#34C759', section: 'Personal & Grooming' },
-    { id: 'smoking', name: 'Tea / Smoking', color: '#8E8E93', section: 'Personal & Grooming' },
+    { id: 'recharge', name: 'Mobile Recharge', icon: '📱', color: '#34C759', section: 'Personal & Grooming' },
+    { id: 'mobile_data', name: 'Mobile Data', icon: '📶', color: '#007AFF', section: 'Personal & Grooming' },
+    { id: 'clothing', name: 'Clothing / Dress', icon: '👗', color: '#FF2D55', section: 'Personal & Grooming' },
+    { id: 'shoes', name: 'Shoes / Footwear', icon: '👞', color: '#8E8E93', section: 'Personal & Grooming' },
+    { id: 'panjabi', name: 'Panjabi / Lungi', icon: '👳', color: '#5856D6', section: 'Personal & Grooming' },
+    { id: 'sharee', name: 'Sharee / Salwar', icon: '💃', color: '#AF52DE', section: 'Personal & Grooming' },
+    { id: 'tailoring', name: 'Tailoring Cost', icon: '✂️', color: '#FF3B30', section: 'Personal & Grooming' },
+    { id: 'saloon', name: 'Barber / Saloon', icon: '💈', color: '#5AC8FA', section: 'Personal & Grooming' },
+    { id: 'parlor', name: 'Beauty Parlor', icon: '💄', color: '#FF2D55', section: 'Personal & Grooming' },
+    { id: 'shaving_kit', name: 'Shaving / Deodorant', icon: '🪒', color: '#8E8E93', section: 'Personal & Grooming' },
+    { id: 'perfume', name: 'Perfume / Attar', icon: '✨', color: '#AF52DE', section: 'Personal & Grooming' },
+    { id: 'gym', name: 'Gym / Fitness', icon: '💪', color: '#34C759', section: 'Personal & Grooming' },
+    { id: 'supplements', name: 'Gym Supplements', icon: '🥤', color: '#FF9500', section: 'Personal & Grooming' },
+    { id: 'pet_food', name: 'Pet Food / Care', icon: '🐾', color: '#FF9500', section: 'Personal & Grooming' },
+    { id: 'paan', name: 'Paan / Supari', icon: '🍃', color: '#34C759', section: 'Personal & Grooming' },
+    { id: 'smoking', name: 'Tea / Smoking', icon: '🚬', color: '#8E8E93', section: 'Personal & Grooming' },
 
-    { id: 'bank_fee', name: 'Bank Fees / Tax', color: '#8E8E93', section: 'Finance & Legal' },
-    { id: 'insurance', name: 'Insurance', color: '#5AC8FA', section: 'Finance & Legal' },
-    { id: 'loan_inst', name: 'Loan Installment', color: '#FF2D55', section: 'Finance & Legal' },
-    { id: 'gold', name: 'Gold / Jewelry', color: '#FFCC00', section: 'Finance & Legal' },
-    { id: 'legal_fee', name: 'Lawyer / Legal', color: '#5856D6', section: 'Finance & Legal' },
-    { id: 'police_fine', name: 'Police Fine', color: '#FF3B30', section: 'Finance & Legal' },
-    { id: 'passport', name: 'Passport / Visa', color: '#5AC8FA', section: 'Finance & Legal' },
+    { id: 'bank_fee', name: 'Bank Fees / Tax', icon: '🏦', color: '#8E8E93', section: 'Finance & Legal' },
+    { id: 'insurance', name: 'Insurance', icon: '🛡️', color: '#5AC8FA', section: 'Finance & Legal' },
+    { id: 'loan_inst', name: 'Loan Installment', icon: '💸', color: '#FF2D55', section: 'Finance & Legal' },
+    { id: 'gold', name: 'Gold / Jewelry', icon: '💍', color: '#FFCC00', section: 'Finance & Legal' },
+    { id: 'legal_fee', name: 'Lawyer / Legal', icon: '⚖️', color: '#5856D6', section: 'Finance & Legal' },
+    { id: 'police_fine', name: 'Police Fine', icon: '👮', color: '#FF3B30', section: 'Finance & Legal' },
+    { id: 'passport', name: 'Passport / Visa', icon: '🛂', color: '#5AC8FA', section: 'Finance & Legal' },
 
-    { id: 'cinema', name: 'Cinema / Movies', color: '#FF3B30', section: 'Entertainment' },
-    { id: 'games', name: 'Video Games', color: '#5856D6', section: 'Entertainment' },
-    { id: 'steam_games', name: 'Steam / Epic', color: '#000000', section: 'Entertainment' },
-    { id: 'tour', name: 'Travel / Tour', color: '#34C759', section: 'Entertainment' },
-    { id: 'park', name: 'Amusement Park', color: '#FF9500', section: 'Entertainment' },
-    { id: 'streaming', name: 'Netflix / Spotify', color: '#007AFF', section: 'Entertainment' },
-    { id: 'hobbies', name: 'Hobby / Sports', color: '#AF52DE', section: 'Entertainment' },
-    { id: 'other', name: 'Other Expense', color: '#8E8E93', section: 'Other' }
+    { id: 'cinema', name: 'Cinema / Movies', icon: '🎬', color: '#FF3B30', section: 'Entertainment' },
+    { id: 'games', name: 'Video Games', icon: '🎮', color: '#5856D6', section: 'Entertainment' },
+    { id: 'steam_games', name: 'Steam / Epic', icon: '🕹️', color: '#000000', section: 'Entertainment' },
+    { id: 'tour', name: 'Travel / Tour', icon: '🗺️', color: '#34C759', section: 'Entertainment' },
+    { id: 'park', name: 'Amusement Park', icon: '🎡', color: '#FF9500', section: 'Entertainment' },
+    { id: 'streaming', name: 'Netflix / Spotify', icon: '🎧', color: '#007AFF', section: 'Entertainment' },
+    { id: 'hobbies', name: 'Hobby / Sports', icon: '🏸', color: '#AF52DE', section: 'Entertainment' },
+    { id: 'other', name: 'Other Expense', icon: '✨', color: '#8E8E93', section: 'Other' }
   ],
 
   currentMonth: new Date().getMonth(),
@@ -321,7 +321,7 @@ const Finance = {
         <!-- Zakat & Sadaqah Hub: Coming Soon -->
         <div class="finance-premium-card" style="text-align: center; padding: 32px 24px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(59, 130, 246, 0.01) 100%); border: 1px dashed rgba(255, 255, 255, 0.08); border-radius: 20px; position: relative; overflow: hidden; box-shadow: var(--shadow-sm);">
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 2; position: relative;">
-            <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(212, 163, 89, 0.1); border: 1px solid rgba(212, 163, 89, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-accent-gold); box-shadow: 0 0 20px rgba(212, 163, 89, 0.15); animation: float 6s ease-in-out infinite;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><path d="M12 7v10"/></svg></div>
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(212, 163, 89, 0.1); border: 1px solid rgba(212, 163, 89, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-accent-gold); font-size: 22px; box-shadow: 0 0 20px rgba(212, 163, 89, 0.15); animation: float 6s ease-in-out infinite;">🕋</div>
             <div style="font-weight: 800; font-size: 16px; color: var(--color-text-primary); letter-spacing: 0.5px;">Zakat & Sadaqah Hub</div>
             <div style="font-size: 12px; color: var(--color-text-subtitle); max-width: 320px; line-height: 1.5; font-weight: 500; margin-bottom: 4px;">Comprehensive Zakat calculations, custom assets bookkeeping, live Nisab thresholds, and Sadaqah charity tracking are coming in the next update.</div>
             <div style="font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--color-accent-gold); padding: 4px 14px; background: rgba(212, 163, 89, 0.08); border-radius: 20px; border: 1px solid rgba(212, 163, 89, 0.15);">Coming Soon</div>
@@ -343,9 +343,9 @@ const Finance = {
     return `
       <div class="finance-month-navigator">
         <div class="fin-unified-controls">
-          <button onclick="Finance.changeMonth(-1)" class="finance-nav-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button onclick="Finance.changeMonth(-1)" class="finance-nav-btn">❮</button>
           <div style="font-size:15px; font-weight:800; min-width:120px; text-align:center;">${monthStr}</div>
-          <button onclick="Finance.changeMonth(1)" class="finance-nav-btn ${isCurrent ? 'hidden' : ''}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+          <button onclick="Finance.changeMonth(1)" class="finance-nav-btn ${isCurrent ? 'hidden' : ''}">❯</button>
         </div>
         <div style="display:flex; align-items:center;">
           <div class="fin-control-divider"></div>
@@ -577,11 +577,7 @@ const Finance = {
   },
 
   getCategory(id) {
-    return (this.categoryMap && this.categoryMap.get(id)) || { name: 'Other', icon: Icons.moreHorizontal, color: '#8E8E93' };
-  },
-
-  getIcon(id) {
-    return this.categoryMap && this.categoryMap.get(id) && this.categoryMap.get(id).icon ? this.categoryMap.get(id).icon : Icons.financeIcon(id);
+    return (this.categoryMap && this.categoryMap.get(id)) || { name: 'Other', icon: '❓', color: '#8E8E93' };
   },
 
   renderActivityItem(e, index) {
@@ -594,7 +590,7 @@ const Finance = {
       <div class="transaction-item-wrapper" style="position: relative;">
         <div class="transaction-timeline-connector" style="--timeline-dot-color: ${isInc ? '#34C759' : '#FF2D55'};"></div>
         <div class="transaction-item anim-fade-in-up" style="animation-delay: ${index * 0.04}s;">
-          <div class="transaction-icon" style="background:${resolvedColor}15; color:${resolvedColor}">${isInc ? c.icon : this.getIcon(e.category)}</div>
+          <div class="transaction-icon" style="background:${resolvedColor}15; color:${resolvedColor}">${c.icon}</div>
           <div class="transaction-info">
             <div class="transaction-name">${Utils.escapeHTML(isInc ? e.description : c.name)}</div>
             <div class="transaction-meta">${isInc ? 'Deposit' : c.section}</div>
@@ -639,7 +635,7 @@ const Finance = {
           return displayVaults.map((s, i) => this.renderSavingsItem(s, i)).join('');
         })() : `
           <div class="vault-empty-state" onclick="Finance.showSavingsModal()">
-            <div class="vault-empty-icon">${Icons.diamond}</div>
+            <div class="vault-empty-icon">💎</div>
             <div style="font-weight:700; font-size:14px; color:var(--color-text-muted);">Secure your future</div>
             <div style="font-size:12px; color:var(--color-text-muted); opacity:0.6; margin-top:4px;">Tap to create your first savings goal</div>
           </div>
@@ -659,30 +655,30 @@ const Finance = {
 
   getVaultIcon(name) {
     const n = name.toLowerCase();
-    if (n.includes('iphone') || n.includes('phone') || n.includes('mobile')) return Icons.mobile;
-    if (n.includes('macbook') || n.includes('laptop')) return Icons.monitor;
-    if (n.includes('pc') || n.includes('desktop') || n.includes('computer') || n.includes('monitor')) return Icons.monitor;
-    if (n.includes('watch') || n.includes('iwatch')) return Icons.clock;
-    if (n.includes('game') || n.includes('ps5') || n.includes('xbox') || n.includes('console') || n.includes('gaming')) return Icons.gamepad;
-    if (n.includes('camera') || n.includes('dslr') || n.includes('lens')) return Icons.camera;
-    if (n.includes('tech') || n.includes('gadget')) return Icons.cpu;
-    if (n.includes('car') || n.includes('auto')) return Icons.car;
-    if (n.includes('bike') || n.includes('motorcycle')) return Icons.bike;
-    if (n.includes('cycle') || n.includes('bicycle')) return Icons.bike;
-    if (n.includes('hajj') || n.includes('umrah') || n.includes('makkah')) return Icons.kaaba;
-    if (n.includes('islamic') || n.includes('mosque') || n.includes('madina')) return Icons.mosque;
-    if (n.includes('charity') || n.includes('zakat') || n.includes('sadaqah')) return Icons.hands;
-    if (n.includes('house') || n.includes('home') || n.includes('flat') || n.includes('rent')) return Icons.home;
-    if (n.includes('wedding') || n.includes('marriage') || n.includes('nikah')) return Icons.heart;
-    if (n.includes('travel') || n.includes('trip') || n.includes('tour') || n.includes('flight')) return Icons.plane;
-    if (n.includes('food') || n.includes('bazaar') || n.includes('grocery')) return Icons.shoppingCart;
-    if (n.includes('gift') || n.includes('birthday')) return Icons.gift;
-    if (n.includes('education') || n.includes('book') || n.includes('course') || n.includes('university')) return Icons.books;
-    if (n.includes('business') || n.includes('office') || n.includes('startup')) return Icons.barChart;
-    if (n.includes('invest') || n.includes('stock') || n.includes('crypto')) return Icons.barChart;
-    if (n.includes('emergency') || n.includes('medical') || n.includes('health')) return Icons.hospital;
-    if (n.includes('money') || n.includes('cash') || n.includes('save')) return Icons.dollar;
-    return Icons.diamond; 
+    if (n.includes('iphone') || n.includes('phone') || n.includes('mobile')) return '📱';
+    if (n.includes('macbook') || n.includes('laptop')) return '💻';
+    if (n.includes('pc') || n.includes('desktop') || n.includes('computer') || n.includes('monitor')) return '🖥️';
+    if (n.includes('watch') || n.includes('iwatch')) return '⌚';
+    if (n.includes('game') || n.includes('ps5') || n.includes('xbox') || n.includes('console') || n.includes('gaming')) return '🎮';
+    if (n.includes('camera') || n.includes('dslr') || n.includes('lens')) return '📷';
+    if (n.includes('tech') || n.includes('gadget')) return '🔌';
+    if (n.includes('car') || n.includes('auto')) return '🚗';
+    if (n.includes('bike') || n.includes('motorcycle')) return '🏍️';
+    if (n.includes('cycle') || n.includes('bicycle')) return '🚲';
+    if (n.includes('hajj') || n.includes('umrah') || n.includes('makkah')) return '🕋';
+    if (n.includes('islamic') || n.includes('mosque') || n.includes('madina')) return '🕌';
+    if (n.includes('charity') || n.includes('zakat') || n.includes('sadaqah')) return '🤲';
+    if (n.includes('house') || n.includes('home') || n.includes('flat') || n.includes('rent')) return '🏠';
+    if (n.includes('wedding') || n.includes('marriage') || n.includes('nikah')) return '💍';
+    if (n.includes('travel') || n.includes('trip') || n.includes('tour') || n.includes('flight')) return '✈️';
+    if (n.includes('food') || n.includes('bazaar') || n.includes('grocery')) return '🛒';
+    if (n.includes('gift') || n.includes('birthday')) return '🎁';
+    if (n.includes('education') || n.includes('book') || n.includes('course') || n.includes('university')) return '📚';
+    if (n.includes('business') || n.includes('office') || n.includes('startup')) return '💼';
+    if (n.includes('invest') || n.includes('stock') || n.includes('crypto')) return '📈';
+    if (n.includes('emergency') || n.includes('medical') || n.includes('health')) return '🏥';
+    if (n.includes('money') || n.includes('cash') || n.includes('save')) return '💰';
+    return '💎'; 
   },
 
   renderSavingsItem(g, idx) {
@@ -762,7 +758,7 @@ const Finance = {
       <div class="finance-modal-content" style="max-width:500px;">
         <div class="fin-modal-header">
           <div class="fin-modal-title">Log Spending</div>
-          <button class="fin-modal-close" onclick="Finance.closeModal()">${Icons.x}</button>
+          <button class="fin-modal-close" onclick="Finance.closeModal()">✕</button>
         </div>
         
         <div class="fin-modal-amount-wrap">
@@ -819,7 +815,7 @@ const Finance = {
       const rc = this.getResolvedColor(c.color); 
       html += `
         <div class="fin-cat-pill ${this.selectedCategory === c.id ? 'active' : ''}" onclick="Finance.selectCategory('${c.id}')" id="cat-${c.id}">
-          <div class="fin-cat-icon" style="background:${rc}15; color:${rc}">${this.getIcon(c.id)}</div>
+          <div class="fin-cat-icon" style="background:${rc}15; color:${rc}">${c.icon}</div>
           <span class="fin-cat-name">${c.name}</span>
         </div>`;
     });
@@ -915,7 +911,7 @@ const Finance = {
     if (!goal) return;
 
     if (goal.saved >= goal.target) {
-      return Utils.toast('Goal already achieved!', 'info');
+      return Utils.toast('Goal already achieved! 🏆', 'info');
     }
 
     const mult = DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1;
@@ -925,7 +921,7 @@ const Finance = {
       <div class="finance-modal-content" style="max-width:400px;">
         <div class="fin-modal-header">
           <div class="fin-modal-title">Deposit to ${Utils.escapeHTML(goal.name)}</div>
-          <button class="fin-modal-close" onclick="Finance.closeModal()">${Icons.x}</button>
+          <button class="fin-modal-close" onclick="Finance.closeModal()">✕</button>
         </div>
         
         <p style="font-size:12px; color:var(--color-text-subtitle); margin-bottom:16px; line-height:1.4;">
@@ -996,9 +992,9 @@ const Finance = {
       this.renderVaultOverlayItems();
     }
 
-    Utils.toast(`Deposited successfully!`, 'success');
+    Utils.toast(`Deposited successfully! 💰`, 'success');
     if (!wasComplete && goal.saved >= goal.target) {
-      setTimeout(() => Utils.toast(`Goal "${goal.name}" Completed!`, 'success'), 500);
+      setTimeout(() => Utils.toast(`🏆 Goal "${goal.name}" Completed!`, 'success'), 500);
     }
   },
 
@@ -1225,7 +1221,7 @@ const Finance = {
       <div class="finance-modal-content" style="max-width:400px;">
         <div class="fin-modal-header">
           <div class="fin-modal-title">Finance Settings</div>
-          <button class="fin-modal-close" onclick="Finance.closeModal()">${Icons.x}</button>
+          <button class="fin-modal-close" onclick="Finance.closeModal()">✕</button>
         </div>
         
         <div style="padding: 12px 0 20px;">
