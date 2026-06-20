@@ -453,7 +453,8 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  animation: splashContentEntry 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  animation: splashContentEntry 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both,
+             splashContentFloat 4s ease-in-out 1.2s infinite;
 }
 
 @keyframes splashContentEntry {
@@ -465,6 +466,11 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+@keyframes splashContentFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 /* === ICON CONTAINER === */
@@ -568,6 +574,14 @@
   animation-delay: 1s;
 }
 
+.splash.hidden .splash-icon-ring {
+  animation: splashExitRing 0.6s ease-out forwards;
+}
+
+.splash.hidden .splash-icon-ring-2 {
+  animation: splashExitRing2 0.6s ease-out forwards;
+}
+
 @keyframes splashRingPulse {
   0% {
     opacity: 0.8;
@@ -581,6 +595,16 @@
     opacity: 0.8;
     transform: scale(1);
   }
+}
+
+@keyframes splashExitRing {
+  0% { opacity: 0.4; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.5); }
+}
+
+@keyframes splashExitRing2 {
+  0% { opacity: 0.25; transform: scale(1); }
+  100% { opacity: 0; transform: scale(3); }
 }
 
 /* === APP NAME === */
@@ -628,6 +652,16 @@
   letter-spacing: 0.04em;
   animation: splashTagEntry 0.7s ease 0.9s both;
   margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.splash-tagline::after {
+  content: '|';
+  position: absolute;
+  color: rgba(148, 163, 184, 0.4);
+  animation: splashCursorBlink 1s step-end infinite;
+  margin-left: 2px;
 }
 
 @keyframes splashTagEntry {
@@ -639,6 +673,11 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes splashCursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* === LOADING BAR === */
