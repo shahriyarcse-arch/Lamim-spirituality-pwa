@@ -255,7 +255,7 @@ const Finance = {
           }
         }
       }
-    } catch (e) { console.warn('Exchange rate fetch failed:', e); Utils.toast('Could not fetch exchange rates. Using last known rate.', 'warn'); }
+    } catch (e) { console.warn('Exchange rate fetch failed:', e); }
   },
 
   getSymbol() { return DB.getSettings().currency === 'BDT' ? '৳' : '$'; },

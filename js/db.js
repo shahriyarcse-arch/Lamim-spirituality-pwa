@@ -4,8 +4,61 @@
 const DB = {
   _cache: {},
   _db: null,
+  _channel: null,
 
   init() {
+    if (typeof BroadcastChannel !== 'undefined' && !this._channel) {
+      this._channel = new BroadcastChannel('lamim_db_sync');
+      this._channel.onmessage = (e) => {
+        const { type, key, val } = e.data;
+        if (type === 'set') {
+          this._cache[key] = val;
+          if (key === 'lamim_lang') {
+            try {
+              const newLang = JSON.parse(val);
+              if (window.App) {
+                window.App.lang = newLang;
+                document.documentElement.setAttribute('lang', newLang);
+                window.App.applyTranslations();
+              }
+            } catch (err) {}
+          }
+          if (key === 'lamim_settings') {
+            try {
+              const settings = JSON.parse(val);
+              document.documentElement.setAttribute('data-theme', settings.theme || 'dark');
+              const moon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+              const sun = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+              document.querySelectorAll('#theme-icon-top, #theme-icon-section').forEach(el => el.innerHTML = settings.theme === 'dark' ? moon : sun);
+              if (window.Profile && document.getElementById('section-profile')?.classList.contains('active')) {
+                Profile.renderSettings();
+              }
+            } catch (err) {}
+          }
+          if (key === 'lamim_user') {
+            if (window.Profile && document.getElementById('section-profile')?.classList.contains('active')) {
+              Profile.renderProfile();
+              Profile.renderSettings();
+            }
+          }
+          if (key.startsWith('lamim_salah_')) {
+            this._streakCache = null;
+          }
+          window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        } else if (type === 'remove') {
+          delete this._cache[key];
+          if (key.startsWith('lamim_salah_')) {
+            this._streakCache = null;
+          }
+          window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        } else if (type === 'clear') {
+          this._cache = {};
+          this._streakCache = null;
+          window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        }
+      };
+    }
+
     return new Promise((resolve) => {
       let resolved = false;
       const done = (fallback = false) => {
@@ -211,6 +264,9 @@ const DB = {
       }
 
       this._asyncWrite(key, strVal);
+      if (this._channel) {
+        try { this._channel.postMessage({ type: 'set', key, val: strVal }); } catch(err) {}
+      }
       return true;
     } catch (e) {
       console.error(`[DB] Error in set for key: ${key}`, e);
@@ -224,6 +280,9 @@ const DB = {
       try { localStorage.removeItem(key); } catch {}
     }
     this._asyncDelete(key);
+    if (this._channel) {
+      try { this._channel.postMessage({ type: 'remove', key }); } catch(err) {}
+    }
   },
 
   rawGet(key) {
@@ -239,6 +298,9 @@ const DB = {
       }
 
       this._asyncWrite(key, val);
+      if (this._channel) {
+        try { this._channel.postMessage({ type: 'set', key, val }); } catch(err) {}
+      }
       return true;
     } catch (e) {
       console.error(`[DB] Error in rawSet for key: ${key}`, e);
@@ -250,6 +312,9 @@ const DB = {
     this._cache = {};
     try { localStorage.clear(); } catch {}
     this._asyncClear();
+    if (this._channel) {
+      try { this._channel.postMessage({ type: 'clear' }); } catch(err) {}
+    }
   },
 
   keys() {
@@ -271,7 +336,10 @@ const DB = {
   },
 
   // Settings
-  getSettings()  { return this.get('lamim_settings') || { theme: 'light', notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125, calcMethod: 'mwl' }; },
+  getSettings()  {
+    const defaultTheme = (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    return this.get('lamim_settings') || { theme: defaultTheme, notifications: true, jumuahMode: true, language: 'en', currency: 'USD', lat: 23.8103, lng: 90.4125, calcMethod: 'mwl' };
+  },
   setSettings(s) { return this.set('lamim_settings', s); },
 
   // Salah — keyed by date YYYY-MM-DD

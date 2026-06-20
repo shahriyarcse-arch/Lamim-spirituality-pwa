@@ -113,3 +113,11 @@ const DuaBoard = {
     Utils.toast('Dua saved! May Allah accept it 🤲', 'success');
   }
 };
+
+// Setup live sync for DuaBoard modal
+window.addEventListener('lamim:data-updated', () => {
+  const modal = document.getElementById('dua-modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    DuaBoard.renderList();
+  }
+});

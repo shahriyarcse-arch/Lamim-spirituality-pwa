@@ -138,10 +138,12 @@ const YearReview = {
     if (habits.length > 0) {
       habits.forEach(h => {
         (h.history || []).forEach(entry => {
-          const entryYear = parseInt(entry.date, 10);
-          if (entryYear === year) {
-            totalHabitDays++;
-            if (entry.clean) cleanHabitDays++;
+          if (entry && entry.date) {
+            const entryYear = parseInt(entry.date.split('-')[0], 10);
+            if (entryYear === year) {
+              totalHabitDays++;
+              if (entry.clean) cleanHabitDays++;
+            }
           }
         });
       });

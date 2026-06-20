@@ -271,7 +271,7 @@ const Salah = {
 
               <!-- Status Selection or Locked Result -->
               ${isLocked
-                ? `<div class="salah-locked-result">
+                ? `<div class="salah-locked-result" onclick="Salah.unlockPrayer('${p}','${date}')" style="cursor: pointer; -webkit-tap-highlight-color: transparent;">
                      <div class="salah-locked-icon" style="color:${statusInfo.color};filter:drop-shadow(${statusInfo.glow})">${statusInfo.icon}</div>
                      <div class="salah-locked-info">
                        <div class="salah-locked-status" style="color:${statusInfo.color}">${statusInfo.label}</div>
@@ -328,7 +328,7 @@ const Salah = {
       const selector = card.querySelector('.salah-status-selector');
       if (selector) {
         selector.outerHTML = `
-          <div class="salah-locked-result">
+          <div class="salah-locked-result" onclick="Salah.unlockPrayer('${prayer}','${date}')" style="cursor: pointer; -webkit-tap-highlight-color: transparent;">
             <div class="salah-locked-icon" style="color:${sm.color};filter:drop-shadow(${sm.glow})">${sm.icon}</div>
             <div class="salah-locked-info">
               <div class="salah-locked-status" style="color:${sm.color}">${sm.label}</div>
@@ -903,6 +903,32 @@ const Salah = {
         }
       }
     });
+  },
+
+  unlockPrayer(prayer, date) {
+    date = date || this.selectedDate;
+    if (date > Utils.todayStr()) {
+      Utils.toast("Cannot edit future dates", "error");
+      return;
+    }
+    const isBn = (localStorage.getItem('lamim_lang') || 'en') === 'bn';
+    const label = this.prayerMeta[prayer].label;
+    const labelTrans = window.t ? window.t(label) : label;
+    
+    Utils.confirm(
+      isBn ? 'রিসেট করুন' : 'Unlock Prayer',
+      isBn ? `${labelTrans} সালাতের স্ট্যাটাস পরিবর্তন করতে চান?` : `Unlock and reset ${labelTrans} prayer status?`,
+      () => {
+        const salah = DB.getSalah(date);
+        salah[prayer] = null;
+        DB.setSalah(date, salah);
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        this.renderAll(true);
+        if (typeof Home !== 'undefined' && Home.render) Home.render();
+        Utils.toast(isBn ? 'সালাত রিসেট করা হয়েছে' : `${labelTrans} reset successfully`, 'success');
+      },
+      'warning'
+    );
   },
 
   resetToday() {

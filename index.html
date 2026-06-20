@@ -28,7 +28,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180x180.png">
-  <link rel="stylesheet" href="css/bundle.css?v=1">
+  <link rel="stylesheet" href="css/bundle.css?v=139">
   <style>
 /* =============================================
    LAMIM — CSS DESIGN TOKENS & VARIABLES
@@ -754,13 +754,18 @@
   <!-- Mujahid MUST load last to override all competing rules -->
   <script>
     (function() {
-      const saved = localStorage.getItem('lamim_settings');
+      let saved = null;
+      try { saved = localStorage.getItem('lamim_settings'); } catch(e){}
       let theme = 'light';
+      try {
+        const m = window.matchMedia('(prefers-color-scheme: dark)');
+        theme = m && m.matches ? 'dark' : 'light';
+      } catch(e){}
       try {
         if (saved && saved !== 'undefined') {
           const parsed = JSON.parse(saved);
-          theme = parsed.theme || 'light';
-        } else {
+          if (parsed && parsed.theme) theme = parsed.theme;
+        } else if (false) {
           theme = 'light';
         }
       } catch (e) {

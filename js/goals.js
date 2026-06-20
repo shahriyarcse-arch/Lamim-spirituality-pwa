@@ -38,6 +38,14 @@ const Goals = {
 
   init() {
     this.render(false);
+    if (!this._dataUpdateBound) {
+      window.addEventListener('lamim:data-updated', () => {
+        if (document.getElementById('section-nafl')?.classList.contains('active')) {
+          this.render(true);
+        }
+      });
+      this._dataUpdateBound = true;
+    }
   },
 
   render(skipAnim = false) {
@@ -208,7 +216,7 @@ const Goals = {
 
           <!-- Status Selection or Locked Result -->
           ${isLocked 
-            ? `<div class="salah-locked-result">
+            ? `<div class="salah-locked-result" onclick="Goals.toggleSunnah('${item.id}')" style="cursor: pointer;">
                  <div class="salah-locked-icon" style="color: ${isPrayed ? '#34d399' : '#f85149'}; filter: drop-shadow(0 0 8px ${isPrayed ? 'rgba(52,211,153,0.5)' : 'rgba(248,81,73,0.5)'})">
                    ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                  </div>
@@ -349,7 +357,7 @@ const Goals = {
 
         <!-- Status Selection or Locked Result -->
         ${isLocked 
-          ? `<div class="salah-locked-result">
+          ? `<div class="salah-locked-result" onclick="Goals.unlockTahajjud()" style="cursor: pointer;">
                <div class="salah-locked-icon" style="color: ${isPrayed ? '#34d399' : '#f85149'}; filter: drop-shadow(0 0 8px ${isPrayed ? 'rgba(52,211,153,0.5)' : 'rgba(248,81,73,0.5)'})">
                  ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                </div>
@@ -451,6 +459,27 @@ const Goals = {
     }
   },
 
+  unlockTahajjud() {
+    if (this.currentDate > Utils.todayStr()) {
+      Utils.toast("Cannot edit future dates", "error");
+      return;
+    }
+    const data = DB.getSalah(this.currentDate);
+    Utils.confirm(
+      'Unlock Tahajjud',
+      'Unlock and reset Tahajjud status?',
+      () => {
+        data.tahajjud = false;
+        data.tahajjud_rakat = 0;
+        DB.setSalah(this.currentDate, data);
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        this.render(true);
+        Utils.toast('Tahajjud unlocked', 'info');
+      },
+      'warning'
+    );
+  },
+
   renderWitr(rakat) {
     const container = document.getElementById('witr-card-container');
     if (!container) return;
@@ -494,7 +523,7 @@ const Goals = {
 
         <!-- Status Selection or Locked Result -->
         ${isLocked 
-          ? `<div class="salah-locked-result">
+          ? `<div class="salah-locked-result" onclick="Goals.unlockWitr()" style="cursor: pointer;">
                <div class="salah-locked-icon" style="color: ${isPrayed ? '#34d399' : '#f85149'}; filter: drop-shadow(0 0 8px ${isPrayed ? 'rgba(52,211,153,0.5)' : 'rgba(248,81,73,0.5)'})">
                  ${isPrayed ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'}
                </div>
@@ -570,6 +599,26 @@ const Goals = {
     DB.setSalah(this.currentDate, data);
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
+  },
+
+  unlockWitr() {
+    if (this.currentDate > Utils.todayStr()) {
+      Utils.toast("Cannot edit future dates", "error");
+      return;
+    }
+    const data = DB.getSalah(this.currentDate);
+    Utils.confirm(
+      'Unlock Witr',
+      'Unlock and reset Witr status?',
+      () => {
+        data.witr = 0;
+        DB.setSalah(this.currentDate, data);
+        window.dispatchEvent(new CustomEvent('lamim:data-updated'));
+        this.render(true);
+        Utils.toast('Witr unlocked', 'info');
+      },
+      'warning'
+    );
   },
 
   // Keep backward compatibility
