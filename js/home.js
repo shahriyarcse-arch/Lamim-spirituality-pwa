@@ -5,6 +5,8 @@ const Home = {
   insightTimeout: null,
   _cachedSHS: null,
   _lastPrayerName: null,
+  _waqtPrevName: null,
+  _waqtBurstTimeout: null,
 
   init() { 
     this.render(); 
@@ -25,6 +27,7 @@ const Home = {
     if (this.dateTimeRAF)  { cancelAnimationFrame(this.dateTimeRAF);  this.dateTimeRAF = null; }
     if (this.insightInterval) { clearInterval(this.insightInterval); this.insightInterval = null; }
     if (this.insightTimeout) { clearTimeout(this.insightTimeout); this.insightTimeout = null; }
+    if (this._waqtBurstTimeout) { clearTimeout(this._waqtBurstTimeout); this._waqtBurstTimeout = null; }
   },
 
   render() {
@@ -142,8 +145,7 @@ const Home = {
   renderIhsanLevel() {
     const container = document.getElementById('home-level-progress-container');
     if (!container) return;
-    
-    // FIX #4: Use cached SHS instead of recalculating
+
     const shs = this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { total: 0, rating: { color: '#8E8E93' } });
     const ranks = [
       { min: 0,  label: 'Ghafil' },
@@ -158,35 +160,71 @@ const Home = {
 
     let curIdx = ranks.findIndex(r => shs.total < r.min) - 1;
     if (curIdx < 0) curIdx = 0;
-    
     const current = ranks[curIdx];
     const next = ranks[curIdx + 1] || current;
     const diff = next.min - current.min;
     const prog = diff > 0 ? ((shs.total - current.min) / diff) * 100 : 100;
+    const color = shs.rating.color;
+
+    const starPositions = [
+      [40, 90], [125, 60], [210, 80], [295, 50],
+      [380, 75], [465, 55], [550, 85], [620, 50]
+    ];
+
+    const segLengths = [];
+    for (let i = 1; i < starPositions.length; i++) {
+      const dx = starPositions[i][0] - starPositions[i-1][0];
+      const dy = starPositions[i][1] - starPositions[i-1][1];
+      segLengths.push(Math.sqrt(dx*dx + dy*dy));
+    }
+    const totalConnLen = segLengths.reduce((a, b) => a + b, 0);
+
+    let progressLen = 0;
+    for (let i = 0; i < Math.min(curIdx, 7); i++) progressLen += segLengths[i];
+    if (curIdx < 7) progressLen += (prog / 100) * segLengths[curIdx];
+    const fillOffset = totalConnLen - progressLen;
+
+    const allPoints = starPositions.map(p => p.join(',')).join(' ');
+
+    const starsHtml = ranks.map((r, idx) => {
+      const [x, y] = starPositions[idx];
+      const isAchieved = idx < curIdx;
+      const isCurrent = idx === curIdx;
+      const isFuture = idx > curIdx;
+      const starR = isAchieved ? 10 : isCurrent ? 11 : 7;
+      return `
+        <g class="ihsan-star ${isAchieved ? 'ihsan-star-achieved' : isCurrent ? 'ihsan-star-current' : 'ihsan-star-future'}">
+          <circle cx="${x}" cy="${y}" r="${starR}" fill="${isAchieved || isCurrent ? color : 'none'}"
+            stroke="${isAchieved || isCurrent ? color : 'var(--color-divider-subtle)'}" stroke-width="2"/>
+          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="16" fill="none" stroke="${color}" stroke-width="2" opacity="0.35" class="ihsan-pulse-ring"/>` : ''}
+          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="22" fill="none" stroke="${color}" stroke-width="1" opacity="0.15" class="ihsan-pulse-ring-outer"/>` : ''}
+          <text x="${x}" y="${y + 22}" text-anchor="middle" font-size="9" font-weight="${isCurrent ? '800' : '600'}"
+            fill="${isAchieved || isCurrent ? 'var(--color-text-primary)' : 'var(--color-text-muted)'}" opacity="${isFuture ? 0.35 : 1}">${r.label}</text>
+        </g>`;
+    }).join('');
 
     container.innerHTML = `
-      <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:flex-end">
-        <div style="display:flex; flex-direction:column">
-          <span style="font-size:10px; font-weight:800; opacity:0.45; text-transform:uppercase; letter-spacing:1.2px">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</span>
-          <span style="font-size:18px; font-weight:900; color:${shs.rating.color}; letter-spacing:-0.3px;">${window.t ? window.t(current.label) : current.label}</span>
-        </div>
-        <div style="text-align:right; display:flex; flex-direction:column">
-          <span style="font-size:11px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.5px">${window.t ? window.t('Next') : 'Next'}: <span style="color:var(--color-accent-gold);">${window.t ? window.t(next.label) : next.label}</span></span>
-          <span style="font-size:14px; font-weight:800; color:${shs.rating.color}; margin-top:2px;">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
-        </div>
-      </div>
-      <div style="height:10px; background:var(--color-divider-subtle); border-radius:10px; position:relative; overflow:visible; margin-top:6px;">
-        <div style="width:${prog}%; height:100%; background:linear-gradient(90deg, ${shs.rating.color}, var(--color-accent-gold)); border-radius:10px; position:relative; box-shadow:0 0 16px ${shs.rating.color}40; transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);">
-          <div style="position:absolute; right:-6px; top:-4px; width:22px; height:22px; background:var(--color-bg-elevated); border-radius:50%; border:3px solid ${shs.rating.color}; box-shadow:0 0 14px ${shs.rating.color};"></div>
-        </div>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-top:10px; padding:0 2px;">
-        ${ranks.map((r, idx) => `
-          <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-            <div style="width:12px; height:12px; border-radius:50%; background:${idx <= curIdx ? shs.rating.color : 'var(--color-divider-subtle)'}; border:3px solid ${idx <= curIdx ? shs.rating.color : 'var(--color-border)'}; box-shadow:${idx <= curIdx ? `0 0 8px ${shs.rating.color}60` : 'none'}; transition:all 0.5s ease;"></div>
-            <span style="font-size:9px; font-weight:700; color:${idx === curIdx ? shs.rating.color : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.5px; opacity:${idx <= curIdx ? 1 : 0.4};">${window.t ? window.t(r.label.substring(0, 4)) : r.label.substring(0, 4)}</span>
+      <div class="ihsan-galaxy-container">
+        <div class="ihsan-galaxy-header">
+          <div>
+            <div class="ihsan-label">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</div>
+            <div class="ihsan-current-rank" style="color:${color};">${window.t ? window.t(current.label) : current.label} <span class="ihsan-shs">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span></div>
           </div>
-        `).join('')}
+          <div class="ihsan-next-info">
+            <div class="ihsan-label">${window.t ? window.t('Next') : 'Next'}</div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:var(--color-accent-gold); font-weight:800; font-size:14px;">${window.t ? window.t(next.label) : next.label}</span>
+              <span class="ihsan-pct" style="color:${color};">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="ihsan-galaxy-scroll">
+          <svg class="ihsan-galaxy-svg" viewBox="0 0 660 140" width="660" height="140">
+            <polyline points="${allPoints}" fill="none" stroke="var(--color-divider-subtle)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+            <polyline points="${allPoints}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${totalConnLen}" stroke-dashoffset="${fillOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.34, 1.56, 0.64, 1);"/>
+            ${starsHtml}
+          </svg>
+        </div>
       </div>
     `;
   },
@@ -499,7 +537,7 @@ const Home = {
     this.dateTimeRAF = requestAnimationFrame(tick);
   },
 
-  /* ---- Next Prayer Countdown (rAF — smooth, no lag) ---- */
+  /* ---- Waqt Orb — Living Countdown Sphere ---- */
   startNextPrayerCountdown() {
     const times = Utils.calcPrayerTimes();
     const next  = Utils.getNextPrayer(times);
@@ -509,50 +547,51 @@ const Home = {
     const nextName = typeof next.name === 'string' && next.name ? next.name : 'Prayer';
     const nextLabel = typeof next.label === 'string' && next.label ? next.label : '--:--';
 
-    // Ensure structure is always fresh and premium
+    const waqtColors = {
+      fajr:    '#38bdf8',
+      dhuhr:   '#fbbf24',
+      asr:     '#fb923c',
+      maghrib: '#a855f7',
+      isha:    '#6366f1'
+    };
+    const waqtColor = waqtColors[next.name] || '#10B981';
+    const waqtClass = 'waqt-' + (next.name || 'fajr');
+
     el.innerHTML = `
-      <div class="card next-prayer-premium home-reveal revealed" style="margin-bottom:var(--space-6); padding: 20px 22px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-          <div style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
+      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin-bottom:var(--space-6);">
+        <div class="waqt-orb-header">
+          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
           <div style="display:flex; align-items:center; gap:4px; font-size:9px; font-weight:700; color:var(--color-accent-gold);">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>${window.t ? window.t('Tracked') : 'Tracked'}</span>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px;">
-          <div>
-            <div id="home-next-name" class="next-prayer-glow" style="font-size:1.7rem; font-weight:900; color:var(--home-time-color); line-height:1.1; margin-bottom:6px; text-transform:capitalize; letter-spacing:-0.5px;">${window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-            <div id="home-next-time" style="font-size:13px; font-weight:600; color:var(--color-text-muted); display:flex; align-items:center; gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              ${window.n ? window.n(nextLabel) : nextLabel}
+        <div class="waqt-orb-body">
+          <div class="waqt-orb-visual">
+            <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
+              <circle id="waqt-ring" cx="70" cy="70" r="58" stroke="${waqtColor}" stroke-width="4" fill="none" stroke-dasharray="364.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+            </svg>
+            <div class="waqt-orb-inner">
+              <div id="home-countdown" class="waqt-countdown">--:--:--</div>
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <div id="home-countdown" class="countdown-premium" style="font-size: 2rem; font-weight: 900; letter-spacing: -0.5px; line-height: 1; color: var(--color-text-primary);">--:--:--</div>
-            <div style="font-size: 9px; font-weight: 700; color: var(--color-text-muted); margin-top: 6px; text-transform:uppercase; letter-spacing:0.8px;">${window.t ? window.t('Remaining') : 'Remaining'}</div>
-          </div>
-        </div>
-        <!-- Countdown progress bar -->
-        <div style="margin-top:14px; height:3px; background:var(--color-divider-subtle); border-radius:10px; overflow:hidden;">
-          <div id="home-countdown-bar" style="width:0%; height:100%; background:linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-gold)); border-radius:10px;"></div>
+          <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor};">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+          <div id="home-next-time" class="waqt-prayer-time">${window.n ? window.n(nextLabel) : nextLabel}</div>
         </div>
       </div>
     `;
 
-    // Set initial prayer name/time
-    this._lastPrayerName = nextName;
-    const nameEl = document.getElementById('home-next-name');
-    const timeEl = document.getElementById('home-next-time');
-    if (nameEl) nameEl.textContent = window.t ? window.t(nextName) : nextName.charAt(0).toUpperCase() + nextName.slice(1);
-    if (timeEl) timeEl.textContent = window.n ? window.n(nextLabel) : nextLabel;
-
-    // Cancel previous loop
+    this._lastPrayerName = next.name;
+    this._waqtPrevName = next.name;
     if (this.countdownRAF) cancelAnimationFrame(this.countdownRAF);
+    if (this._waqtBurstTimeout) { clearTimeout(this._waqtBurstTimeout); this._waqtBurstTimeout = null; }
 
     let lastCountdown = '';
     let lastPct = -1;
+    const CIRC = 364.4;
     const tickCountdown = () => {
-      // FIX #3: Fully stop when Home is not active (will restart via init)
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;
         return;
@@ -562,13 +601,29 @@ const Home = {
       const n = Utils.getNextPrayer(t);
       const cd = Utils.countdownTo(n.time);
 
-      // FIX #2: Update prayer name and time when the next prayer changes
-      if (n.name !== this._lastPrayerName) {
+      if (n.name !== this._waqtPrevName) {
+        this._waqtPrevName = n.name;
         this._lastPrayerName = n.name;
-        const updatedName = document.getElementById('home-next-name');
-        const updatedTime = document.getElementById('home-next-time');
-        if (updatedName) updatedName.textContent = window.t ? window.t(n.name.charAt(0).toUpperCase() + n.name.slice(1)) : (n.name.charAt(0).toUpperCase() + n.name.slice(1));
-        if (updatedTime) updatedTime.textContent = window.n ? window.n(n.label) : n.label;
+        const orbCard = el.querySelector('.waqt-orb-premium');
+        if (orbCard) {
+          Object.keys(waqtColors).forEach(k => orbCard.classList.remove('waqt-' + k));
+          orbCard.classList.add('waqt-' + (n.name || 'fajr'));
+          orbCard.classList.add('waqt-bursting');
+          if (this._waqtBurstTimeout) clearTimeout(this._waqtBurstTimeout);
+          this._waqtBurstTimeout = setTimeout(() => {
+            const c = orbCard;
+            if (c) c.classList.remove('waqt-bursting');
+            this._waqtBurstTimeout = null;
+          }, 800);
+        }
+        const ringEl = document.getElementById('waqt-ring');
+        if (ringEl) ringEl.style.stroke = waqtColors[n.name] || '#10B981';
+        const glowEl = document.getElementById('waqt-orb-glow');
+        if (glowEl) glowEl.style.setProperty('--waqt-glow', waqtColors[n.name] || '#10B981');
+        const pnEl = document.getElementById('home-next-name');
+        if (pnEl) pnEl.style.color = waqtColors[n.name] || '#10B981';
+        const ptEl = document.getElementById('home-next-time');
+        if (ptEl) ptEl.textContent = window.n ? window.n(n.label) : n.label;
       }
 
       if (cd !== lastCountdown) {
@@ -577,7 +632,6 @@ const Home = {
         if (cdEl) cdEl.textContent = window.n ? window.n(cd) : cd;
       }
 
-      // Countdown progress bar: elapsed time between previous and next prayer
       const nowMs = Date.now();
       const nIdx = t.findIndex(p => p.time.getTime() === n.time.getTime());
       const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : (t.length > 0 ? t[t.length - 1].time.getTime() : n.time.getTime() - 86400000 / 5));
@@ -587,8 +641,16 @@ const Home = {
         const pct = Math.max(0, Math.min(100, (elapsed / totalGap) * 100));
         if (Math.abs(pct - lastPct) > 0.5) {
           lastPct = pct;
-          const bar = document.getElementById('home-countdown-bar');
-          if (bar) bar.style.width = pct + '%';
+          const ring = document.getElementById('waqt-ring');
+          if (ring) ring.style.strokeDashoffset = CIRC * (1 - pct / 100);
+
+          const orbCard = el.querySelector('.waqt-orb-premium');
+          if (orbCard) {
+            const remaining = n.time.getTime() - nowMs;
+            orbCard.classList.remove('waqt-urgent', 'waqt-critical');
+            if (remaining < 600000) orbCard.classList.add('waqt-critical');
+            else if (remaining < 3600000) orbCard.classList.add('waqt-urgent');
+          }
         }
       }
       this.countdownRAF = requestAnimationFrame(tickCountdown);
