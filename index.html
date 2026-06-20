@@ -730,11 +730,12 @@
     }
     @keyframes shsPulseDraw {
       0% { stroke-dasharray: 0, 200; }
+      75% { stroke-dasharray: 200, 0; }
       100% { stroke-dasharray: 200, 0; }
     }
     .shs-pulse-path {
       stroke-dasharray: 200, 0;
-      animation: shsPulseDraw 2.5s ease-in-out infinite alternate;
+      animation: shsPulseDraw 2.5s ease-in-out infinite;
     }
   </style>
   <link rel="stylesheet" href="css/year-review.css?v=1">
