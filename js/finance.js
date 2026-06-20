@@ -330,9 +330,9 @@ const Finance = {
         </div>
       </div>
     `;
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       this.initChart(stats);
-    }, 100);
+    });
   },
 
   renderMonthSelector() {
@@ -1104,8 +1104,7 @@ const Finance = {
       const d = new Date(e.date);
       const matchesMonth = d.getMonth() === m && d.getFullYear() === y;
       const matchesSearch = e.description.toLowerCase().includes(this.historySearch);
-      const matchesCat = this.historyCategory === 'all';
-      return matchesMonth && matchesSearch && matchesCat;
+      return matchesMonth && matchesSearch;
     }).map(i => ({...i, type: 'income'}));
 
     let filtered = [...exps, ...incs].sort((a, b) => {

@@ -221,14 +221,6 @@ const App = {
     // Ensure setup form is always bound
     if (typeof Auth !== 'undefined') Auth.init();
 
-    // Network status indicators for PWA
-    window.addEventListener('online', () => {
-      Utils.toast(this.lang === 'bn' ? 'ইন্টারনেট কানেকশন ফিরেছে!' : 'Back Online!', 'success');
-    });
-    window.addEventListener('offline', () => {
-      Utils.toast(this.lang === 'bn' ? 'আপনি এখন অফলাইনে আছেন। ডাটা লোকালি সেভ হবে।' : 'You are offline. Data will be saved locally.', 'warning');
-    });
-
     // Android hardware back button support
     let processingPop = false;
     window.addEventListener('popstate', (e) => {
@@ -360,7 +352,7 @@ const App = {
     }
 
     // Init section
-    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, 'year-review': YearReview, profile: Profile, mujahid: Mujahid, finance: Finance };
+    const inits = { home: typeof Home !== 'undefined' ? Home : null, salah: typeof Salah !== 'undefined' ? Salah : null, dhikr: typeof Dhikr !== 'undefined' ? Dhikr : null, nafl: typeof Goals !== 'undefined' ? Goals : null, analysis: typeof Analysis !== 'undefined' ? Analysis : null, 'year-review': typeof YearReview !== 'undefined' ? YearReview : null, profile: typeof Profile !== 'undefined' ? Profile : null, mujahid: typeof Mujahid !== 'undefined' ? Mujahid : null, finance: typeof Finance !== 'undefined' ? Finance : null };
     inits[sectionId]?.init();
 
     // Close sidebar on mobile
@@ -464,18 +456,21 @@ const App = {
 
   refreshCurrentPage() {
     const s = this.currentSection;
-    const inits = { home: Home, salah: Salah, dhikr: Dhikr, nafl: Goals, analysis: Analysis, 'year-review': YearReview, profile: Profile, mujahid: Mujahid, finance: Finance };
+    const inits = { home: typeof Home !== 'undefined' ? Home : null, salah: typeof Salah !== 'undefined' ? Salah : null, dhikr: typeof Dhikr !== 'undefined' ? Dhikr : null, nafl: typeof Goals !== 'undefined' ? Goals : null, analysis: typeof Analysis !== 'undefined' ? Analysis : null, 'year-review': typeof YearReview !== 'undefined' ? YearReview : null, profile: typeof Profile !== 'undefined' ? Profile : null, mujahid: typeof Mujahid !== 'undefined' ? Mujahid : null, finance: typeof Finance !== 'undefined' ? Finance : null };
     if (inits[s]) inits[s].init();
     this.updateAvatars();
   },
 
   bindConnectivity() {
-    const showToast = (msg, type) => {
-      if (typeof Utils !== 'undefined' && Utils.toast) Utils.toast(msg, type);
-    };
-    window.addEventListener('offline', () => showToast('You are offline', 'error'));
-    window.addEventListener('online', () => showToast('Back online', 'success'));
-    if (!navigator.onLine) showToast('You are offline', 'error');
+    window.addEventListener('online', () => {
+      Utils.toast(this.lang === 'bn' ? 'ইন্টারনেট কানেকশন ফিরেছে!' : 'Back Online!', 'success');
+    });
+    window.addEventListener('offline', () => {
+      Utils.toast(this.lang === 'bn' ? 'আপনি এখন অফলাইনে আছেন। ডাটা লোকালি সেভ হবে।' : 'You are offline. Data will be saved locally.', 'warning');
+    });
+    if (!navigator.onLine) {
+      Utils.toast(this.lang === 'bn' ? 'আপনি এখন অফলাইনে আছেন। ডাটা লোকালি সেভ হবে।' : 'You are offline. Data will be saved locally.', 'warning');
+    }
   }
 };
 

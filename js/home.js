@@ -567,8 +567,8 @@ const Home = {
         this._lastPrayerName = n.name;
         const updatedName = document.getElementById('home-next-name');
         const updatedTime = document.getElementById('home-next-time');
-        if (updatedName) updatedName.textContent = n.name.charAt(0).toUpperCase() + n.name.slice(1);
-        if (updatedTime) updatedTime.textContent = n.label;
+        if (updatedName) updatedName.textContent = window.t ? window.t(n.name.charAt(0).toUpperCase() + n.name.slice(1)) : (n.name.charAt(0).toUpperCase() + n.name.slice(1));
+        if (updatedTime) updatedTime.textContent = window.n ? window.n(n.label) : n.label;
       }
 
       if (cd !== lastCountdown) {

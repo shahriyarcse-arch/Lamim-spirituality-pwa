@@ -497,6 +497,22 @@ const Mujahid = {
     return this.habits.find(h => h.id === id);
   },
 
+  calcStreak(habit) {
+    if (!habit || !habit.history || habit.history.length === 0) return 0;
+    const sorted = [...habit.history].filter(h => h.clean).sort((a, b) => b.date.localeCompare(a.date));
+    if (sorted.length === 0) return 0;
+    let streak = 0;
+    const today = new Date();
+    const checkDate = new Date(today);
+    for (let i = 0; i < sorted.length; i++) {
+      const d = new Date(sorted[i].date + 'T00:00:00');
+      const diff = Math.round((checkDate - d) / 86400000);
+      if (diff === streak) { streak++; checkDate.setDate(checkDate.getDate() - 1); }
+      else break;
+    }
+    return streak;
+  },
+
   render(skipAnim = false) {
     const container = document.getElementById('mujahid-content');
     if (!container) return;
@@ -682,8 +698,11 @@ const Mujahid = {
   },
 
   saveStartDate() {
-    const habitId = document.getElementById('mujahid-startdate-habit-id').value;
-    const dateStr = document.getElementById('mujahid-startdate-input').value; // YYYY-MM-DDTHH:mm
+    const habitIdEl = document.getElementById('mujahid-startdate-habit-id');
+    const dateStrEl = document.getElementById('mujahid-startdate-input');
+    if (!habitIdEl || !dateStrEl) return;
+    const habitId = habitIdEl.value;
+    const dateStr = dateStrEl.value; // YYYY-MM-DDTHH:mm
     
     let isoString = new Date(dateStr).toISOString();
     
@@ -1544,7 +1563,7 @@ const Mujahid = {
     const msgEl = document.getElementById('mujahid-confirm-msg');
     const btn = document.getElementById('mujahid-confirm-btn');
     
-    if (!modal || !btn) return;
+    if (!modal || !titleEl || !msgEl || !btn) return;
     
     titleEl.textContent = title;
     msgEl.textContent = msg;
@@ -1641,6 +1660,7 @@ const Mujahid = {
   showBreathingExercise() {
     const modal = document.getElementById('mujahid-breathe-pro');
     if (!modal) return;
+    modal.onclick = (e) => { if (e.target === modal) this.hideBreathingExercise(); };
     Utils.openModal(modal);
     this.startBreathingExercise();
   },

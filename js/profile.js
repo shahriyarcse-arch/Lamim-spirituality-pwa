@@ -660,8 +660,8 @@ const Profile = {
   showLocationModal() {
     const settings = DB.getSettings();
     Utils.openModal(document.getElementById('location-modal'));
-    document.getElementById('loc-lat').value = settings.lat || '';
-    document.getElementById('loc-lng').value = settings.lng || '';
+    document.getElementById('loc-lat').value = settings.lat ?? '';
+    document.getElementById('loc-lng').value = settings.lng ?? '';
     document.getElementById('loc-name').value = settings.locationName || '';
   },
 

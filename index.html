@@ -715,6 +715,20 @@
 }
 
   </style>
+  <style>
+    @keyframes text-shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
   <link rel="stylesheet" href="css/year-review.css?v=1">
   <link rel="stylesheet" href="css/lively-enhancements.css?v=6">
 
@@ -1432,7 +1446,8 @@
           <input class="input" id="loc-name" type="text" placeholder="Label (optional)" style="width:100%">
           <div style="display:flex;gap:8px;">
             <button class="btn btn-primary" onclick="Profile.saveLocation()" style="flex:1">Save</button>
-            <button class="btn btn-ghost" onclick="Profile.detectLocation()" style="flex:1">Auto-Detect</button>
+            <button class="btn btn-ghost" onclick="Profile.detectLocation(event)" 
+style="flex:1">Auto-Detect</button>
           </div>
         </div>
       </div>
