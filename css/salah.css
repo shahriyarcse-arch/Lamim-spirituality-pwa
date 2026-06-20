@@ -206,7 +206,7 @@
 
   50% {
     border-color: var(--color-border-active);
-    box-shadow: 0 0 12px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
   }
 
   100% {
