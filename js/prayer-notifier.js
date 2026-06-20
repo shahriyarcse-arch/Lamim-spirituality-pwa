@@ -85,14 +85,14 @@ const PrayerNotifier = {
 
   sendNotification(prayer) {
     const prayerNames = {
-      fajr: { en: 'Fajr', bn: 'ফজর', emoji: '🌅' },
-      dhuhr: { en: 'Dhuhr', bn: 'যোহর', emoji: '☀️' },
-      asr: { en: 'Asr', bn: 'আসর', emoji: '🌤️' },
-      maghrib: { en: 'Maghrib', bn: 'মাগরিব', emoji: '🌅' },
-      isha: { en: 'Isha', bn: 'এশা', emoji: '🌙' }
+      fajr: { en: 'Fajr', bn: 'ফজর', emoji: Icons.sunrise },
+      dhuhr: { en: 'Dhuhr', bn: 'যোহর', emoji: Icons.sun },
+      asr: { en: 'Asr', bn: 'আসর', emoji: Icons.cloudSun },
+      maghrib: { en: 'Maghrib', bn: 'মাগরিব', emoji: Icons.sunset },
+      isha: { en: 'Isha', bn: 'এশা', emoji: Icons.moon }
     };
 
-    const info = prayerNames[prayer.name] || { en: prayer.name, bn: prayer.name, emoji: '🕌' };
+    const info = prayerNames[prayer.name] || { en: prayer.name, bn: prayer.name, emoji: Icons.mosque };
     const lang = localStorage.getItem('lamim_lang') || 'en';
     const isBn = lang === 'bn';
 

@@ -35,7 +35,7 @@ const DuaBoard = {
       this.save(duas);
       Utils.confetti(16);
       window.dispatchEvent(new CustomEvent('lamim:data-updated'));
-      Utils.toast('Dua answered! Alhamdulillah! 🤲✨', 'success');
+      Utils.toast('Dua answered! Alhamdulillah!', 'success');
     }
   },
 
@@ -110,7 +110,7 @@ const DuaBoard = {
     this.add(text);
     input.value = '';
     this.renderList();
-    Utils.toast('Dua saved! May Allah accept it 🤲', 'success');
+    Utils.toast('Dua saved! May Allah accept it', 'success');
   }
 };
 

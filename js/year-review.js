@@ -211,7 +211,7 @@ const YearReview = {
     if (!data || data.trackedDays === 0) {
       container.innerHTML = navHtml + `
         <div style="text-align:center;padding:60px 20px;opacity:0.6">
-          <div style="font-size:3rem;margin-bottom:16px">📊</div>
+          <div style="font-size:3rem;margin-bottom:16px">${Icons.barChart}</div>
           <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">No data for ${this.year}</div>
           <div style="font-size:0.85rem">Start tracking your spiritual journey and come back at year's end.</div>
         </div>

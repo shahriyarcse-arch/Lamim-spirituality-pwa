@@ -42,12 +42,12 @@ const Home = {
     const maghrib = Utils.timeToMin(times[3].time);
     const isha = Utils.timeToMin(times[4].time);
 
-    let greet = 'Good Night 🌙';
-    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak 🌅';
-    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon ☀️';
-    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah 🌤️';
-    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light 🌆';
-    else if (nowTime >= isha) greet = 'Isha Peace 🌙';
+    let greet = 'Good Night';
+    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak';
+    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon';
+    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah';
+    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light';
+    else if (nowTime >= isha) greet = 'Isha Peace';
 
     // Get Last Name (with safety)
     const rawName = (user && typeof user.name === 'string') ? user.name : 'User';
@@ -368,11 +368,11 @@ const Home = {
     }
 
     const avgPrayed = (totalPrayed / history.length).toFixed(1);
-    const tip = perfectDays >= 5 ? '🔥 Exceptional week! You\'re in a spiritual flow.'
-      : totalMissed > totalPrayed ? '🌱 Start with one prayer at a time. Consistency over intensity.'
-      : totalDhikr > 1000 ? '📿 Your dhikr is high — keep your tongue moist with remembrance.'
-      : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
-      : '🤲 You\'re doing great. Small steps lead to big transformations.';
+    const tip = perfectDays >= 5 ? 'Exceptional week! You\'re in a spiritual flow.'
+      : totalMissed > totalPrayed ? 'Start with one prayer at a time. Consistency over intensity.'
+      : totalDhikr > 1000 ? 'Your dhikr is high — keep your tongue moist with remembrance.'
+      : totalSunnah < 5 ? 'Add a Sunnah prayer daily for extra light.'
+      : 'You\'re doing great. Small steps lead to big transformations.';
 
     container.innerHTML = `
       <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
@@ -392,7 +392,7 @@ const Home = {
           </div>
         </div>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border-muted);display:flex;align-items:center;gap:8px;">
-          <span style="font-size:14px;line-height:1;">💡</span>
+          <span style="font-size:14px;line-height:1;">${Icons.lightbulb}</span>
           <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${tip}</span>
         </div>
       </div>
