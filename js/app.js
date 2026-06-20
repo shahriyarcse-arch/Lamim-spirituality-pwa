@@ -197,7 +197,7 @@ const App = {
         this.showPage('setup');
       }
       this._bootComplete = true;
-    }, 800);
+    }, 1400);
 
     // Safety fallback
     setTimeout(() => {
