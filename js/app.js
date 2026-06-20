@@ -197,7 +197,7 @@ const App = {
         this.showPage('setup');
       }
       this._bootComplete = true;
-    }, 1400);
+    }, 2800);
 
     // Safety fallback
     setTimeout(() => {
@@ -210,7 +210,7 @@ const App = {
       }
       else this.showPage('setup');
       this._bootComplete = true;
-    }, 4000);
+    }, 6000);
 
     // Nav bindings
     this.bindNav();
