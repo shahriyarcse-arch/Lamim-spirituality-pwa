@@ -206,7 +206,7 @@ const DB = {
 
   remove(key) {
     delete this._cache[key];
-    if (key === 'lamim_lang' || key === 'lamim_settings') {
+    if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
       try { localStorage.removeItem(key); } catch {}
     }
     this._asyncDelete(key);
@@ -220,11 +220,11 @@ const DB = {
     try {
       this._cache[key] = val;
 
-      if (key === 'lamim_lang' || key === 'lamim_settings') {
-        try { localStorage.setItem(key, val); } catch {}
-      }
+    if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
+      try { localStorage.setItem(key, val); } catch {}
+    }
 
-      this._asyncWrite(key, val);
+    this._asyncWrite(key, val);
       return true;
     } catch (e) {
       console.error(`[DB] Error in rawSet for key: ${key}`, e);

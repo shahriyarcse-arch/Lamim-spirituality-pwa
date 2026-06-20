@@ -23,13 +23,18 @@ const ASSETS = [
   './js/analysis.js',
   './js/dua.js',
   './js/prayer-notifier.js',
+  './js/year-review.js',
   './js/app.js'
 ];
 
 // Install: Cache core assets & skip waiting immediately
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.addAll(ASSETS).catch((err) => {
+        console.error('[SW] Failed to cache some assets:', err);
+      })
+    )
   );
   self.skipWaiting();
 });

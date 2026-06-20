@@ -828,6 +828,7 @@ const Finance = {
     let a = parseFloat(document.getElementById('finance-expense-amount').value);
     const c = this.selectedCategory, d = document.getElementById('finance-expense-date').value, obj = this.categories.find(o => o.id === c);
     if (isNaN(a) || a <= 0) return Utils.toast('Enter valid amount', 'error');
+    if (!obj) return Utils.toast('Please select a category', 'error');
 
     // Calculate absolute total balance in USD (base currency)
     const allIncome = this.data.income.reduce((s, o) => s + o.amount, 0);

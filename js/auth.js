@@ -23,29 +23,11 @@ const Auth = {
   setLang(lang) {
     const hiddenInput = document.getElementById('setup-lang');
     if (hiddenInput) hiddenInput.value = lang;
-    const cardEn = document.getElementById('pref-lang-en');
-    const cardBn = document.getElementById('pref-lang-bn');
-    if (lang === 'en') {
-      cardEn?.classList.add('active');
-      cardBn?.classList.remove('active');
-    } else {
-      cardBn?.classList.add('active');
-      cardEn?.classList.remove('active');
-    }
   },
 
   setCurrency(curr) {
     const hiddenInput = document.getElementById('setup-currency');
     if (hiddenInput) hiddenInput.value = curr;
-    const currencies = ['USD', 'BDT', 'SAR', 'EUR', 'GBP'];
-    currencies.forEach(c => {
-      const card = document.getElementById(`curr-${c}`);
-      if (c === curr) {
-        card?.classList.add('active');
-      } else {
-        card?.classList.remove('active');
-      }
-    });
   },
 
   nextStep(currentStep) {
@@ -318,68 +300,7 @@ const Auth = {
     
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      
-      const nameInput = document.getElementById('setup-name');
-      const err = document.getElementById('setup-name-err');
-      const name = nameInput.value.trim();
-      
-      if (!name) {
-        this.goToStep(1);
-        nameInput.classList.add('input-error');
-        if (err) { err.textContent = 'Name is required'; err.classList.add('show'); }
-        return;
-      }
-
-      const langSelect = document.getElementById('setup-lang');
-      const currencySelect = document.getElementById('setup-currency');
-      const latInput = document.getElementById('setup-lat');
-      const lngInput = document.getElementById('setup-lng');
-
-      const language = langSelect ? langSelect.value : 'en';
-      const currency = currencySelect ? currencySelect.value : 'USD';
-      const lat = latInput ? parseFloat(latInput.value) : 23.8103;
-      const lng = lngInput ? parseFloat(lngInput.value) : 90.4125;
-
-      const user = { 
-        id: 'local_' + Date.now(), 
-        name: name, 
-        email: 'local@lamim.offline',
-        role: 'user',
-        gender: '',
-        age: '',
-        avatar: null, 
-        location: '', 
-        createdAt: new Date().toISOString()
-      };
-      
-      const settings = DB.getSettings();
-      settings.language = language;
-      settings.currency = currency;
-      settings.lat = lat;
-      settings.lng = lng;
-      
-      const statusText = document.getElementById('setup-location-status');
-      if (statusText && statusText.textContent.startsWith('Detected: ')) {
-        settings.locationName = statusText.textContent.replace('Detected: ', '');
-      } else {
-        settings.locationName = lat.toFixed(2) + ', ' + lng.toFixed(2);
-      }
-
-      DB.setUser(user);
-      DB.setSettings(settings);
-
-      if (typeof Home !== 'undefined') Home.render();
-      if (typeof Salah !== 'undefined') Salah.init();
-      if (typeof Profile !== 'undefined') {
-        Profile.renderSettings();
-        Profile.render();
-      }
-
-      Utils.toast('Welcome, ' + name + '!', 'success');
-      
-      setTimeout(() => {
-        App.showDashboard();
-      }, 500);
+      this.submitSetup();
     });
   },
 

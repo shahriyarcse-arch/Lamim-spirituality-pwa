@@ -112,9 +112,11 @@ const App = {
           }
         });
       }
-      caches.keys().then(keys => {
-        keys.forEach(key => { try { caches.delete(key); } catch(e) {} });
-      });
+      if (typeof caches !== 'undefined') {
+        caches.keys().then(keys => {
+          keys.forEach(key => { try { caches.delete(key); } catch(e) {} });
+        });
+      }
       setTimeout(() => window.location.reload(true), 500);
       return; // Stop initialization until reload
     }
