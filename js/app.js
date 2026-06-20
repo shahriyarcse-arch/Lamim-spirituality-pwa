@@ -92,6 +92,7 @@ const App = {
   },
 
   async init() {
+    alert('App.init() STARTED');
     // Wait for IndexedDB cache load and migration
     await DB.init();
 
