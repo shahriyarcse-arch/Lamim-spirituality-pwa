@@ -8,8 +8,8 @@ const Home = {
   _waqtPrevName: null,
   _waqtBurstTimeout: null,
 
-  init() { 
-    this.render(); 
+  init() {
+    this.render();
     // Listen for local data updates to refresh dashboard live
     if (!this._boundDataUpdated) {
       window.addEventListener('lamim:data-updated', () => {
@@ -24,7 +24,7 @@ const Home = {
   /** Stop all rAF loops when leaving Home section (called by App.navigateTo) */
   cleanup() {
     if (this.countdownRAF) { cancelAnimationFrame(this.countdownRAF); this.countdownRAF = null; }
-    if (this.dateTimeRAF)  { cancelAnimationFrame(this.dateTimeRAF);  this.dateTimeRAF = null; }
+    if (this.dateTimeRAF) { cancelAnimationFrame(this.dateTimeRAF); this.dateTimeRAF = null; }
     if (this.insightInterval) { clearInterval(this.insightInterval); this.insightInterval = null; }
     if (this.insightTimeout) { clearTimeout(this.insightTimeout); this.insightTimeout = null; }
     if (this._waqtBurstTimeout) { clearTimeout(this._waqtBurstTimeout); this._waqtBurstTimeout = null; }
@@ -91,7 +91,7 @@ const Home = {
     const db = document.getElementById('home-date-bar');
     if (db) {
       const shs = this._cachedSHS;
-      
+
       db.innerHTML = `
         <div class="home-stats-row">
           <div class="home-stat-chip home-stat-streak">
@@ -152,7 +152,7 @@ const Home = {
 
     const shs = this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { total: 0, rating: { color: '#8E8E93' } });
     const ranks = [
-      { min: 0,  label: 'Ghafil' },
+      { min: 0, label: 'Ghafil' },
       { min: 15, label: 'Musafir' },
       { min: 30, label: 'Murid' },
       { min: 50, label: 'Mujahid' },
@@ -177,9 +177,9 @@ const Home = {
 
     const segLengths = [];
     for (let i = 1; i < starPositions.length; i++) {
-      const dx = starPositions[i][0] - starPositions[i-1][0];
-      const dy = starPositions[i][1] - starPositions[i-1][1];
-      segLengths.push(Math.sqrt(dx*dx + dy*dy));
+      const dx = starPositions[i][0] - starPositions[i - 1][0];
+      const dy = starPositions[i][1] - starPositions[i - 1][1];
+      segLengths.push(Math.sqrt(dx * dx + dy * dy));
     }
     const totalConnLen = segLengths.reduce((a, b) => a + b, 0);
 
@@ -236,12 +236,12 @@ const Home = {
   renderSpiritualPulse() {
     const container = document.getElementById('shs-pulse-graph-spot');
     if (!container) return;
-    
+
     // FIX #4: Use cached SHS instead of recalculating
     const color = (this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { rating: { color: '#8E8E93' } })).rating.color;
     container.style.overflow = 'visible';
-    container.style.width = '100px'; 
-    
+    container.style.width = '100px';
+
     container.innerHTML = `
       <svg width="100" height="30" viewBox="0 0 100 30" style="filter: drop-shadow(0 0 5px ${color}40);">
         <defs>
@@ -262,7 +262,7 @@ const Home = {
   renderAIInsight() {
     const container = document.getElementById('home-ai-insight-container');
     if (!container) return;
-    
+
     const quotes = [
       "Small consistent deeds are most beloved to Allah. You are building something beautiful.",
       "The sweetness of faith is found in the stillness of Salah. Breathe and focus today.",
@@ -412,9 +412,9 @@ const Home = {
     const avgPrayed = (totalPrayed / history.length).toFixed(1);
     const tip = perfectDays >= 5 ? '🔥 Exceptional week! You\'re in a spiritual flow.'
       : totalMissed > totalPrayed ? '🌱 Start with one prayer at a time. Consistency over intensity.'
-      : totalDhikr > 1000 ? '📿 Your dhikr is high — keep your tongue moist with remembrance.'
-      : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
-      : '🤲 You\'re doing great. Small steps lead to big transformations.';
+        : totalDhikr > 1000 ? '📿 Your dhikr is high — keep your tongue moist with remembrance.'
+          : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
+            : '🤲 You\'re doing great. Small steps lead to big transformations.';
 
     container.innerHTML = `
       <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px;">
@@ -425,7 +425,7 @@ const Home = {
           <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
             <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;">Weekly Pulse</div>
             <div style="font-size:12px;font-weight:600;color:var(--color-text-secondary);line-height:1.4;">
-              ${avgPrayed}/5 avg · ${perfectDays} perfect · ${totalDhikr > 999 ? (totalDhikr/1000).toFixed(1)+'k' : totalDhikr} dhikr
+              ${avgPrayed}/5 avg · ${perfectDays} perfect · ${totalDhikr > 999 ? (totalDhikr / 1000).toFixed(1) + 'k' : totalDhikr} dhikr
             </div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
@@ -463,7 +463,7 @@ const Home = {
   renderNurParticles() {
     const container = document.getElementById('nur-particles-container');
     if (!container || container.children.length > 0) return;
-    
+
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < 12; i++) {
       const p = document.createElement('div');
@@ -512,7 +512,7 @@ const Home = {
       if (sec !== lastSec) {
         lastSec = sec;
         const isMobile = window.innerWidth <= 768;
-        
+
         const locale = (typeof App !== 'undefined' && App.lang === 'bn') ? 'bn-BD' : 'en-US';
         const timeStr = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if (timeVal) timeVal.textContent = window.n ? window.n(timeStr) : timeStr;
@@ -532,25 +532,25 @@ const Home = {
   /* ---- Waqt Orb — Living Countdown Sphere ---- */
   startNextPrayerCountdown() {
     const times = Utils.calcPrayerTimes();
-    const next  = Utils.getNextPrayer(times);
-    const el    = document.getElementById('home-next-prayer');
+    const next = Utils.getNextPrayer(times);
+    const el = document.getElementById('home-next-prayer');
     if (!el) return;
 
     const nextName = typeof next.name === 'string' && next.name ? next.name : 'Prayer';
     const nextLabel = typeof next.label === 'string' && next.label ? next.label : '--:--';
 
     const waqtColors = {
-      fajr:    '#38bdf8',
-      dhuhr:   '#fbbf24',
-      asr:     '#fb923c',
+      fajr: '#38bdf8',
+      dhuhr: '#fbbf24',
+      asr: '#fb923c',
       maghrib: '#a855f7',
-      isha:    '#6366f1'
+      isha: '#6366f1'
     };
     const waqtColor = waqtColors[next.name] || '#10B981';
     const waqtClass = 'waqt-' + (next.name || 'fajr');
 
     el.innerHTML = `
-      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin-bottom:var(--space-6);">
+      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin: 0;">
         <div class="waqt-orb-header">
           <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
           <div style="display:flex; align-items:center; gap:4px; font-size:9px; font-weight:700; color:var(--color-accent-gold);">
@@ -561,9 +561,9 @@ const Home = {
         <div class="waqt-orb-body">
           <div class="waqt-orb-visual">
             <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
-            <svg width="110" height="110" viewBox="0 0 110 110">
-              <circle cx="55" cy="55" r="45" stroke="var(--color-divider-subtle)" stroke-width="3.5" fill="none"/>
-              <circle id="waqt-ring" cx="55" cy="55" r="45" stroke="${waqtColor}" stroke-width="3.5" fill="none" stroke-dasharray="282.7" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
+              <circle id="waqt-ring" cx="70" cy="70" r="58" stroke="${waqtColor}" stroke-width="4" fill="none" stroke-dasharray="364.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"/>
             </svg>
             <div class="waqt-orb-inner">
               <div id="home-countdown" class="waqt-countdown">--:--:--</div>
@@ -582,7 +582,7 @@ const Home = {
 
     let lastCountdown = '';
     let lastPct = -1;
-    const CIRC = 282.7;
+    const CIRC = 364.4;
     const tickCountdown = () => {
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;
@@ -656,21 +656,21 @@ const Home = {
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
     const visualPct = (score.done / 5) * 100;
-    const circumference = 2 * Math.PI * 46;
+    const circumference = 2 * Math.PI * 62;
     const offset = circumference - (visualPct / 100) * circumference;
     const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
     // Ensure structure is always fresh
     el.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div class="salah-ring-premium ring-chart" style="width:120px;height:120px">
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle class="ring-chart-bg" cx="60" cy="60" r="46" stroke-width="11"/>
-            <circle class="ring-chart-fill" id="salah-ring-fill" cx="60" cy="60" r="46" stroke-width="11"
+        <div class="salah-ring-premium ring-chart" style="width:160px;height:160px">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="ring-chart-bg" cx="80" cy="80" r="62" stroke-width="14"/>
+            <circle class="ring-chart-fill" id="salah-ring-fill" cx="80" cy="80" r="62" stroke-width="14"
               stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)"/>
           </svg>
           <div class="ring-chart-label">
-            <div id="salah-ring-count" style="font-size:1.85rem;font-weight:900;line-height:1">0</div>
-            <div style="font-size:0.65rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
+            <div id="salah-ring-count" style="font-size:2.4rem;font-weight:900;line-height:1">0</div>
+            <div style="font-size:0.7rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
           </div>
         </div>
         <div style="text-align:center;width:100%;">
