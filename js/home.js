@@ -240,10 +240,10 @@ const Home = {
     // FIX #4: Use cached SHS instead of recalculating
     const color = (this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { rating: { color: '#8E8E93' } })).rating.color;
     container.style.overflow = 'visible';
-    container.style.width = '80px'; 
+    container.style.width = '100px'; 
     
     container.innerHTML = `
-      <svg width="80" height="30" viewBox="0 0 100 30" style="filter: drop-shadow(0 0 5px ${color}40);">
+      <svg width="100" height="30" viewBox="0 0 100 30" style="filter: drop-shadow(0 0 5px ${color}40);">
         <defs>
           <linearGradient id="pGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:${color};stop-opacity:0" />
@@ -561,9 +561,9 @@ const Home = {
         <div class="waqt-orb-body">
           <div class="waqt-orb-visual">
             <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
-            <svg width="140" height="140" viewBox="0 0 140 140">
-              <circle cx="70" cy="70" r="58" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
-              <circle id="waqt-ring" cx="70" cy="70" r="58" stroke="${waqtColor}" stroke-width="4" fill="none" stroke-dasharray="364.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="45" stroke="var(--color-divider-subtle)" stroke-width="3.5" fill="none"/>
+              <circle id="waqt-ring" cx="55" cy="55" r="45" stroke="${waqtColor}" stroke-width="3.5" fill="none" stroke-dasharray="282.7" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 55 55)"/>
             </svg>
             <div class="waqt-orb-inner">
               <div id="home-countdown" class="waqt-countdown">--:--:--</div>
@@ -582,7 +582,7 @@ const Home = {
 
     let lastCountdown = '';
     let lastPct = -1;
-    const CIRC = 364.4;
+    const CIRC = 282.7;
     const tickCountdown = () => {
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;
@@ -656,21 +656,21 @@ const Home = {
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
     const visualPct = (score.done / 5) * 100;
-    const circumference = 2 * Math.PI * 62;
+    const circumference = 2 * Math.PI * 46;
     const offset = circumference - (visualPct / 100) * circumference;
     const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
     // Ensure structure is always fresh
     el.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div class="salah-ring-premium ring-chart" style="width:160px;height:160px">
-          <svg width="160" height="160" viewBox="0 0 160 160">
-            <circle class="ring-chart-bg" cx="80" cy="80" r="62" stroke-width="14"/>
-            <circle class="ring-chart-fill" id="salah-ring-fill" cx="80" cy="80" r="62" stroke-width="14"
+        <div class="salah-ring-premium ring-chart" style="width:120px;height:120px">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle class="ring-chart-bg" cx="60" cy="60" r="46" stroke-width="11"/>
+            <circle class="ring-chart-fill" id="salah-ring-fill" cx="60" cy="60" r="46" stroke-width="11"
               stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)"/>
           </svg>
           <div class="ring-chart-label">
-            <div id="salah-ring-count" style="font-size:2.4rem;font-weight:900;line-height:1">0</div>
-            <div style="font-size:0.7rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
+            <div id="salah-ring-count" style="font-size:1.85rem;font-weight:900;line-height:1">0</div>
+            <div style="font-size:0.65rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
           </div>
         </div>
         <div style="text-align:center;width:100%;">

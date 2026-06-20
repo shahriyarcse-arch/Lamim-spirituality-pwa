@@ -816,7 +816,7 @@
 .waqt-orb-premium {
   position: relative;
   overflow: hidden;
-  padding: 20px 22px;
+  padding: 14px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--card-radius);
   background: var(--color-surface-card);
@@ -850,8 +850,8 @@
 }
 .waqt-orb-visual {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -877,7 +877,7 @@
   justify-content: center;
 }
 .waqt-countdown {
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.5px;
@@ -1157,16 +1157,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: var(--radius-lg);
   background: var(--color-surface-nested);
   border: 1px solid var(--color-border);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   box-shadow: var(--shadow-sm);
   flex: 1;
   justify-content: center;
-  min-height: 40px;
+  min-height: 46px;
 }
 
 .home-stat-streak {
@@ -1180,20 +1180,20 @@
 }
 
 .home-stat-shs-orb {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 900;
   color: #fff;
   box-shadow: 0 2px 6px color-mix(in srgb, var(--stat-color, var(--color-accent-primary)) 40%, transparent);
 }
 
 .home-stat-label {
-  font-size: 9px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: var(--color-text-muted);
@@ -1218,11 +1218,12 @@
     font-size: 1.6rem;
   }
   .home-stat-chip {
-    padding: 6px 8px;
-    font-size: 11px;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 44px;
   }
   .home-stat-label {
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.5px;
   }
 }
