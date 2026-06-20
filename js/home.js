@@ -101,7 +101,7 @@ const Home = {
             </div>
           </div>
         </div>
-        <div id="shs-pulse-graph-spot" style="display: flex; align-items: center; justify-content: center; min-width: 80px; margin-right: 10px; opacity: 0.5;"></div>
+        <div id="shs-pulse-graph-spot" style="display: flex; align-items: center; justify-content: center; min-width: 80px; margin-right: 10px;"></div>
       `;
     }
 
@@ -201,7 +201,7 @@ const Home = {
     container.style.width = '80px'; 
     
     container.innerHTML = `
-      <svg width="80" height="30" viewBox="0 0 100 30" style="opacity:0.8; filter: drop-shadow(0 0 5px ${color}40);">
+      <svg width="80" height="30" viewBox="0 0 100 30" style="filter: drop-shadow(0 0 5px ${color}40);">
         <defs>
           <linearGradient id="pGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:${color};stop-opacity:0" />
@@ -209,10 +209,8 @@ const Home = {
             <stop offset="100%" style="stop-color:${color};stop-opacity:0" />
           </linearGradient>
         </defs>
-        <path d="M 0,15 Q 10,15 15,15 T 25,5 T 35,25 T 45,15 T 55,15 T 65,15 T 75,5 T 85,25 T 100,15" 
-              fill="none" stroke="url(#pGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <animate attributeName="stroke-dasharray" from="0,200" to="200,0" dur="3s" repeatCount="indefinite" />
-        </path>
+        <path class="shs-pulse-path" d="M 0,15 Q 10,15 15,15 T 25,5 T 35,25 T 45,15 T 55,15 T 65,15 T 75,5 T 85,25 T 100,15" 
+              fill="none" stroke="url(#pGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     `;
   },
