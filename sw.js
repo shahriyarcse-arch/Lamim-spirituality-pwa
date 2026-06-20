@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lamim-v131';
+const CACHE_NAME = 'lamim-v132';
 const ASSETS = [
   './',
   './index.html',
@@ -33,11 +33,12 @@ const ASSETS = [
 // Install: Cache core assets & skip waiting immediately
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) =>
-      cache.addAll(ASSETS).catch((err) => {
-        console.error('[SW] Failed to cache some assets:', err);
-      })
-    )
+    caches.open(CACHE_NAME).then((cache) => {
+      const requests = ASSETS.map(url => new Request(url, { cache: 'reload' }));
+      return cache.addAll(requests);
+    }).catch((err) => {
+      console.error('[SW] Failed to cache assets during install:', err);
+    })
   );
   self.skipWaiting();
 });
