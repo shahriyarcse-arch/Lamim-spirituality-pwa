@@ -1022,34 +1022,3 @@
 .ihsan-star-future circle {
   filter: none;
 }
-
-/* =============================================
-   SALAH PETAL BLOOM
-   ============================================= */
-.salah-bloom-ring {
-  transition: filter 0.5s var(--cb-smooth);
-}
-.salah-bloom-ring.full-bloom svg {
-  filter: drop-shadow(0 0 14px rgba(52,211,153,0.35));
-  animation: bloomGlow 3s ease-in-out infinite;
-}
-@keyframes bloomGlow {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(52,211,153,0.25)); }
-  50% { filter: drop-shadow(0 0 22px rgba(52,211,153,0.5)) brightness(1.04); }
-}
-
-/* =============================================
-   QALB COMPASS — Mood-Aware Insight
-   ============================================= */
-.qalb-needle {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.card.qalb-radiant {
-  border-color: rgba(251,191,36,0.25) !important;
-}
-.card.qalb-growing {
-  border-color: rgba(52,211,153,0.25) !important;
-}
-.card.qalb-resting {
-  border-color: rgba(167,139,250,0.25) !important;
-}
