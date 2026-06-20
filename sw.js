@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lamim-v129';
+const CACHE_NAME = 'lamim-v130';
 const ASSETS = [
   './',
   './index.html',
@@ -90,65 +90,25 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // LOCAL ASSETS (JS, CSS, images) → Network-First with Timeout (1.5s) fallback to Cache
-  // This ensures online users always get the latest updates instantly,
-  // while offline/slow-connection users get the cached version instantly.
+  // LOCAL ASSETS (JS, CSS, images) → Cache-First / Stale-While-Revalidate
+  // Serves from cache immediately (0.5ms load) for instant launch on phones,
+  // then updates the cache in the background. If a file is not in cache,
+  // it falls back to the network.
   const isLocalAsset = e.request.url.startsWith(self.location.origin);
   if (isLocalAsset) {
     e.respondWith(
-      new Promise((resolve) => {
-        let resolved = false;
-
-        const timeoutId = setTimeout(() => {
-          if (!resolved) {
-            caches.match(e.request, { ignoreSearch: true }).then((cached) => {
-              if (!resolved) {
-                resolved = true;
-                if (cached) {
-                  console.log('[SW] Timeout fallback to cache for:', e.request.url);
-                  resolve(cached);
-                } else {
-                  console.log('[SW] Timeout with no cache for:', e.request.url);
-                  resolve(new Response('Offline – resource unavailable', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
-                }
-              }
-            }).catch(() => {
-              if (!resolved) {
-                resolved = true;
-                resolve(new Response('Offline', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
-              }
-            });
-          }
-        }, 1500);
-
-        fetch(e.request, { cache: 'no-cache' })
+      caches.match(e.request, { ignoreSearch: true }).then((cached) => {
+        const fetchPromise = fetch(e.request, { cache: 'no-cache' })
           .then((res) => {
             if (res && res.ok) {
               const copy = res.clone();
               caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
-              
-              if (!resolved) {
-                clearTimeout(timeoutId);
-                resolved = true;
-                resolve(res);
-              }
-            } else {
-              if (!resolved) {
-                clearTimeout(timeoutId);
-                resolved = true;
-                caches.match(e.request, { ignoreSearch: true }).then((cached) => resolve(cached || res));
-              }
             }
+            return res;
           })
-          .catch(() => {
-            if (!resolved) {
-              clearTimeout(timeoutId);
-              resolved = true;
-              caches.match(e.request, { ignoreSearch: true }).then((cached) => {
-                resolve(cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/plain' } }));
-              });
-            }
-          });
+          .catch(() => cached); // network error fallback to cached if present
+
+        return cached || fetchPromise;
       })
     );
     return;

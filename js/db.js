@@ -7,14 +7,30 @@ const DB = {
 
   init() {
     return new Promise((resolve) => {
+      let resolved = false;
+      const done = (fallback = false) => {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(timeoutId);
+        if (fallback) {
+          this._fallbackToLocalStorage();
+        }
+        resolve();
+      };
+
+      // Safety timeout: fallback to localStorage if IndexedDB takes more than 2 seconds
+      const timeoutId = setTimeout(() => {
+        console.warn("[DB] IndexedDB initialization timed out. Falling back to localStorage.");
+        done(true);
+      }, 2000);
+
       // 1. Open IndexedDB
       let request;
       try {
         request = indexedDB.open('lamim_db', 1);
       } catch (err) {
         console.error("IndexedDB.open failed, falling back to localStorage", err);
-        this._fallbackToLocalStorage();
-        resolve();
+        done(true);
         return;
       }
 
@@ -31,19 +47,17 @@ const DB = {
           .then(() => this._migrateFromLocalStorage())
           .then(() => {
             this.migrate();
-            resolve();
+            done(false);
           })
           .catch((err) => {
             console.error("IndexedDB cache loading/migration failed, falling back", err);
-            this._fallbackToLocalStorage();
-            resolve();
+            done(true);
           });
       };
 
       request.onerror = (e) => {
         console.error("IndexedDB onerror, falling back to localStorage", e);
-        this._fallbackToLocalStorage();
-        resolve();
+        done(true);
       };
     });
   },
@@ -220,11 +234,11 @@ const DB = {
     try {
       this._cache[key] = val;
 
-    if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
-      try { localStorage.setItem(key, val); } catch {}
-    }
+      if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
+        try { localStorage.setItem(key, val); } catch {}
+      }
 
-    this._asyncWrite(key, val);
+      this._asyncWrite(key, val);
       return true;
     } catch (e) {
       console.error(`[DB] Error in rawSet for key: ${key}`, e);
