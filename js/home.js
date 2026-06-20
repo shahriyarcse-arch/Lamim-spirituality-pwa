@@ -671,51 +671,88 @@ const Home = {
     const score = Utils.salahScore(today);
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
-    const visualPct = (score.done / 5) * 100;
-    const circumference = 2 * Math.PI * 62;
-    const offset = circumference - (visualPct / 100) * circumference;
-    const color = score.done === 5 ? '#34d399' : score.done >= 3 ? '#fbbf24' : '#f87171';
-    // Ensure structure is always fresh
+    
+    const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+    const prayerLabels = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    
+    let lastDoneIdx = -1;
+    for (let i = 0; i < prayers.length; i++) {
+      let st = today[prayers[i]];
+      if (st && st !== 'missed') lastDoneIdx = i;
+    }
+    const progressPct = lastDoneIdx >= 0 ? (lastDoneIdx / (prayers.length - 1)) * 100 : 0;
+    
+    const isPerfect = score.done === 5;
+    const isMissed = score.missed > 0;
+    const accentColor = isPerfect ? '#10B981' : '#3B82F6';
+
+    let pointsHTML = '';
+    prayers.forEach((p, i) => {
+      let st = today[p];
+      let isDone = st === 'jamaat' || st === 'alone' || st === 'qaza';
+      let isMiss = st === 'missed';
+      
+      let dotBg = 'var(--color-surface-nested)';
+      let dotBorder = 'var(--color-divider-strong)';
+      let shadow = 'none';
+      let icon = '';
+      
+      if (isDone) {
+        dotBg = accentColor;
+        dotBorder = accentColor;
+        shadow = `0 0 10px ${accentColor}60`;
+        icon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      } else if (isMiss) {
+        dotBg = '#EF4444';
+        dotBorder = '#EF4444';
+        icon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      }
+
+      pointsHTML += `
+        <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div style="width:24px; height:24px; border-radius:50%; background:${dotBg}; border:2px solid ${dotBorder}; box-shadow:${shadow}; display:flex; align-items:center; justify-content:center; transition:all 0.4s var(--cb-bounce);">
+            ${icon}
+          </div>
+          <span style="font-size:10px; font-weight:700; color:${isDone ? 'var(--color-text-primary)' : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.5px;">${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
+        </div>
+      `;
+    });
+
     el.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div class="salah-ring-premium ring-chart" style="width:160px;height:160px">
-          <svg width="160" height="160" viewBox="0 0 160 160">
-            <circle class="ring-chart-bg" cx="80" cy="80" r="62" stroke-width="14"/>
-            <circle class="ring-chart-fill" id="salah-ring-fill" cx="80" cy="80" r="62" stroke-width="14"
-              stroke-dasharray="${circumference}" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)"/>
-          </svg>
-          <div class="ring-chart-label">
-            <div id="salah-ring-count" style="font-size:2.4rem;font-weight:900;line-height:1">0</div>
-            <div style="font-size:0.7rem;color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;">${window.t ? window.t('of 5') : 'of 5'}</div>
+      <div style="display:flex; flex-direction:column; width:100%; padding: 4px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 28px;">
+          <div style="text-align:left;">
+            <div style="font-size:1.5rem; font-weight:900; letter-spacing:-0.5px; color:var(--color-text-primary);">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
+            <div style="color:var(--color-text-muted); font-size:12px; margin-top:4px; font-weight:600;">
+              ${isPerfect ? "Beautiful! You've prayed all 5." : isMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey."}
+            </div>
+          </div>
+          <div style="background:color-mix(in srgb, ${accentColor} 15%, transparent); color:${accentColor}; padding:6px 14px; border-radius:20px; font-size:16px; font-weight:800; border:1px solid color-mix(in srgb, ${accentColor} 30%, transparent);">
+            ${window.n ? window.n(score.done) : score.done}/5
           </div>
         </div>
-        <div style="text-align:center;width:100%;">
-          <div style="font-size:var(--text-md);font-weight:800;letter-spacing:-0.3px;">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
-          <div id="salah-ring-desc" style="color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px;font-weight:500;">${window.n ? window.n('0/5') : '0/5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}</div>
-          <div class="progress-bar mt-2" style="width:140px;margin:10px auto 0;">
-            <div class="progress-fill" id="salah-ring-bar" style="width:0%"></div>
+
+        <div style="position:relative; width:100%; margin:0 auto 10px; padding:0 12px; display:flex; flex-direction:column;">
+          <!-- Track Background -->
+          <div style="position:absolute; top:10px; left:24px; right:24px; height:4px; background:var(--color-divider-subtle); z-index:0; border-radius:2px;"></div>
+          <!-- Track Fill -->
+          <div style="position:absolute; top:10px; left:24px; right:24px; height:4px; z-index:1; border-radius:2px;">
+            <div id="salah-timeline-fill" style="height:100%; background:${accentColor}; width:0%; transition:width 1s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow:0 0 8px ${accentColor}80; border-radius:2px;"></div>
+          </div>
+          
+          <!-- Points Row -->
+          <div style="display:flex; justify-content:space-between; width:100%;">
+            ${pointsHTML}
           </div>
         </div>
       </div>
     `;
 
-    const fill = document.getElementById('salah-ring-fill');
-    const count = document.getElementById('salah-ring-count');
-    const desc = document.getElementById('salah-ring-desc');
-    const bar = document.getElementById('salah-ring-bar');
-
+    const fill = document.getElementById('salah-timeline-fill');
     if (fill) {
-      fill.setAttribute('stroke', color);
-      fill.style.strokeDashoffset = offset;
-    }
-    if (count) {
-      count.textContent = window.n ? window.n(score.done) : score.done;
-      count.style.color = color;
-    }
-    if (desc) desc.textContent = `${window.n ? window.n(score.done) : score.done}/${window.n ? window.n('5') : '5'} ${window.t ? window.t('prayers completed') : 'prayers completed'}`;
-    if (bar) {
-      bar.style.width = visualPct + '%';
-      bar.style.background = color;
+      setTimeout(() => {
+        fill.style.width = progressPct + '%';
+      }, 50);
     }
   }
 };
