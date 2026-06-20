@@ -549,6 +549,15 @@ const Home = {
     const waqtColor = waqtColors[next.name] || '#10B981';
     const waqtClass = 'waqt-' + (next.name || 'fajr');
 
+    const waqtMsgs = {
+      fajr: "The angels of night and day witness the Dawn prayer.",
+      dhuhr: "The gates of heaven open; a perfect time for reflection.",
+      asr: "Guard strictly your afternoon prayer; it carries immense reward.",
+      maghrib: "The day concludes; seek forgiveness and embrace the evening.",
+      isha: "End your day with peace; a light for the darkness of night."
+    };
+    const waqtMsg = waqtMsgs[next.name] || "Seek comfort in your connection with the Creator.";
+
     el.innerHTML = `
       <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin: 0;">
         <div class="waqt-orb-header">
@@ -559,6 +568,15 @@ const Home = {
           </div>
         </div>
         <div class="waqt-orb-body">
+          <div class="waqt-info-side">
+            <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor}; font-size: 2.4rem; margin-bottom: 2px;">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+            <div id="home-next-time" class="waqt-prayer-time" style="font-size: 1.1rem;">${window.n ? window.n(nextLabel) : nextLabel}</div>
+            
+            <div class="waqt-context-msg" style="margin-top: 14px; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); line-height: 1.4; border-left: 3px solid ${waqtColor}60; padding-left: 12px; font-style: italic;">
+              "${window.t ? window.t(waqtMsg) : waqtMsg}"
+            </div>
+          </div>
+
           <div class="waqt-orb-visual">
             <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
             <svg width="140" height="140" viewBox="0 0 140 140">
@@ -569,8 +587,6 @@ const Home = {
               <div id="home-countdown" class="waqt-countdown">--:--:--</div>
             </div>
           </div>
-          <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor};">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-          <div id="home-next-time" class="waqt-prayer-time">${window.n ? window.n(nextLabel) : nextLabel}</div>
         </div>
       </div>
     `;
