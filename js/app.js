@@ -179,6 +179,7 @@ const App = {
     // Splash → route (offline boot sequence)
     this._bootComplete = false;
     setTimeout(() => {
+      alert('SPLASH VISIBLE NOW - CLICK OK TO CONTINUE');
       console.log('[Boot] Starting initialization...');
       document.getElementById('splash')?.classList.add('hidden');
       
