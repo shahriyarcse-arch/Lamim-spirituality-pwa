@@ -353,6 +353,11 @@ const Mujahid = {
   init() {
     this.loadHabits();
     this.migrateIcons();
+    // Restore lastRelapse from localStorage for undo persistence
+    const saved = localStorage.getItem('lamim_lastRelapse');
+    if (saved) {
+      try { this.lastRelapse = JSON.parse(saved); } catch(e) {}
+    }
     this.render();
     
     // Listen for local data updates
@@ -1404,6 +1409,7 @@ const Mujahid = {
       oldStartDate: habit.startDate,
       oldHistory: [...(habit.history || [])]
     };
+    localStorage.setItem('lamim_lastRelapse', JSON.stringify(this.lastRelapse));
 
     const stats = this.getHabitStats(id);
     const relapseEntry = {
@@ -1435,6 +1441,7 @@ const Mujahid = {
     habit.startDate = this.lastRelapse.oldStartDate;
     habit.history = this.lastRelapse.oldHistory;
     this.lastRelapse = null;
+    localStorage.removeItem('lamim_lastRelapse');
 
     this.saveHabits();
     this.render(true);

@@ -302,6 +302,7 @@ const Goals = {
       DB.setSalah(this.currentDate, data);
       window.dispatchEvent(new CustomEvent('lamim:data-updated'));
       this.render(true);
+      Utils.toast(window.t ? window.t('Sunnah recorded') : 'Sunnah recorded', 'success');
 
       // Check if all sunnah, tahajjud, witr complete
       const done = Object.values(data.sunnah || {}).filter(v => v === true || v === 'prayed').length;
@@ -457,6 +458,7 @@ const Goals = {
     DB.setSalah(this.currentDate, data);
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
+    Utils.toast(window.t ? window.t('Tahajjud recorded') : 'Tahajjud recorded', 'success');
   },
 
   setTahajjudMissed() {
@@ -473,6 +475,7 @@ const Goals = {
     DB.setSalah(this.currentDate, data);
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
+    Utils.toast(window.t ? window.t('Tahajjud recorded as missed') : 'Tahajjud recorded as missed', 'info');
   },
 
   promptCustomTahajjud() {
@@ -624,6 +627,7 @@ const Goals = {
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     Utils.sparkle(document.getElementById('witr-salah-card') || document.body, 4);
     this.render(true);
+    Utils.toast(window.t ? window.t('Witr recorded') : 'Witr recorded', 'success');
   },
 
   toggleWitrMissed() {
@@ -639,6 +643,7 @@ const Goals = {
     DB.setSalah(this.currentDate, data);
     window.dispatchEvent(new CustomEvent('lamim:data-updated'));
     this.render(true);
+    Utils.toast(window.t ? window.t('Witr marked as missed') : 'Witr marked as missed', 'info');
   },
 
   unlockWitr() {

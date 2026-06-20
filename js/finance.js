@@ -597,9 +597,19 @@ const Finance = {
           </div>
           <div style="display:flex; align-items:center; gap:12px; position:relative; z-index:1;">
             <div class="transaction-amount ${isInc ? 'positive' : 'negative'}">${isInc ? '+' : '-'}${sym}${this.formatVal(e.amount)}</div>
-            <button class="fin-delete-btn" onclick="Finance.${isInc ? 'deleteIncome' : 'deleteExpense'}('${e.id}')" title="Delete">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+            ${isInc ? `
+            <button class="fin-delete-btn" style="margin-right:4px;" onclick="Finance.showEditIncomeModal('${e.id}')" title="Edit">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
             </button>
+            <button class="fin-delete-btn" onclick="Finance.deleteIncome('${e.id}')" title="Delete">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+            </button>` : `
+            <button class="fin-delete-btn" style="margin-right:4px;" onclick="Finance.showEditExpenseModal('${e.id}')" title="Edit">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            </button>
+            <button class="fin-delete-btn" onclick="Finance.deleteExpense('${e.id}')" title="Delete">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+            </button>`}
           </div>
         </div>
       </div>
@@ -846,6 +856,93 @@ const Finance = {
 
     this.data.expenses.push({ id: Utils.uid(), description: obj.name, amount: amountInBase, category: c, date: d });
     this.saveData(); this.closeModal(); this.render();
+    Utils.toast(window.t ? window.t('Expense saved') : 'Expense saved', 'success');
+  },
+
+  showEditExpenseModal(id) {
+    const e = this.data.expenses.find(x => x.id === id);
+    if (!e) return;
+    const sym = this.getSymbol();
+    const catOptions = this.categories.map(c =>
+      `<option value="${c.id}" ${c.id === e.category ? 'selected' : ''}>${c.name}</option>`
+    ).join('');
+    const html = `
+      <div class="finance-modal-content">
+        <div class="fin-modal-header"><div class="fin-modal-title">Edit Expense</div></div>
+        <div class="fin-modal-amount-wrap">
+          <div style="display:flex; align-items:center;">
+            <span class="fin-modal-currency">${sym}</span>
+            <input type="number" id="finance-expense-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus>
+          </div>
+        </div>
+        <div class="fin-field-group"><label class="fin-field-label">Category</label>
+          <select id="finance-expense-category-edit" class="fin-field-input" style="appearance:auto;">${catOptions}</select>
+        </div>
+        <div class="fin-field-group"><label class="fin-field-label">Date</label>
+          <input type="date" id="finance-expense-date-edit" value="${e.date}" class="fin-field-input">
+        </div>
+        <div class="fin-modal-actions">
+          <button class="fin-save-btn" onclick="Finance.saveEditExpense('${id}')">${window.t ? window.t('Update') : 'Update'}</button>
+          <button class="fin-cancel-btn" onclick="Finance.closeModal()">${window.t ? window.t('Cancel') : 'Cancel'}</button>
+        </div>
+      </div>`;
+    this.showModal(html);
+  },
+
+  saveEditExpense(id) {
+    let a = parseFloat(document.getElementById('finance-expense-amount-edit').value);
+    const c = document.getElementById('finance-expense-category-edit').value;
+    const d = document.getElementById('finance-expense-date-edit').value;
+    if (isNaN(a) || a <= 0) return Utils.toast('Enter valid amount', 'error');
+    const idx = this.data.expenses.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    let amountInBase = a;
+    if (DB.getSettings().currency === 'BDT') amountInBase = a / this.exchangeRate;
+    const obj = this.categories.find(o => o.id === c);
+    this.data.expenses[idx] = { ...this.data.expenses[idx], amount: amountInBase, category: c, date: d, description: obj ? obj.name : 'Other' };
+    this.saveData(); this.closeModal(); this.render();
+    Utils.toast(window.t ? window.t('Transaction updated') : 'Transaction updated', 'success');
+  },
+
+  showEditIncomeModal(id) {
+    const e = this.data.income.find(x => x.id === id);
+    if (!e) return;
+    const sym = this.getSymbol();
+    const html = `
+      <div class="finance-modal-content">
+        <div class="fin-modal-header"><div class="fin-modal-title">Edit Deposit</div></div>
+        <div class="fin-modal-amount-wrap">
+          <div style="display:flex; align-items:center;">
+            <span class="fin-modal-currency">${sym}</span>
+            <input type="number" id="finance-income-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus>
+          </div>
+        </div>
+        <div class="fin-field-group"><label class="fin-field-label">Source</label>
+          <input type="text" id="finance-income-desc-edit" value="${Utils.escapeHTML(e.description)}" class="fin-field-input">
+        </div>
+        <div class="fin-field-group"><label class="fin-field-label">Date</label>
+          <input type="date" id="finance-income-date-edit" value="${e.date}" class="fin-field-input">
+        </div>
+        <div class="fin-modal-actions">
+          <button class="fin-save-btn" onclick="Finance.saveEditIncome('${id}')">${window.t ? window.t('Update') : 'Update'}</button>
+          <button class="fin-cancel-btn" onclick="Finance.closeModal()">${window.t ? window.t('Cancel') : 'Cancel'}</button>
+        </div>
+      </div>`;
+    this.showModal(html);
+  },
+
+  saveEditIncome(id) {
+    const desc = document.getElementById('finance-income-desc-edit').value;
+    let a = parseFloat(document.getElementById('finance-income-amount-edit').value);
+    const d = document.getElementById('finance-income-date-edit').value;
+    if (!desc || isNaN(a) || a <= 0) return Utils.toast('Fill valid fields', 'error');
+    const idx = this.data.income.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    let amountInBase = a;
+    if (DB.getSettings().currency === 'BDT') amountInBase = a / this.exchangeRate;
+    this.data.income[idx] = { ...this.data.income[idx], amount: amountInBase, description: desc, date: d };
+    this.saveData(); this.closeModal(); this.render();
+    Utils.toast(window.t ? window.t('Transaction updated') : 'Transaction updated', 'success');
   },
 
   showIncomeModal() {
@@ -860,7 +957,7 @@ const Finance = {
     this.showModal(html);
   },
 
-  saveIncome() { const desc = document.getElementById('finance-income-desc').value; let a = parseFloat(document.getElementById('finance-income-amount').value); const d = document.getElementById('finance-income-date').value; if (!desc || isNaN(a) || a <= 0) return Utils.toast('Fill valid fields','error'); if (DB.getSettings().currency==='BDT') a /= this.exchangeRate; this.data.income.push({ id: Utils.uid(), description: desc, amount: a, date: d }); this.saveData(); this.closeModal(); this.render(); },
+  saveIncome() { const desc = document.getElementById('finance-income-desc').value; let a = parseFloat(document.getElementById('finance-income-amount').value); const d = document.getElementById('finance-income-date').value; if (!desc || isNaN(a) || a <= 0) return Utils.toast('Fill valid fields','error'); if (DB.getSettings().currency==='BDT') a /= this.exchangeRate; this.data.income.push({ id: Utils.uid(), description: desc, amount: a, date: d }); this.saveData(); this.closeModal(); this.render(); Utils.toast(window.t ? window.t('Income saved') : 'Income saved', 'success'); },
   
   deleteExpense(id) {
     Utils.confirm('Delete Record', 'Are you sure you want to delete this transaction?', () => {

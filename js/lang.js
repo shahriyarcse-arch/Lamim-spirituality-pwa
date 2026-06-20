@@ -391,7 +391,21 @@ const Translations = {
   // Home dynamic subtitle translation
   "Beautiful! You've prayed all 5.": "চমৎকার! আপনি ৫ ওয়াক্তই আদায় করেছেন।",
   "Keep striving. Every prayer counts.": "চেষ্টা চালিয়ে যান। প্রতিটি সালাতই গুরুত্বপূর্ণ।",
-  "Your daily spiritual journey.": "আপনার দৈনন্দিন আধ্যাত্মিক যাত্রা।"
+  "Your daily spiritual journey.": "আপনার দৈনন্দিন আধ্যাত্মিক যাত্রা।",
+
+  // Goals/Nafl toast messages
+  'Sunnah recorded': 'সুন্নাত রেকর্ড করা হয়েছে',
+  'Tahajjud recorded': 'তাহাজ্জুদ রেকর্ড করা হয়েছে',
+  'Tahajjud recorded as missed': 'তাহাজ্জুদ মিস হিসেবে রেকর্ড করা হয়েছে',
+  'Witr recorded': 'বিতর রেকর্ড করা হয়েছে',
+  'Witr marked as missed': 'বিতর মিস হিসেবে চিহ্নিত করা হয়েছে',
+
+  // Finance toast messages
+  'Expense saved': 'ব্যয় সংরক্ষিত হয়েছে',
+  'Income saved': 'আয় সংরক্ষিত হয়েছে',
+  'Goal saved': 'লক্ষ্য সংরক্ষিত হয়েছে',
+  'Transaction updated': 'লেনদেন আপডেট করা হয়েছে',
+  'Update': 'আপডেট'
 };
 
 window.t = function(key) {
