@@ -367,12 +367,9 @@ const Salah = {
     // Targeted stat update — no re-render
     const newScore = Utils.salahScore(salah);
     const statPrayed = document.querySelector('.salah-stat-card.stat-prayed .salah-stat-val');
-    if (statPrayed) statPrayed.textContent = `${newScore.done}/5`;
+    if (statPrayed) statPrayed.textContent = `${window.n ? window.n(newScore.done) : newScore.done}/${window.n ? window.n(5) : 5}`;
     const statScore = document.querySelectorAll('.salah-stat-card .salah-stat-val');
-    if (statScore.length >= 5) statScore[4].textContent = `${newScore.pct}%`;
-
-    const sm2 = this.statusMeta[status];
-    const result2 = sm2.result === 'successful' ? '✅' : sm2.result === 'qaza' ? '⏰' : '❌';
+    if (statScore.length >= 5) statScore[4].textContent = `${window.n ? window.n(newScore.pct) : newScore.pct}%`;
 
     // Celebrate all 5 done
     const score = Utils.salahScore(DB.getSalah(date));

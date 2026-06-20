@@ -328,6 +328,7 @@ const Translations = {
   'Celestial Deeds': 'স্বর্গীয় আমলসমূহ',
   'Worshipping in the depth of the night': 'রাতের শেষ তৃতীয়াংশে ইবাদত করা',
   'Deeds Complete': 'আমল সম্পন্ন',
+  '{done} / {total} Deeds Complete': '{done} / {total} আমল সম্পন্ন',
   'Unlock and reset {sunnah}?': '{sunnah} আনলক এবং রিসেট করতে চান?',
   'Did you pray this Sunnah?': 'আপনি কি এই সুন্নাতটি আদায় করেছেন?',
   'Sunnah Prayed': 'সুন্নাত আদায় করেছেন',

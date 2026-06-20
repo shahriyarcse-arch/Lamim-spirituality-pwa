@@ -352,8 +352,9 @@ const Dhikr = {
 
     // Aggregate all lamim_dhikr_YYYY-MM-DD keys from localStorage
     const dbData = {};
-    for (let i = 0; i < DB.keys().length; i++) {
-      const key = DB.keys()[i];
+    const allKeys = DB.keys();
+    for (let i = 0; i < allKeys.length; i++) {
+      const key = allKeys[i];
       if (key && key.startsWith('lamim_dhikr_') && key !== 'lamim_dhikr_presets') {
         const dateStr = key.replace('lamim_dhikr_', '');
         try {

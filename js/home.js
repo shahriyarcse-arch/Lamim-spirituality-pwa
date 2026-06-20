@@ -674,7 +674,7 @@ const Home = {
     const progressPct = lastDoneIdx >= 0 ? (lastDoneIdx / (prayers.length - 1)) * 100 : 0;
     
     const isPerfect = score.done === 5;
-    const isMissed = score.missed > 0;
+    const hasMissed = score.done > 0 && score.done < 5;
     const accentColor = isPerfect ? '#10B981' : '#3B82F6';
 
     let pointsHTML = '';
@@ -709,7 +709,7 @@ const Home = {
       `;
     });
 
-    const statusMsg = isPerfect ? "Beautiful! You've prayed all 5." : isMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey.";
+    const statusMsg = isPerfect ? "Beautiful! You've prayed all 5." : hasMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey.";
 
     el.innerHTML = `
       <div style="display:flex; flex-direction:column; width:100%; padding: 4px 0;">

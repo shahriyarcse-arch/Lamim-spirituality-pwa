@@ -399,6 +399,7 @@ const Mujahid = {
     let lastSec = -1;
     let firstTick = true;
     this._liveCounterId = setInterval(() => {
+      if (!document.getElementById('section-mujahid')?.classList.contains('active')) return;
       const now = new Date();
       const currentSec = now.getSeconds();
       if (currentSec === lastSec) return;
