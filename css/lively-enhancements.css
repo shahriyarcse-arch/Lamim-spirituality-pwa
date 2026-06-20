@@ -690,6 +690,48 @@
   filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.2));
 }
 
+/* Live glossy breathe on stat cards */
+.salah-stat-card {
+  animation: liveGlossySalah 4s ease-in-out infinite;
+}
+.salah-stat-card:nth-child(1) { animation-delay: 0s; }
+.salah-stat-card:nth-child(2) { animation-delay: 1s; }
+.salah-stat-card:nth-child(3) { animation-delay: 2s; }
+.salah-stat-card:nth-child(4) { animation-delay: 3s; }
+.salah-stat-card:nth-child(5) { animation-delay: 4s; }
+
+@keyframes liveGlossySalah {
+  0%, 100% {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 transparent;
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: inset 0 2px 12px rgba(255,255,255,0.15), 0 0 24px rgba(16,185,129,0.25);
+    filter: brightness(1.08);
+  }
+}
+
+/* Prayer card next-prayer glow */
+.salah-prayer-card.is-next {
+  animation: prayerCardGlow 3s ease-in-out infinite;
+}
+@keyframes prayerCardGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.15), var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05); }
+  50% { box-shadow: 0 0 30px rgba(52, 211, 153, 0.35), 0 0 60px rgba(52, 211, 153, 0.15), var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.08); }
+}
+
+/* Option buttons — icon glow pulse */
+.salah-option-btn .salah-opt-icon {
+  animation: optIconGlow 3s ease-in-out infinite;
+}
+.salah-option-btn:nth-child(1) .salah-opt-icon { animation-delay: 0s; }
+.salah-option-btn:nth-child(2) .salah-opt-icon { animation-delay: 0.5s; }
+.salah-option-btn:nth-child(3) .salah-opt-icon { animation-delay: 1s; }
+@keyframes optIconGlow {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 2px currentColor); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 8px currentColor); }
+}
+
 /* Stat values — gentle color bounce */
 .salah-stat-val {
   transition: transform 0.3s var(--cb-bounce), color 0.3s var(--cb-smooth) !important;

@@ -3922,7 +3922,7 @@ select.input option:disabled { color: var(--color-text-muted); }
 
   50% {
     border-color: var(--color-border-active);
-    box-shadow: 0 0 12px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.3), 0 0 36px rgba(16, 185, 129, 0.1);
   }
 
   100% {
