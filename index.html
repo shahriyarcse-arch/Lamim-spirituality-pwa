@@ -332,9 +332,10 @@
 }
 
 .splash.hidden {
-  opacity: 0;
+  opacity: 0 !important;
   transform: scale(1.05);
   pointer-events: none;
+  visibility: hidden !important;
 }
 
 /* === AURORA BACKGROUND BLOBS === */
@@ -738,7 +739,7 @@
 <div id="app">
 
 <!-- SPLASH -->
-<div class="splash" id="splash" style="display:flex !important; opacity:1 !important; visibility:visible !important;">
+<div class="splash" id="splash">
   <!-- Animated Aurora Background Blobs -->
   <div class="splash-aurora">
     <div class="splash-blob splash-blob-1"></div>
