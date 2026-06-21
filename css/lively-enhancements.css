@@ -914,21 +914,20 @@
   transition: stroke-dashoffset 0.3s ease-out, stroke 0.6s var(--cb-smooth);
 }
 .waqt-urgent #waqt-ring {
-  filter: drop-shadow(0 0 8px #ef4444);
+  filter: drop-shadow(0 0 6px var(--waqt-glow, #10B981));
 }
 .waqt-critical #waqt-ring {
-  filter: drop-shadow(0 0 14px #ef4444);
+  filter: drop-shadow(0 0 10px #f97316);
   animation: waqtCriticalPulse 0.8s ease-in-out infinite;
 }
 .waqt-urgent .waqt-orb-glow {
   animation-duration: 2s;
-  opacity: 0.3;
-  background: radial-gradient(circle, #ef4444 0%, transparent 70%);
+  opacity: 0.25;
 }
 .waqt-critical .waqt-orb-glow {
-  animation-duration: 0.8s;
-  opacity: 0.4;
-  background: radial-gradient(circle, #ef4444 0%, transparent 70%);
+  animation-duration: 1s;
+  opacity: 0.3;
+  background: radial-gradient(circle, #f97316 0%, transparent 70%);
 }
 @keyframes waqtCriticalPulse {
   0%, 100% { opacity: 1; }
