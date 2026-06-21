@@ -31,6 +31,7 @@ const PushManager = {
           body: JSON.stringify({
             action: 'subscribe',
             subscription: sub.toJSON(),
+            lang: localStorage.getItem('lamim_lang') || 'en',
             times: times.map(t => ({ name: t.name, timestamp: t.time.getTime() }))
           })
         }).catch(() => {});
