@@ -1242,15 +1242,21 @@ select.input option:disabled { color: var(--color-text-muted); }
 }
 .sidebar-logo-icon {
   width: 40px; height: 40px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #1f4f4b, #0f2a2d 45%, #020409 100%);
+  background: linear-gradient(145deg, #fff6e2, #ffe1b7);
   background-size: 200% 200%; animation: gradientShift 4s ease infinite;
   display: flex; align-items: center; justify-content: center;
   font-size: var(--text-xl); flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(20, 184, 166, 0.24), inset 0 0 0 1px rgba(249, 215, 106, 0.18);
+  box-shadow: 0 8px 20px rgba(232, 132, 22, 0.22), inset 0 0 0 1px rgba(255, 189, 91, 0.22);
+  overflow: hidden;
+}
+.sidebar-logo-icon img {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
 }
 .sidebar-logo-text { 
   font-size: var(--text-xl); font-weight: var(--fw-extrabold); 
-  background: linear-gradient(to right, #f9d76a, #2dd4bf, #e6fffb, #f9d76a);
+  background: linear-gradient(to right, #0b6b47, #1f8a52, #f0a51e, #0b6b47);
   background-size: 300% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; 
   animation: shimmerText 4s linear infinite;
@@ -1402,14 +1408,20 @@ select.input option:disabled { color: var(--color-text-muted); }
 }
 .topbar-logo-orb {
   width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(145deg, #123536, #09141d 58%, #020409);
+  background: linear-gradient(145deg, #fff6e2, #ffe1b7);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 16px rgba(20,184,166,0.26), inset 0 0 0 1px rgba(249,215,106,0.16);
+  box-shadow: 0 0 16px rgba(232,132,22,0.22), inset 0 0 0 1px rgba(255,189,91,0.2);
   animation: orbGlowComponent 3s ease-in-out infinite;
+  overflow: hidden;
+}
+.topbar-logo-orb img {
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
 }
 @keyframes orbGlowComponent {
-  0%, 100% { box-shadow: 0 0 16px rgba(20,184,166,0.26), inset 0 0 0 1px rgba(249,215,106,0.16); }
-  50% { box-shadow: 0 0 24px rgba(20,184,166,0.42), 0 0 8px rgba(249,215,106,0.24), inset 0 0 0 1px rgba(249,215,106,0.24); }
+  0%, 100% { box-shadow: 0 0 16px rgba(232,132,22,0.22), inset 0 0 0 1px rgba(255,189,91,0.2); }
+  50% { box-shadow: 0 0 24px rgba(232,132,22,0.34), 0 0 8px rgba(37,128,70,0.22), inset 0 0 0 1px rgba(255,189,91,0.28); }
 }
 .topbar-brand-name {
   font-size: var(--text-2xl); font-weight: var(--fw-extrabold);
@@ -2037,14 +2049,14 @@ select.input option:disabled { color: var(--color-text-muted); }
   width: 110px;
   height: 110px;
   border-radius: 28px;
-  background: linear-gradient(145deg, #0f2a2d 0%, #09141d 52%, #020409 100%);
+  background: linear-gradient(145deg, #fff6e2 0%, #fffdf4 52%, #ffe1b7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
-    0 20px 50px rgba(20, 184, 166, 0.28),
-    0 0 0 1px rgba(249, 215, 106, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 20px 50px rgba(232, 132, 22, 0.24),
+    0 0 0 1px rgba(255, 189, 91, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -2px 0 rgba(0, 0, 0, 0.15);
   animation: splashOrbEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both;
   z-index: 2;
@@ -2080,12 +2092,19 @@ select.input option:disabled { color: var(--color-text-muted); }
   }
 }
 
-.splash-icon-orb svg {
+.splash-icon-orb svg,
+.splash-icon-orb img {
   width: 64px;
   height: 64px;
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.splash-icon-orb img {
+  width: 86px;
+  height: 86px;
+  border-radius: 22px;
 }
 
 /* Pulsing Rings Around Icon */
@@ -2329,26 +2348,28 @@ select.input option:disabled { color: var(--color-text-muted); }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 30% 30%, #1f4f4b, #0f2a2d 45%, #020409 100%);
+  background: linear-gradient(145deg, #fff6e2, #ffe1b7);
   background-size: 200% 200%;
   animation: float-logo 4s ease-in-out infinite, gradientShiftAuth 6s ease infinite;
   box-shadow: 
-    0 12px 28px rgba(20, 184, 166, 0.26),
-    inset 0 2px 4px rgba(255, 255, 255, 0.24);
-  border: 1px solid rgba(249, 215, 106, 0.18);
+    0 12px 28px rgba(232, 132, 22, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 189, 91, 0.22);
+  overflow: hidden;
 }
 
 [data-theme="light"] .minimal-logo-wrap {
   box-shadow: 
-    0 12px 28px rgba(20, 184, 166, 0.24),
+    0 12px 28px rgba(232, 132, 22, 0.18),
     inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
 
 .premium-svg-logo {
-  width: 42px;
-  height: 42px;
+  width: 68px;
+  height: 68px;
   color: #ffffff;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+  border-radius: 18px;
 }
 
 @keyframes float-logo {
