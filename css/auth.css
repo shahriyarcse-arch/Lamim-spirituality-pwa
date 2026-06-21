@@ -69,18 +69,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 30% 30%, #f472b6, #d946ef, #8b5cf6, #3b82f6);
+  background: radial-gradient(circle at 30% 30%, #1f4f4b, #0f2a2d 45%, #020409 100%);
   background-size: 200% 200%;
   animation: float-logo 4s ease-in-out infinite, gradientShiftAuth 6s ease infinite;
   box-shadow: 
-    0 12px 28px rgba(139, 92, 246, 0.4),
-    inset 0 2px 4px rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+    0 12px 28px rgba(20, 184, 166, 0.26),
+    inset 0 2px 4px rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(249, 215, 106, 0.18);
 }
 
 [data-theme="light"] .minimal-logo-wrap {
   box-shadow: 
-    0 12px 28px rgba(139, 92, 246, 0.3),
+    0 12px 28px rgba(20, 184, 166, 0.24),
     inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
 

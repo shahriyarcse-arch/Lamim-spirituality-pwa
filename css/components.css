@@ -300,15 +300,15 @@ select.input option:disabled { color: var(--color-text-muted); }
 }
 .sidebar-logo-icon {
   width: 40px; height: 40px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #f472b6, #d946ef, #8b5cf6, #3b82f6);
+  background: radial-gradient(circle at 30% 30%, #1f4f4b, #0f2a2d 45%, #020409 100%);
   background-size: 200% 200%; animation: gradientShift 4s ease infinite;
   display: flex; align-items: center; justify-content: center;
   font-size: var(--text-xl); flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 8px 20px rgba(20, 184, 166, 0.24), inset 0 0 0 1px rgba(249, 215, 106, 0.18);
 }
 .sidebar-logo-text { 
   font-size: var(--text-xl); font-weight: var(--fw-extrabold); 
-  background: linear-gradient(to right, #a855f7, #3b82f6, #ec4899, #a855f7);
+  background: linear-gradient(to right, #f9d76a, #2dd4bf, #e6fffb, #f9d76a);
   background-size: 300% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; 
   animation: shimmerText 4s linear infinite;
@@ -454,14 +454,14 @@ select.input option:disabled { color: var(--color-text-muted); }
 }
 .topbar-logo-orb {
   width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, #a855f7, #6366f1, #38bdf8);
+  background: linear-gradient(145deg, #123536, #09141d 58%, #020409);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 16px rgba(139,92,246,0.35), 0 0 4px rgba(139,92,246,0.2);
+  box-shadow: 0 0 16px rgba(20,184,166,0.26), inset 0 0 0 1px rgba(249,215,106,0.16);
   animation: orbGlowComponent 3s ease-in-out infinite;
 }
 @keyframes orbGlowComponent {
-  0%, 100% { box-shadow: 0 0 16px rgba(139,92,246,0.35), 0 0 4px rgba(139,92,246,0.2); }
-  50% { box-shadow: 0 0 24px rgba(139,92,246,0.5), 0 0 8px rgba(56,189,248,0.3); }
+  0%, 100% { box-shadow: 0 0 16px rgba(20,184,166,0.26), inset 0 0 0 1px rgba(249,215,106,0.16); }
+  50% { box-shadow: 0 0 24px rgba(20,184,166,0.42), 0 0 8px rgba(249,215,106,0.24), inset 0 0 0 1px rgba(249,215,106,0.24); }
 }
 .topbar-brand-name {
   font-size: var(--text-2xl); font-weight: var(--fw-extrabold);
