@@ -558,8 +558,22 @@ const Home = {
     const waqtColor = waqtColors[next.name] || '#10B981';
     const waqtClass = 'waqt-' + (next.name || 'fajr');
 
+    // Compute initial ring offset + urgency class before render (no flash)
+    const CIRC = 452.4;
+    const nowMsInit = Date.now();
+    const nIdxInit = times.findIndex(p => p.time.getTime() === next.time.getTime());
+    const prevTimeInit = nIdxInit > 0 ? times[nIdxInit - 1].time.getTime() : (nIdxInit === 0 ? next.time.getTime() - 17280000 : next.time.getTime() - 86400000 / 5);
+    const totalGapInit = next.time.getTime() - prevTimeInit;
+    let initPct = 0;
+    if (totalGapInit > 0 && totalGapInit < 86400000) initPct = Math.max(0, Math.min(100, ((nowMsInit - prevTimeInit) / totalGapInit) * 100));
+    const initOffset = CIRC * (1 - initPct / 100);
+    const remainingInit = next.time.getTime() - nowMsInit;
+    let extraWaqtClass = '';
+    if (remainingInit < 600000) extraWaqtClass = ' waqt-critical';
+    else if (remainingInit < 3600000) extraWaqtClass = ' waqt-urgent';
+
     el.innerHTML = `
-      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}" style="margin: 0; padding: 24px;">
+      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}${extraWaqtClass}" style="margin: 0; padding: 24px;">
         <div class="waqt-orb-header" style="justify-content:center; margin-bottom: 16px;">
           <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
         </div>
@@ -568,7 +582,7 @@ const Home = {
             <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
             <svg width="160" height="160" viewBox="0 0 160 160">
               <circle cx="80" cy="80" r="72" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
-              <circle id="waqt-ring" cx="80" cy="80" r="72" stroke="${waqtColor}" stroke-width="5" fill="none" stroke-dasharray="452.4" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+              <circle id="waqt-ring" cx="80" cy="80" r="72" stroke="${waqtColor}" stroke-width="5" fill="none" stroke-dasharray="${CIRC}" stroke-dashoffset="${initOffset}" stroke-linecap="round" transform="rotate(-90 80 80)"/>
             </svg>
             <div class="waqt-orb-inner">
               <div id="home-countdown" class="waqt-countdown" style="font-size: 1.8rem;">--:--:--</div>
@@ -589,7 +603,7 @@ const Home = {
 
     let lastCountdown = '';
     let lastPct = -1;
-    const CIRC = 452.4;
+    // CIRC already declared above in the outer scope
     const tickCountdown = () => {
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;

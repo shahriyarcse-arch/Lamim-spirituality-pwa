@@ -1220,6 +1220,17 @@
   padding: 0 var(--space-1);
 }
 
+.shs-pulse-dot {
+  stroke-dasharray: 200;
+  animation: pulseSweep 3s ease-in-out infinite;
+}
+
+@keyframes pulseSweep {
+  0%   { stroke-dashoffset: 200; opacity: 0.3; }
+  50%  { stroke-dashoffset: 0;   opacity: 1; }
+  100% { stroke-dashoffset: -200; opacity: 0.3; }
+}
+
 @media (max-width: 768px) {
   .home-hero-card {
     padding: var(--space-4);

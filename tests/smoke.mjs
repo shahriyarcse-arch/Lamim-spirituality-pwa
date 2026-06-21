@@ -17,7 +17,12 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', 'http://127.0.0.1');
     const pathname = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
-    // Mock API endpoint for push service (prevents 404 in smoke test)
+    // Mock Vercel endpoints and API (prevents 404 in smoke test)
+    if (pathname.startsWith('/_vercel/')) {
+      res.writeHead(200, { 'Content-Type': 'text/javascript' });
+      res.end('// vercel script mocked');
+      return;
+    }
     if (pathname.startsWith('/api/')) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ vapidKey: '' }));
