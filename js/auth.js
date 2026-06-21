@@ -5,6 +5,7 @@ const Auth = {
   init() {
     this.selectedGender = null;
     this.bindSetup();
+    this.goToStep(1);
   },
 
   setGender(gender) {
@@ -67,6 +68,10 @@ const Auth = {
     // 4 steps — each is 25% wide
     const translatePct = -((stepNum - 1) * 25);
     wrapper.style.transform = `translateX(${translatePct}%)`;
+
+    document.querySelectorAll('.setup-step').forEach(step => {
+      step.classList.toggle('active', step.dataset.step === String(stepNum));
+    });
 
     // Update progress dots
     const dots = document.querySelectorAll('.setup-dot');

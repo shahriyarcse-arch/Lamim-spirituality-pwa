@@ -2547,6 +2547,11 @@ select.input option:disabled { color: var(--color-text-muted); }
   flex-direction: column;
   justify-content: center;
   min-height: 420px;
+  pointer-events: none;
+}
+
+.setup-step.active {
+  pointer-events: auto;
 }
 
 .setup-actions {

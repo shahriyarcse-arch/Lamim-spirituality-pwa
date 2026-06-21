@@ -23,7 +23,7 @@ const PrayerNotifier = {
     // Reset the last notified prayer at midnight
     this._lastNotifiedPrayer = localStorage.getItem('lamim_last_notified_prayer') || null;
     const lastNotifiedDate = localStorage.getItem('lamim_last_notified_date') || '';
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = Utils.todayStr();
     if (lastNotifiedDate !== todayStr) {
       this._lastNotifiedPrayer = null;
       localStorage.removeItem('lamim_last_notified_prayer');

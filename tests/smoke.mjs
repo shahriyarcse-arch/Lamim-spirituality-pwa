@@ -104,12 +104,42 @@ try {
     throw new Error(`Home layout CSS did not apply correctly: ${JSON.stringify(homeLayout)}`);
   }
 
-  const sections = ['home', 'salah', 'dhikr', 'nafl', 'mujahid', 'finance', 'analysis', 'profile'];
+  const sections = ['home', 'salah', 'dhikr', 'nafl', 'mujahid', 'finance', 'analysis', 'year-review', 'profile'];
   for (const section of sections) {
     await page.evaluate(sec => App.navigateTo(sec), section);
     await page.waitForSelector(`#section-${section}.active`, { timeout: 5000 });
     await page.waitForTimeout(250);
   }
+
+  const setupContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await setupContext.addInitScript(() => {
+    localStorage.setItem('lamim_cache_cleared_v36', 'true');
+    localStorage.setItem('lamim_settings', JSON.stringify({
+      theme: 'dark',
+      notifications: false,
+      language: 'en',
+      currency: 'USD'
+    }));
+    localStorage.removeItem('lamim_user');
+  });
+  const setupPage = await setupContext.newPage();
+  setupPage.on('pageerror', error => errors.push(error.stack || error.message));
+  setupPage.on('console', msg => {
+    if (msg.type() === 'error') errors.push(msg.text());
+  });
+  await setupPage.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+  await setupPage.waitForSelector('#page-setup.active', { timeout: 8000 });
+  await setupPage.fill('#setup-name', 'Smoke Setup');
+  await setupPage.click('.setup-step.active .btn-next');
+  await setupPage.click('#setup-gender-male');
+  await setupPage.click('.setup-step.active .btn-next');
+  await setupPage.waitForSelector('#dob-col-d', { timeout: 3000 });
+  await setupPage.click('.setup-step.active .btn-next');
+  await setupPage.fill('#setup-lat', '23.8103');
+  await setupPage.fill('#setup-lng', '90.4125');
+  await setupPage.click('.setup-step.active .purple-btn-xoss');
+  await setupPage.waitForSelector('#page-dashboard.active', { timeout: 5000 });
+  await setupContext.close();
 
   if (errors.length) {
     throw new Error(`Browser errors:\n${errors.join('\n')}`);
