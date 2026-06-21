@@ -520,8 +520,13 @@ const Profile = {
       try {
         const data = JSON.parse(e.target.result);
         
-        Utils.confirm('Restore Data?', 'This will overwrite your current data with the backup file. Continue?', () => {
+        Utils.confirm('Restore Data?', 'This will overwrite your current Lamim data with the backup file. Continue?', () => {
           let restored = 0;
+          if (typeof DB.clearLamimData === 'function') {
+            DB.clearLamimData();
+          } else {
+            DB.clear();
+          }
           for (const key in data) {
             if (key.startsWith('lamim_')) {
               DB.rawSet(key, data[key]);

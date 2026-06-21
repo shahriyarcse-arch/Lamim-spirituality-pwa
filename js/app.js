@@ -171,8 +171,8 @@ const App = {
             const currentVersion = DB.rawGet('lamim_current_sw_version');
             if (currentVersion !== event.data.version) {
               DB.rawSet('lamim_current_sw_version', event.data.version);
-              console.log('[App] New version detected:', event.data.version, '— auto-refreshing...');
-              window.location.reload();
+              console.log('[App] New version detected:', event.data.version);
+              this.reloadWhenIdle();
             }
           }
         });
@@ -264,6 +264,29 @@ const App = {
         this.navigateTo('home', true);
       }
     });
+  },
+
+  isUserBusy() {
+    const active = document.activeElement;
+    const editing = active && ['INPUT', 'TEXTAREA', 'SELECT'].includes(active.tagName);
+    const openModal = document.querySelector('.modal-overlay:not(.hidden)');
+    return Boolean(editing || openModal);
+  },
+
+  reloadWhenIdle() {
+    if (this.isUserBusy()) {
+      if (this._pendingReloadTimer) clearInterval(this._pendingReloadTimer);
+      Utils.toast(this.lang === 'bn' ? 'নতুন আপডেট প্রস্তুত। কাজ শেষ হলে অ্যাপ রিফ্রেশ হবে।' : 'Update ready. Lamim will refresh when you finish editing.', 'info');
+      this._pendingReloadTimer = setInterval(() => {
+        if (!this.isUserBusy()) {
+          clearInterval(this._pendingReloadTimer);
+          this._pendingReloadTimer = null;
+          window.location.reload();
+        }
+      }, 3000);
+      return;
+    }
+    window.location.reload();
   },
 
   showPage(page) {

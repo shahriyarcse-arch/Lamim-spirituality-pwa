@@ -110,8 +110,8 @@ const PrayerNotifier = {
         navigator.serviceWorker.ready.then(reg => {
           reg.showNotification(title, {
             body: body,
-            icon: './icons/icon-192.png',
-            badge: './icons/icon-72.png',
+            icon: './assets/icon-192x192.png',
+            badge: './assets/icon-32x32.png',
             tag: `prayer-${prayer.name}`,
             renotify: true,
             vibrate: [200, 100, 200, 100, 200],
@@ -123,7 +123,7 @@ const PrayerNotifier = {
         // Fallback to regular Notification API
         new Notification(title, {
           body: body,
-          icon: './icons/icon-192.png',
+          icon: './assets/icon-192x192.png',
           tag: `prayer-${prayer.name}`,
           requireInteraction: true
         });

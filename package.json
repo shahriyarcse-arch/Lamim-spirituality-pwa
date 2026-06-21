@@ -1,0 +1,28 @@
+{
+  "name": "lamim",
+  "version": "1.0.0",
+  "description": "Lamim Spirituality PWA",
+  "private": true,
+  "main": "sw.js",
+  "scripts": {
+    "check:js": "node --check js/utils.js && node --check js/db.js && node --check js/auth.js && node --check js/home.js && node --check js/hijri.js && node --check js/salah.js && node --check js/dhikr.js && node --check js/goals.js && node --check js/finance.js && node --check js/mujahid.js && node --check js/profile.js && node --check js/analysis.js && node --check js/year-review.js && node --check js/dua.js && node --check js/prayer-notifier.js && node --check js/app.js",
+    "smoke": "node tests/smoke.mjs",
+    "test": "npm run check:js && npm run smoke"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahriyarcse-arch/Lamim-spirituality-pwa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shahriyarcse-arch/Lamim-spirituality-pwa/issues"
+  },
+  "homepage": "https://github.com/shahriyarcse-arch/Lamim-spirituality-pwa#readme",
+  "devDependencies": {
+    "playwright": "^1.61.0",
+    "puppeteer": "^25.1.0"
+  }
+}

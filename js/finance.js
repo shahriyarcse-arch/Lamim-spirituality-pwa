@@ -517,7 +517,7 @@ const Finance = {
       const dObj = new Date(date);
       const isToday = date === Utils.todayStr();
       const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-      const isYesterday = date === yesterday.toISOString().split('T')[0];
+      const isYesterday = date === Utils.dateStr(yesterday);
       
       let label = dObj.toLocaleDateString('default', { day: 'numeric', month: 'short' });
       if (isToday) label = 'Today';
@@ -577,6 +577,7 @@ const Finance = {
   },
 
   getCategory(id) {
+    if (id === 'transfer') return { name: 'Vault Transfer', icon: '↗', color: '#6366F1', section: 'Savings' };
     return (this.categoryMap && this.categoryMap.get(id)) || { name: 'Other', icon: '❓', color: '#8E8E93' };
   },
 
@@ -762,7 +763,7 @@ const Finance = {
     if (now.getMonth() === this.currentViewDate.getMonth() && now.getFullYear() === this.currentViewDate.getFullYear()) {
       defaultDate = now;
     }
-    const dateStr = defaultDate.toISOString().split('T')[0];
+    const dateStr = Utils.dateStr(defaultDate);
     
     const html = `
       <div class="finance-modal-content" style="max-width:500px;">
@@ -872,7 +873,7 @@ const Finance = {
         <div class="fin-modal-amount-wrap">
           <div style="display:flex; align-items:center;">
             <span class="fin-modal-currency">${sym}</span>
-            <input type="number" id="finance-expense-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
+            <input type="number" id="finance-expense-amount-edit" value="${Math.abs(e.amount) * (DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
           </div>
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Category</label>
@@ -914,7 +915,7 @@ const Finance = {
         <div class="fin-modal-amount-wrap">
           <div style="display:flex; align-items:center;">
             <span class="fin-modal-currency">${sym}</span>
-            <input type="number" id="finance-income-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
+            <input type="number" id="finance-income-amount-edit" value="${Math.abs(e.amount) * (DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
           </div>
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Source</label>
@@ -952,7 +953,7 @@ const Finance = {
     if (now.getMonth() === this.currentViewDate.getMonth() && now.getFullYear() === this.currentViewDate.getFullYear()) {
       defaultDate = now;
     }
-    const dateStr = defaultDate.toISOString().split('T')[0];
+    const dateStr = Utils.dateStr(defaultDate);
     const html = `<div class="finance-modal-content"><div class="fin-modal-header"><div class="fin-modal-title">Add Deposit</div></div><div class="fin-modal-amount-wrap"><div style="display:flex; align-items:center;"><span class="fin-modal-currency">${sym}</span><input type="number" id="finance-income-amount" placeholder="0.00" class="fin-modal-amount-input" autofocus aria-label="Amount"></div></div><div class="fin-field-group"><label class="fin-field-label">Source</label><input type="text" id="finance-income-desc" placeholder="Salary, Gift etc." class="fin-field-input"></div><div class="fin-field-group"><label class="fin-field-label">Date</label><input type="date" id="finance-income-date" value="${dateStr}" class="fin-field-input"></div><div class="fin-modal-actions"><button class="fin-save-btn income" onclick="Finance.saveIncome()">Confirm</button><button class="fin-cancel-btn" onclick="Finance.closeModal()">Cancel</button></div></div>`;
     this.showModal(html);
   },
@@ -1056,17 +1057,23 @@ const Finance = {
       return Utils.toast('Invalid amount entered', 'error');
     }
 
-    const mult = DB.getSettings().currency === 'BDT' ? this.exchangeRate : 1;
     const remainingInBase = goal.target - goal.saved; // USD base
     
     let amountInBase = amount;
     if (DB.getSettings().currency === 'BDT') amountInBase = amount / this.exchangeRate;
 
+    const allIncome = this.data.income.reduce((s, o) => s + o.amount, 0);
+    const allExpenses = this.data.expenses.reduce((s, o) => s + o.amount, 0);
+    const totalBalance = allIncome - allExpenses;
+    if (amountInBase > totalBalance + 0.0001) {
+      const sym = this.getSymbol();
+      return Utils.toast(`Insufficient balance! Available: ${sym}${this.formatVal(totalBalance)}`, 'error');
+    }
+
     // Strict validation: Prevent depositing more than remaining target (with a 0.01 tolerance for currency conversions)
     if (amountInBase > remainingInBase + 0.0001) {
-      const remainingDisplay = remainingInBase * mult;
       const sym = this.getSymbol();
-      return Utils.toast(`Cannot exceed remaining target! Needed: ${sym}${this.formatVal(remainingDisplay)}`, 'error');
+      return Utils.toast(`Cannot exceed remaining target! Needed: ${sym}${this.formatVal(remainingInBase)}`, 'error');
     }
 
     const wasComplete = goal.saved >= goal.target;
@@ -1877,8 +1884,12 @@ const Finance = {
       this._hoveredIdx = clamped;
     };
 
-    canvas.removeEventListener('mousemove', this._chartHoverHandler);
-    canvas.removeEventListener('mouseleave', this._chartHoverHandler);
+    if (this._chartHoverHandler) {
+      canvas.removeEventListener('mousemove', this._chartHoverHandler);
+    }
+    if (this._chartLeaveHandler) {
+      canvas.removeEventListener('mouseleave', this._chartLeaveHandler);
+    }
 
     const moveHandler = (e) => handler(e);
     const leaveHandler = () => { if (tooltip) tooltip.classList.remove('visible'); this._hoveredIdx = -1; };
@@ -1886,6 +1897,7 @@ const Finance = {
     canvas.addEventListener('mousemove', moveHandler);
     canvas.addEventListener('mouseleave', leaveHandler);
     this._chartHoverHandler = moveHandler;
+    this._chartLeaveHandler = leaveHandler;
   },
 
   getStats(v) {

@@ -5,6 +5,7 @@ const DB = {
   _cache: {},
   _db: null,
   _channel: null,
+  _usingLocalStorage: false,
 
   init() {
     if (typeof BroadcastChannel !== 'undefined' && !this._channel) {
@@ -95,6 +96,10 @@ const DB = {
       };
 
       request.onsuccess = (e) => {
+        if (resolved) {
+          try { e.target.result.close(); } catch {}
+          return;
+        }
         this._db = e.target.result;
         this._loadCache()
           .then(() => this._migrateFromLocalStorage())
@@ -116,12 +121,23 @@ const DB = {
   },
 
   _fallbackToLocalStorage() {
+    this._usingLocalStorage = true;
+    this._db = null;
     this._cache = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('lamim_')) {
         this._cache[k] = localStorage.getItem(k);
       }
+    }
+  },
+
+  _writeLocalCopy(key, val) {
+    if (!key || !key.startsWith('lamim_')) return;
+    try {
+      localStorage.setItem(key, val);
+    } catch (err) {
+      console.warn(`[DB] localStorage mirror failed for key: ${key}`, err);
     }
   },
 
@@ -202,7 +218,10 @@ const DB = {
   },
 
   _asyncWrite(key, val) {
-    if (!this._db) return;
+    if (!this._db) {
+      this._writeLocalCopy(key, val);
+      return;
+    }
     try {
       const transaction = this._db.transaction(['keyvalue'], 'readwrite');
       const store = transaction.objectStore('keyvalue');
@@ -211,6 +230,7 @@ const DB = {
       req.onerror = (e) => {
         const err = e.target.error;
         console.error(`[DB] Async write failed for key: ${key}`, err);
+        this._writeLocalCopy(key, val);
         if (err && (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
           if (typeof Utils !== 'undefined') {
             Utils.toast('Storage limit reached! Please backup and clear some data.', 'error');
@@ -259,8 +279,8 @@ const DB = {
       const strVal = JSON.stringify(val);
       this._cache[key] = strVal;
 
-      if (key === 'lamim_lang' || key === 'lamim_settings') {
-        try { localStorage.setItem(key, strVal); } catch {}
+      if (this._usingLocalStorage || key === 'lamim_lang' || key === 'lamim_settings') {
+        this._writeLocalCopy(key, strVal);
       }
 
       this._asyncWrite(key, strVal);
@@ -276,7 +296,7 @@ const DB = {
 
   remove(key) {
     delete this._cache[key];
-    if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
+    if (key && key.startsWith('lamim_')) {
       try { localStorage.removeItem(key); } catch {}
     }
     this._asyncDelete(key);
@@ -293,8 +313,8 @@ const DB = {
     try {
       this._cache[key] = val;
 
-      if (key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
-        try { localStorage.setItem(key, val); } catch {}
+      if (this._usingLocalStorage || key === 'lamim_lang' || key === 'lamim_settings' || key === 'lamim_cache_cleared_v36') {
+        this._writeLocalCopy(key, val);
       }
 
       this._asyncWrite(key, val);
@@ -327,9 +347,20 @@ const DB = {
   clearUser()    { this.remove('lamim_user'); },
   
   clearAllUserData() {
-    const keys = this.keys();
+    this.clearLamimData({ keepSettings: true });
+  },
+
+  clearLamimData({ keepSettings = false } = {}) {
+    const keys = new Set(this.keys().filter(k => k.startsWith('lamim_')));
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('lamim_')) keys.add(k);
+      }
+    } catch {}
+
     keys.forEach(k => {
-      if (k.startsWith('lamim_') && k !== 'lamim_settings') {
+      if (!keepSettings || k !== 'lamim_settings') {
         this.remove(k);
       }
     });

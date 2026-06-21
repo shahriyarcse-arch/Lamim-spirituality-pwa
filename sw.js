@@ -28,9 +28,7 @@ const ASSETS = [
   './js/prayer-notifier.js',
   './js/year-review.js',
   './js/app.js',
-  './css/bundle.css',
-  './css/year-review.css',
-  './css/lively-enhancements.css'
+  './css/bundle.css'
 ];
 
 // Install: Cache core assets & skip waiting immediately
