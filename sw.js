@@ -1,6 +1,12 @@
 importScripts('./js/version.js');
 
 const CACHE_NAME = 'lamim-v' + (typeof self.LAMIM_VERSION !== 'undefined' ? self.LAMIM_VERSION : '0');
+
+// Prayer notification state for background notifications
+let _prayerData = null;
+let _prayerCheckId = null;
+let _lastSwPrayerKey = null;
+
 const ASSETS = [
   './',
   './index.html',
@@ -61,11 +67,72 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-// Listen for skip-waiting message from the app (for seamless SW update)
+// Listen for messages from the app
 self.addEventListener('message', (e) => {
   if (e.data && e.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
+  } else if (e.data && e.data.type === 'PRAYER_TIMES') {
+    _prayerData = { times: e.data.times, date: e.data.date };
+    _lastSwPrayerKey = null;
+    _startPrayerChecker();
   }
+});
+
+// Background prayer notification checker (runs while SW is alive)
+function _startPrayerChecker() {
+  if (_prayerCheckId) return;
+  _prayerCheckId = setInterval(() => {
+    if (!_prayerData) return;
+    const now = Date.now();
+    const { times, date } = _prayerData;
+    for (const p of times) {
+      const diff = now - p.time;
+      if (diff >= 0 && diff < 120000) {
+        const key = date + '_' + p.name;
+        if (_lastSwPrayerKey === key) break;
+        _lastSwPrayerKey = key;
+        const names = {
+          fajr: { en: 'Fajr', bn: 'ফজর', emoji: '🌅' },
+          dhuhr: { en: 'Dhuhr', bn: 'যোহর', emoji: '☀️' },
+          asr: { en: 'Asr', bn: 'আসর', emoji: '🌤️' },
+          maghrib: { en: 'Maghrib', bn: 'মাগরিব', emoji: '🌅' },
+          isha: { en: 'Isha', bn: 'এশা', emoji: '🌙' }
+        };
+        const info = names[p.name] || { en: p.name, bn: p.name, emoji: '🕌' };
+        self.registration.showNotification(info.emoji + ' Time for ' + info.en + '!', {
+          body: 'Pray now. May Allah accept your prayer.',
+          icon: './assets/icon-192x192.png',
+          badge: './assets/icon-32x32.png',
+          tag: 'prayer-' + p.name,
+          renotify: true,
+          vibrate: [200, 100, 200, 100, 200],
+          requireInteraction: true,
+          data: { prayer: p.name }
+        });
+        break;
+      }
+    }
+  }, 10000);
+}
+
+function _stopPrayerChecker() {
+  if (_prayerCheckId) {
+    clearInterval(_prayerCheckId);
+    _prayerCheckId = null;
+  }
+}
+
+// Handle notification clicks — open/focus the app
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      if (clients.length > 0) {
+        return clients[0].focus();
+      }
+      return self.clients.openWindow('./');
+    })
+  );
 });
 
 // Fetch: Smart Strategy

@@ -7,7 +7,7 @@
 const PrayerNotifier = {
   _lastNotifiedPrayer: null,
   _intervalId: null,
-  _checkInterval: 30000, // Check every 30 seconds
+  _checkInterval: 5000, // Check every 5 seconds
 
   init() {
     if (this._intervalId) return; // Already running
@@ -35,6 +35,9 @@ const PrayerNotifier = {
     // Also check immediately
     setTimeout(() => this.check(), 2000);
     
+    // Send prayer times to service worker for background notifications
+    this._sendTimesToSW();
+    
     console.log('[PrayerNotifier] Initialized');
   },
 
@@ -49,6 +52,18 @@ const PrayerNotifier = {
     this.stop();
     this._lastNotifiedPrayer = null;
     this.init();
+  },
+
+  _sendTimesToSW() {
+    if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) return;
+    const times = Utils.calcPrayerTimes();
+    if (!times || times.length === 0) return;
+    const todayStr = Utils.todayStr();
+    navigator.serviceWorker.controller.postMessage({
+      type: 'PRAYER_TIMES',
+      times: times.map(t => ({ name: t.name, time: t.time.getTime(), label: t.label })),
+      date: todayStr
+    });
   },
 
   check() {
