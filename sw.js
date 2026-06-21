@@ -162,7 +162,7 @@ self.addEventListener('push', (e) => {
 // Re-subscribe when push subscription changes (expired/rotated)
 self.addEventListener('pushsubscriptionchange', (e) => {
   e.waitUntil(
-    self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: e.oldSubscription?.options?.applicationServerKey })
+    self.registration.pushManager.subscribe({ userVisibleOnly: true })
       .then(sub => {
         return fetch('./api/push', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },

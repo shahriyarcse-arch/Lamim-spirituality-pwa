@@ -38,13 +38,16 @@ module.exports = async (req, res) => {
         const keys = await getVapidKeys();
         webpush.setVapidDetails('mailto:push@lamim.app', keys.publicKey, keys.privateKey);
         const subs = await redis.hgetall('subscriptions').catch(() => ({}));
+        const notified = await redis.hgetall('notified').catch(() => ({}));
         const now = Date.now();
         let sent = 0;
         if (subs) {
           for (const [endpoint, raw] of Object.entries(subs)) {
             try {
               const { subscription, times } = JSON.parse(raw);
+              const lastNotified = parseInt(notified[endpoint] || '0', 10);
               for (const p of times) {
+                if (p.timestamp <= lastNotified) continue;
                 const diff = now - p.timestamp;
                 if (diff >= 0 && diff < 600000) {
                   const label = PRAYER_NAMES[p.name] || p.name;
@@ -55,12 +58,14 @@ module.exports = async (req, res) => {
                     tag: 'prayer-' + p.name
                   }));
                   sent++;
+                  redis.hset('notified', { [endpoint]: String(p.timestamp) }).catch(() => {});
                   break;
                 }
               }
             } catch (err) {
               if (err.statusCode === 410 || err.statusCode === 404) {
                 redis.hdel('subscriptions', endpoint).catch(() => {});
+                redis.hdel('notified', endpoint).catch(() => {});
               }
             }
           }
@@ -84,6 +89,7 @@ module.exports = async (req, res) => {
       }
       if (action === 'unsubscribe' && subscription) {
         await redis.hdel('subscriptions', subscription.endpoint);
+        await redis.hdel('notified', subscription.endpoint);
         return res.json({ ok: true });
       }
       return res.status(400).json({ error: 'Invalid request' });
