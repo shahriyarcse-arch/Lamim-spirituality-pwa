@@ -913,25 +913,17 @@
 #waqt-ring {
   transition: stroke-dashoffset 0.3s ease-out, stroke 0.6s var(--cb-smooth);
 }
-.waqt-urgent #waqt-ring {
-  filter: drop-shadow(0 0 6px var(--waqt-glow, #10B981));
-}
-.waqt-critical #waqt-ring {
-  filter: drop-shadow(0 0 10px #f97316);
-  animation: waqtCriticalPulse 0.8s ease-in-out infinite;
-}
 .waqt-urgent .waqt-orb-glow {
-  animation-duration: 2s;
-  opacity: 0.25;
+  opacity: 0.3;
 }
 .waqt-critical .waqt-orb-glow {
-  animation-duration: 1s;
-  opacity: 0.3;
-  background: radial-gradient(circle, #f97316 0%, transparent 70%);
+  opacity: 0.4;
 }
-@keyframes waqtCriticalPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+.waqt-critical #waqt-ring {
+  stroke-width: 6;
+}
+.waqt-critical .waqt-countdown {
+  color: var(--waqt-glow, #10B981);
 }
 .waqt-bursting {
   animation: waqtBurst 0.8s var(--cb-bounce) both;
