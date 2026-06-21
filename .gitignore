@@ -1,3 +1,2 @@
-node_modules/
-tmp_*.js
-*.log
+.vercel
+.env*.local
