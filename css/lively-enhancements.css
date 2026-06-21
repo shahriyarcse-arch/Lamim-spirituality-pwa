@@ -884,12 +884,7 @@
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-primary);
-  text-shadow: 0 0 12px var(--waqt-glow, var(--color-accent-primary)), 0 0 2px var(--waqt-glow, var(--color-accent-primary));
-  animation: countdownPulse 2s ease-in-out infinite alternate;
-}
-@keyframes countdownPulse {
-  0% { opacity: 0.9; filter: brightness(0.95); }
-  100% { opacity: 1; filter: brightness(1.2); }
+  transition: color 0.5s var(--cb-smooth);
 }
 .waqt-prayer-name {
   font-size: 1.2rem;
@@ -898,12 +893,6 @@
   text-transform: capitalize;
   letter-spacing: -0.3px;
   transition: color 0.6s var(--cb-smooth);
-  text-shadow: 0 0 8px var(--waqt-glow, currentColor), 0 2px 4px rgba(0, 0, 0, 0.4);
-  animation: waqtNameGlow 3s ease-in-out infinite alternate;
-}
-@keyframes waqtNameGlow {
-  0% { filter: brightness(1) drop-shadow(0 0 2px var(--waqt-glow, currentColor)); }
-  100% { filter: brightness(1.15) drop-shadow(0 0 8px var(--waqt-glow, currentColor)); }
 }
 .waqt-prayer-time {
   font-size: 12px;
