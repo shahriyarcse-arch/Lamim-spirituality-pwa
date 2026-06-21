@@ -151,8 +151,19 @@ const App = {
           }
         });
       } else {
-        // Register service worker with auto-update system on production
-        navigator.serviceWorker.register('/sw.js').catch(() => { });
+        // Register service worker with version cache-busting
+        const SW_VERSION = typeof self.LAMIM_VERSION !== 'undefined' ? self.LAMIM_VERSION : Date.now().toString(36);
+        navigator.serviceWorker.register('/sw.js?v=' + SW_VERSION).then(reg => {
+          // Detect new SW install — activate it immediately for seamless update
+          reg.addEventListener('updatefound', () => {
+            const newSW = reg.installing;
+            newSW.addEventListener('statechange', () => {
+              if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                newSW.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        }).catch(() => {});
 
         // Listen for SW update notifications — auto-refresh silently only if version changed
         navigator.serviceWorker.addEventListener('message', (event) => {

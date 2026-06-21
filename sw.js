@@ -1,4 +1,6 @@
-const CACHE_NAME = 'lamim-v134';
+importScripts('./js/version.js');
+
+const CACHE_NAME = 'lamim-v' + (typeof self.LAMIM_VERSION !== 'undefined' ? self.LAMIM_VERSION : '0');
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +10,7 @@ const ASSETS = [
   './assets/icon-180x180.png',
   './assets/icon-192x192.png',
   './assets/icon-512x512.png',
+  './js/version.js',
   './js/lang.js',
   './js/utils.js',
   './js/db.js',
@@ -58,9 +61,16 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+// Listen for skip-waiting message from the app (for seamless SW update)
+self.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // Fetch: Smart Strategy
 // - Navigation (HTML): Network-First (always get latest)
-// - Assets (JS/CSS/etc): Stale-While-Revalidate (fast + auto-update)
+// - Assets (JS/CSS/etc): Network-First with Cache Fallback (fresh when online, cached when offline)
 self.addEventListener('fetch', (e) => {
   // Only handle HTTP/HTTPS requests (ignores chrome-extension://, data:, etc.)
   if (!e.request.url.startsWith('http')) return;
@@ -91,26 +101,21 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // LOCAL ASSETS (JS, CSS, images) → Cache-First / Stale-While-Revalidate
-  // Serves from cache immediately (0.5ms load) for instant launch on phones,
-  // then updates the cache in the background. If a file is not in cache,
-  // it falls back to the network.
+  // LOCAL ASSETS (JS, CSS, images) → Network-First with Cache Fallback
+  // Always tries network first (fresh code when online), falls back to cache when offline.
+  // After fetching, updates cache in background for future offline use.
   const isLocalAsset = e.request.url.startsWith(self.location.origin);
   if (isLocalAsset) {
     e.respondWith(
-      caches.match(e.request, { ignoreSearch: true }).then((cached) => {
-        const fetchPromise = fetch(e.request, { cache: 'no-cache' })
-          .then((res) => {
-            if (res && res.ok) {
-              const copy = res.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
-            }
-            return res;
-          })
-          .catch(() => cached); // network error fallback to cached if present
-
-        return cached || fetchPromise;
-      })
+      fetch(e.request, { cache: 'no-cache' })
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request, { ignoreSearch: true }).then((cached) => cached || new Response('Offline', { status: 503 })))
     );
     return;
   }

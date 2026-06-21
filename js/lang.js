@@ -405,7 +405,8 @@ const Translations = {
   'Income saved': 'আয় সংরক্ষিত হয়েছে',
   'Goal saved': 'লক্ষ্য সংরক্ষিত হয়েছে',
   'Transaction updated': 'লেনদেন আপডেট করা হয়েছে',
-  'Update': 'আপডেট'
+  'Update': 'আপডেট',
+  'New version ready': 'নতুন ভার্সন রেডি! রিফ্রেশ হচ্ছে...'
 };
 
 window.t = function(key) {
