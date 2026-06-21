@@ -721,79 +721,6 @@
 }
 
   </style>
-  <style>
-    @keyframes text-shimmer {
-      0% { background-position: 200% center; }
-      100% { background-position: -200% center; }
-    }
-    @keyframes slideInDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.85); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @keyframes shsDotMove {
-      0% { stroke-dashoffset: 200; }
-      100% { stroke-dashoffset: 0; }
-    }
-    .shs-pulse-dot {
-      stroke-dasharray: 8, 200;
-      animation: shsDotMove 2s linear infinite;
-      filter: drop-shadow(0 0 6px currentColor);
-    }
-    @keyframes pulseSalah {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.05); opacity: 1; }
-  </style>
-  <style>
-    @keyframes text-shimmer {
-      0% { background-position: 200% center; }
-      100% { background-position: -200% center; }
-    }
-    @keyframes slideInDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.85); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @keyframes shsDotMove {
-      0% { stroke-dashoffset: 200; }
-      100% { stroke-dashoffset: 0; }
-    }
-    .shs-pulse-dot {
-      stroke-dasharray: 8, 200;
-      animation: shsDotMove 2s linear infinite;
-      filter: drop-shadow(0 0 6px currentColor);
-    }
-    @keyframes pulseSalah {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.05); opacity: 1; }
-    }
-    /* Critical Splash Styles */
-    .splash {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: #06060c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .splash.hidden {
-      opacity: 0;
-      transform: scale(1.05);
-      pointer-events: none;
-    }
-    [data-theme="light"] .splash {
-      background: #f8f9ff !important;
-    }
-  </style>
   <link rel="stylesheet" href="css/year-review.css?v=1">
   <link rel="stylesheet" href="css/lively-enhancements.css?v=7">
 
@@ -936,7 +863,7 @@
 
               <div class="input-group" style="margin-top: var(--space-5);">
                 <div class="input-with-icon-wrap">
-                  <input class="premium-input" type="text" id="setup-name" placeholder="Your name" autocomplete="name">
+                  <input class="premium-input" type="text" id="setup-name" placeholder="Your name" autocomplete="name" aria-label="Your name">
                   <span class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                 </div>
                 <div class="field-error" id="setup-name-err"></div>
@@ -1067,14 +994,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
                     Latitude
                   </div>
-                  <input class="coord-card-input" type="number" id="setup-lat" step="any" placeholder="0.0000">
+                  <input class="coord-card-input" type="number" id="setup-lat" step="any" placeholder="0.0000" aria-label="Latitude">
                 </div>
                 <div class="coord-card premium">
                   <div class="coord-card-label">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
                     Longitude
                   </div>
-                  <input class="coord-card-input" type="number" id="setup-lng" step="any" placeholder="0.0000">
+                  <input class="coord-card-input" type="number" id="setup-lng" step="any" placeholder="0.0000" aria-label="Longitude">
                 </div>
               </div>
               <div class="field-error" id="setup-loc-err"></div>
@@ -1477,7 +1404,7 @@
           <button class="modal-close" aria-label="Close modal" onclick="DuaBoard.hideModal()">✕</button>
         </div>
         <div class="dua-input-row">
-          <input class="input" id="dua-input" type="text" placeholder="Write your dua..." style="flex:1; min-width:0;">
+          <input class="input" id="dua-input" type="text" placeholder="Write your dua..." style="flex:1; min-width:0;" aria-label="Write your dua">
           <button class="btn btn-primary" onclick="DuaBoard.handleAdd()" style="flex-shrink:0; padding:10px 16px;">🤲 Add</button>
         </div>
         <div id="dua-list" class="dua-list"></div>
@@ -1494,10 +1421,10 @@
         <div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:12px;">
           <label style="font-size:12px;font-weight:600;color:var(--color-text-muted)">Coordinates</label>
           <div style="display:flex;gap:8px;">
-            <input class="input" id="loc-lat" type="number" step="any" placeholder="Latitude" style="flex:1;min-width:0;">
-            <input class="input" id="loc-lng" type="number" step="any" placeholder="Longitude" style="flex:1;min-width:0;">
+            <input class="input" id="loc-lat" type="number" step="any" placeholder="Latitude" style="flex:1;min-width:0;" aria-label="Latitude">
+            <input class="input" id="loc-lng" type="number" step="any" placeholder="Longitude" style="flex:1;min-width:0;" aria-label="Longitude">
           </div>
-          <input class="input" id="loc-name" type="text" placeholder="Label (optional)" style="width:100%">
+          <input class="input" id="loc-name" type="text" placeholder="Label (optional)" style="width:100%" aria-label="Location label">
           <div style="display:flex;gap:8px;">
             <button class="btn btn-primary" onclick="Profile.saveLocation()" style="flex:1">Save</button>
             <button class="btn btn-ghost" onclick="Profile.detectLocation(event)" 
@@ -1927,10 +1854,10 @@ style="flex:1">Auto-Detect</button>
 
 
   <!-- Core Engine -->
-  <script src="js/version.js?v=1" defer></script>
+  <script src="js/version.js?v=2" defer></script>
   <script src="js/lang.js?v=127" defer></script>
   <script src="js/utils.js?v=133" defer></script>
-  <script src="js/db.js?v=129" defer></script>
+  <script src="js/db.js?v=130" defer></script>
   <script src="js/auth.js?v=147" defer></script>
   <script src="js/home.js?v=138" defer></script>
   
@@ -1939,7 +1866,7 @@ style="flex:1">Auto-Detect</button>
   <script src="js/salah.js?v=139" defer></script>
   <script src="js/dhikr.js?v=139" defer></script>
   <script src="js/goals.js?v=140" defer></script>
-  <script src="js/finance.js?v=139" defer></script>
+  <script src="js/finance.js?v=140" defer></script>
   <script src="js/mujahid.js?v=140" defer></script>
   <script src="js/profile.js?v=144" defer></script>
   <script src="js/analysis.js?v=137" defer></script>
@@ -2040,7 +1967,7 @@ style="flex:1">Auto-Detect</button>
   </style>
 
   <script src="js/prayer-notifier.js?v=2" defer></script>
-  <script src="js/app.js?v=138" defer></script>
+  <script src="js/app.js?v=139" defer></script>
 
 </div>
 <div id="salah-print-report"></div>

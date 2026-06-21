@@ -774,7 +774,7 @@ const Finance = {
         <div class="fin-modal-amount-wrap">
           <div style="display:flex; align-items:center; justify-content:center;">
             <span class="fin-modal-currency" style="color:var(--fin-red); font-size:32px;">${sym}</span>
-            <input type="number" id="finance-expense-amount" placeholder="0.00" class="fin-modal-amount-input" autofocus style="width:180px;">
+            <input type="number" id="finance-expense-amount" placeholder="0.00" class="fin-modal-amount-input" autofocus style="width:180px;" aria-label="Amount">
           </div>
         </div>
 
@@ -782,7 +782,7 @@ const Finance = {
           <label class="fin-field-label">Category</label>
           <div class="fin-modal-search-box">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="text" placeholder="Search 250+ categories..." oninput="Finance.handleCatSearch(this.value)" class="fin-cat-search-input">
+            <input type="text" placeholder="Search 250+ categories..." oninput="Finance.handleCatSearch(this.value)" class="fin-cat-search-input" aria-label="Search categories">
           </div>
           <div class="fin-cat-grid" id="fin-cat-list">
             ${this.renderCategoryGrid('')}
@@ -872,14 +872,14 @@ const Finance = {
         <div class="fin-modal-amount-wrap">
           <div style="display:flex; align-items:center;">
             <span class="fin-modal-currency">${sym}</span>
-            <input type="number" id="finance-expense-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus>
+            <input type="number" id="finance-expense-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
           </div>
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Category</label>
-          <select id="finance-expense-category-edit" class="fin-field-input" style="appearance:auto;">${catOptions}</select>
+          <select id="finance-expense-category-edit" class="fin-field-input" style="appearance:auto;" aria-label="Category">${catOptions}</select>
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Date</label>
-          <input type="date" id="finance-expense-date-edit" value="${e.date}" class="fin-field-input">
+          <input type="date" id="finance-expense-date-edit" value="${e.date}" class="fin-field-input" aria-label="Date">
         </div>
         <div class="fin-modal-actions">
           <button class="fin-save-btn" onclick="Finance.saveEditExpense('${id}')">${window.t ? window.t('Update') : 'Update'}</button>
@@ -914,14 +914,14 @@ const Finance = {
         <div class="fin-modal-amount-wrap">
           <div style="display:flex; align-items:center;">
             <span class="fin-modal-currency">${sym}</span>
-            <input type="number" id="finance-income-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus>
+            <input type="number" id="finance-income-amount-edit" value="${Math.abs(e.amount)}" step="0.01" min="0" class="fin-modal-amount-input" autofocus aria-label="Amount">
           </div>
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Source</label>
-          <input type="text" id="finance-income-desc-edit" value="${Utils.escapeHTML(e.description)}" class="fin-field-input">
+          <input type="text" id="finance-income-desc-edit" value="${Utils.escapeHTML(e.description)}" class="fin-field-input" aria-label="Source">
         </div>
         <div class="fin-field-group"><label class="fin-field-label">Date</label>
-          <input type="date" id="finance-income-date-edit" value="${e.date}" class="fin-field-input">
+          <input type="date" id="finance-income-date-edit" value="${e.date}" class="fin-field-input" aria-label="Date">
         </div>
         <div class="fin-modal-actions">
           <button class="fin-save-btn" onclick="Finance.saveEditIncome('${id}')">${window.t ? window.t('Update') : 'Update'}</button>
@@ -953,7 +953,7 @@ const Finance = {
       defaultDate = now;
     }
     const dateStr = defaultDate.toISOString().split('T')[0];
-    const html = `<div class="finance-modal-content"><div class="fin-modal-header"><div class="fin-modal-title">Add Deposit</div></div><div class="fin-modal-amount-wrap"><div style="display:flex; align-items:center;"><span class="fin-modal-currency">${sym}</span><input type="number" id="finance-income-amount" placeholder="0.00" class="fin-modal-amount-input" autofocus></div></div><div class="fin-field-group"><label class="fin-field-label">Source</label><input type="text" id="finance-income-desc" placeholder="Salary, Gift etc." class="fin-field-input"></div><div class="fin-field-group"><label class="fin-field-label">Date</label><input type="date" id="finance-income-date" value="${dateStr}" class="fin-field-input"></div><div class="fin-modal-actions"><button class="fin-save-btn income" onclick="Finance.saveIncome()">Confirm</button><button class="fin-cancel-btn" onclick="Finance.closeModal()">Cancel</button></div></div>`;
+    const html = `<div class="finance-modal-content"><div class="fin-modal-header"><div class="fin-modal-title">Add Deposit</div></div><div class="fin-modal-amount-wrap"><div style="display:flex; align-items:center;"><span class="fin-modal-currency">${sym}</span><input type="number" id="finance-income-amount" placeholder="0.00" class="fin-modal-amount-input" autofocus aria-label="Amount"></div></div><div class="fin-field-group"><label class="fin-field-label">Source</label><input type="text" id="finance-income-desc" placeholder="Salary, Gift etc." class="fin-field-input"></div><div class="fin-field-group"><label class="fin-field-label">Date</label><input type="date" id="finance-income-date" value="${dateStr}" class="fin-field-input"></div><div class="fin-modal-actions"><button class="fin-save-btn income" onclick="Finance.saveIncome()">Confirm</button><button class="fin-cancel-btn" onclick="Finance.closeModal()">Cancel</button></div></div>`;
     this.showModal(html);
   },
 

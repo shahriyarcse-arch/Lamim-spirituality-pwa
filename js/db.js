@@ -21,7 +21,7 @@ const DB = {
                 document.documentElement.setAttribute('lang', newLang);
                 window.App.applyTranslations();
               }
-            } catch (err) {}
+            } catch (err) { console.warn('[DB] Broadcast lang sync failed:', err); }
           }
           if (key === 'lamim_settings') {
             try {
@@ -33,7 +33,7 @@ const DB = {
               if (window.Profile && document.getElementById('section-profile')?.classList.contains('active')) {
                 Profile.renderSettings();
               }
-            } catch (err) {}
+            } catch (err) { console.warn('[DB] Broadcast settings sync failed:', err); }
           }
           if (key === 'lamim_user') {
             if (window.Profile && document.getElementById('section-profile')?.classList.contains('active')) {
