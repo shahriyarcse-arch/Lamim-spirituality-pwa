@@ -833,7 +833,8 @@ p { color: var(--color-text-secondary); }
 }
 .glass-deep > * { position: relative; z-index: 3; }
 
-/* Glossy sweep across all cards */
+/* Glossy sweep across all cards (desktop hover only) */
+@media (hover: hover) {
 .card, .card-glass, .settings-group, .salah-prayer-card, .dhikr-preset-card, .nafl-card-modern, .goal-card {
   position: relative;
   overflow: hidden;
@@ -847,6 +848,7 @@ p { color: var(--color-text-secondary); }
 }
 .card:hover::after, .card-glass:hover::after, .settings-group:hover::after, .salah-prayer-card:hover::after, .dhikr-preset-card:hover::after, .nafl-card-modern:hover::after, .goal-card:hover::after {
   transform: translateX(100%) translateY(100%) rotate(45deg);
+}
 }
 
 /* Fluid gradient hero background */
