@@ -1,32 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4f46e5" />
-      <stop offset="100%" stop-color="#a855f7" />
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="50%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
     </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
   </defs>
-  <!-- Background -->
-  <rect width="512" height="512" rx="112" fill="url(#bg)" />
-  
-  <!-- Crescent Moon -->
-  <path d="M336 344c-70.69 0-128-57.31-128-128 0-31.14 11.23-59.62 30-81.82-74.05 10.55-130 74.2-130 151.82 0 83.95 68.05 152 152 152 77.62 0 141.27-55.95 151.82-130-22.2 18.77-50.68 30-81.82 30z" 
-        fill="#ffffff" 
-        opacity="0.95" 
-        filter="url(#glow)"/>
-
-  <!-- Star -->
-  <path d="M256 128l16 48 48 16-48 16-16 48-16-48-48-16 48-16z" 
-        fill="#fcd34d" 
-        filter="url(#glow)" />
-  <path d="M368 180l10 30 30 10-30 10-10 30-10-30-30-10 30-10z" 
-        fill="#fde68a" 
-        opacity="0.8" 
-        filter="url(#glow)" />
+  <rect width="512" height="512" rx="112" fill="#050814"/>
+  <circle cx="256" cy="256" r="188" fill="none" stroke="url(#g)" stroke-width="3" opacity="0.15"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="url(#g)" stroke-width="1.5" opacity="0.1"/>
+  <path d="M296 142c-12.8-5.2-26.8-8-41.5-8C199 134 154 178.5 154 233s45 99 100.5 99c14.7 0 28.7-2.8 41.5-8-30 0-54.5-24.5-54.5-54.5S307 196 337 196c9.5 0 18.5 2.5 26.3 6.7-5.3-32.7-29-59.5-58-60 9.3-0.5 18.8-0.7 28.3-0.7h0.5z" fill="url(#g)" opacity="0.95"/>
+  <path d="M306 168c-35.9 0-65 29.1-65 65s29.1 65 65 65c10.5 0 20.4-2.5 29-6.9-20-4-34.5-21-34.5-40.5s14.5-36.5 34.5-40.5c-8.6-4.4-18.5-6.9-29-6.9z" fill="#050814"/>
+  <circle cx="346" cy="173" r="5" fill="#3B82F6" opacity="0.8"/>
+  <circle cx="366" cy="194" r="2.5" fill="#34D399" opacity="0.6"/>
+  <circle cx="314" cy="288" r="2.5" fill="#3B82F6" opacity="0.4"/>
 </svg>
