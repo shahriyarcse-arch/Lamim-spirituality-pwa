@@ -131,8 +131,8 @@ const Home = {
     // 3. Spiritual Pulse (Micro-Graph)
     this.renderSpiritualPulse();
 
-    // 4. AI Spiritual Insight (reveal class added inside renderAIInsight)
-    this.renderAIInsight();
+    // 4. Barakah Garden
+    this.renderBarakahGarden();
 
     // 5. Weekly AI Summary
     this.renderWeeklySummary();
@@ -140,8 +140,8 @@ const Home = {
     // 6. Dua Request Board Card
     this.renderDuaCard();
 
-    // 7. Barakah Garden
-    this.renderBarakahGarden();
+    // 7. AI Spiritual Insight (reveal class added inside renderAIInsight)
+    this.renderAIInsight();
 
     // 8. Nur Particles (Subtle Animation)
     this.renderNurParticles();
@@ -477,14 +477,13 @@ const Home = {
     if (!container) return;
     const streak = DB.getSalahStreak ? DB.getSalahStreak().perfect : 0;
     const tier = streak >= 100 ? 5 : streak >= 60 ? 4 : streak >= 30 ? 3 : streak >= 14 ? 2 : streak >= 7 ? 1 : 0;
-    const tierNames = ['Sprout', 'Bloom', 'Rose', 'Sapling', 'Tree', 'Olive Tree'];
-    const tierEmojis = ['🌱', '🌸', '🌹', '🌿', '🌳', '🫒'];
-    const tierName = tierNames[tier] || 'Garden';
-    const colors = ['#86efac', '#34d399', '#22c55e', '#16a34a', '#15803d', '#fdba74'];
+    const tierNames = streak === 0 ? ['Fallow Land'] : ['Sprout', 'Bloom', 'Rose', 'Sapling', 'Tree', 'Olive Tree'];
+    const tierEmojis = streak === 0 ? ['🏜️'] : ['🌱', '🌸', '🌹', '🌿', '🌳', '🫒'];
+    const tierName = streak === 0 ? 'Fallow Land' : tierNames[tier];
+    const colors = streak === 0 ? ['#6B7280'] : ['#86efac', '#34d399', '#22c55e', '#16a34a', '#15803d', '#fdba74'];
 
-    // Garden SVG scene — built from tiered plant + decorative elements
-    const gardenSVG = this._gardenSVG(tier);
-    const phaseColor = colors[tier] || '#10B981';
+    const gardenSVG = this._gardenSVG(tier, streak === 0);
+    const phaseColor = streak === 0 ? '#6B7280' : (colors[tier] || '#10B981');
 
     container.innerHTML = `
       <div class="card barakah-garden-card home-reveal revealed" style="padding:0; overflow:hidden; border:1px solid var(--color-border); border-radius:var(--card-radius); background:var(--color-surface-card);">
@@ -492,7 +491,7 @@ const Home = {
           <div class="barakah-garden-svg-wrap">${gardenSVG}</div>
           <div class="barakah-garden-label" style="display:flex; align-items:center; justify-content:space-between; padding:8px 16px 12px; border-top:1px solid var(--color-divider-subtle);">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:18px;">${tierEmojis[tier]}</span>
+              <span style="font-size:18px;">${streak === 0 ? '🏜️' : tierEmojis[tier]}</span>
               <div>
                 <div style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--color-text-muted);">${window.t ? window.t('Barakah Garden') : 'Barakah Garden'}</div>
                 <div style="font-size:15px; font-weight:800; color:${phaseColor};">${window.t ? window.t(tierName) : tierName}</div>
@@ -508,177 +507,206 @@ const Home = {
     `;
   },
 
-  _gardenSVG(tier) {
-    // Color palette
-    const skyA = '#0f172a';
-    const skyB = '#1e293b';
+  _gardenSVG(tier, isBarren) {
+    if (isBarren) {
+      return `<svg width="340" height="230" viewBox="0 0 340 230" style="display:block;">
+        <defs>
+          <radialGradient id="barrenGlow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#29252440"/>
+            <stop offset="100%" stop-color="#29252400"/>
+          </radialGradient>
+        </defs>
+        <rect width="340" height="230" fill="#1c1917"/>
+        <circle cx="170" cy="110" r="80" fill="url(#barrenGlow)"/>
+        <path d="M0,195 Q85,200 170,195 Q255,190 340,195 L340,230 L0,230 Z" fill="#292524"/>
+        <path d="M0,208 Q85,205 170,208 Q255,211 340,208 L340,230 L0,230 Z" fill="#1c1917" opacity="0.6"/>
+        <path d="M0,195 L40,165 L80,190 L120,160 L160,185 L200,155 L240,180 L280,165 L320,190 L340,175 L340,195 Z" fill="#292524" opacity="0.4"/>
+        ${this._cloudSVG(50, 45, 0.5)}
+        ${this._cloudSVG(240, 60, 0.3)}
+        <!-- Single dried grass -->
+        <path d="M170,200 Q172,185 168,175" stroke="#57534e" stroke-width="1.2" fill="none" opacity="0.4"/>
+        <path d="M168,175 Q165,172 163,175" stroke="#57534e" stroke-width="1" fill="none" opacity="0.4"/>
+        <path d="M160,205 Q158,195 162,188" stroke="#57534e" stroke-width="1" fill="none" opacity="0.3"/>
+        <!-- Tiny seed buried -->
+        <ellipse cx="170" cy="204" rx="3" ry="2" fill="#78716c" opacity="0.5"/>
+        <text x="170" y="160" text-anchor="middle" fill="#57534e" font-size="10" font-weight="600" letter-spacing="0.5" opacity="0.6">Plant your first seed</text>
+        <text x="170" y="173" text-anchor="middle" fill="#44403c" font-size="8" font-weight="400" opacity="0.4">Complete all 5 prayers today</text>
+      </svg>`;
+    }
+
+    const skyTop = '#0a0f1e';
+    const skyBot = '#162032';
     const groundA = '#2d5a27';
     const groundB = '#1a3a15';
-    const leafGreen = '#4ade80';
-    const stemGreen = '#22c55e';
-    const trunk = '#8B5A2B';
-    const trunkDark = '#6B4226';
-    const flowerColors = ['#f472b6', '#fb923c', '#a78bfa', '#fbbf24', '#38bdf8'];
-    const glow = '#4ade8040';
 
-    // Sky gradient
     return `<svg width="340" height="230" viewBox="0 0 340 230" style="display:block;">
       <defs>
-        <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="${skyA}"/>
-          <stop offset="100%" stop-color="${skyB}"/>
+        <linearGradient id="bgG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${skyTop}"/>
+          <stop offset="60%" stop-color="${skyBot}"/>
+          <stop offset="100%" stop-color="${groundA}" stop-opacity="0.3"/>
         </linearGradient>
-        <linearGradient id="skyGlow" x1="0.5" y1="0" x2="0.5" y2="1">
-          <stop offset="0%" stop-color="${glow}" stop-opacity="0"/>
-          <stop offset="40%" stop-color="${glow}" stop-opacity="1"/>
-          <stop offset="100%" stop-color="${glow}" stop-opacity="0"/>
+        <linearGradient id="moonG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0.1"/>
         </linearGradient>
-        <radialGradient id="sunGlow" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0%" stop-color="#4ade8040"/>
-          <stop offset="100%" stop-color="#4ade8000"/>
-        </radialGradient>
       </defs>
-      <rect width="340" height="230" fill="url(#bgGrad)"/>
-      <circle cx="170" cy="110" r="80" fill="url(#sunGlow)" class="barakah-sun-glow"/>
-      <ellipse cx="170" cy="210" rx="190" ry="30" fill="${groundA}" opacity="0.6"/>
-      <path d="M0,195 Q85,180 170,195 Q255,210 340,195 L340,230 L0,230 Z" fill="${groundA}"/>
-      <path d="M0,205 Q85,195 170,205 Q255,215 340,205 L340,230 L0,230 Z" fill="${groundB}" opacity="0.5"/>
-      <!-- Distant mountains -->
-      <path d="M0,195 L40,150 L80,185 L120,140 L160,180 L200,130 L240,175 L280,145 L320,185 L340,170 L340,195 Z" fill="#1a2e1a" opacity="0.3"/>
-      ${this._cloudSVG(50, 45, 0.6)}
-      ${this._cloudSVG(240, 60, 0.4)}
-      ${this._grassSVG()}
-      ${this._plantSVG(170, 195, tier)}
-      ${tier >= 1 ? this._plantSVG(90, 203, Math.max(0, tier - 1)) : ''}
-      ${tier >= 2 ? this._plantSVG(250, 200, Math.max(0, tier - 2)) : ''}
+      <rect width="340" height="230" fill="url(#bgG)"/>
+      <!-- Stars -->
+      ${Array.from({length: 15}, (_, i) => {
+        const sx = 20 + Math.sin(i * 1.7) * 150 + 170;
+        const sy = 8 + (i * 7.3) % 45;
+        return `<circle cx="${sx}" cy="${sy}" r="${0.5 + (i % 3) * 0.3}" fill="#e2e8f0" opacity="${0.2 + (i % 4) * 0.15}" class="barakah-star" style="animation-delay:${(i * 0.2).toFixed(2)}s"/>`;
+      }).join('')}
+      <!-- Crescent moon -->
+      <path d="M280,35 A18,18 0 1,1 295,20 A22,22 0 1,0 280,35 Z" fill="url(#moonG)" opacity="0.6"/>
+      <!-- Mountains -->
+      <path d="M0,195 L45,155 L90,185 L135,145 L180,175 L225,140 L270,170 L315,148 L340,180 L340,195 Z" fill="#1a2e1a" opacity="0.5"/>
+      <path d="M0,195 L30,170 L60,188 L100,160 L140,182 L170,155 L200,178 L240,158 L280,180 L320,162 L340,185 L340,195 Z" fill="#1a3a15" opacity="0.35"/>
+      <!-- Ground -->
+      <path d="M0,195 Q85,183 170,195 Q255,207 340,195 L340,230 L0,230 Z" fill="${groundA}"/>
+      <path d="M0,207 Q85,198 170,207 Q255,216 340,207 L340,230 L0,230 Z" fill="${groundB}" opacity="0.6"/>
+      <!-- Mid-ground grass layer -->
+      <path d="M0,195 Q42,190 85,195 Q127,200 170,195 Q212,190 255,195 Q297,200 340,195" fill="none" stroke="#166534" stroke-width="1" opacity="0.3"/>
+      ${this._cloudSVG(60, 48, 0.5)}
+      ${this._cloudSVG(250, 65, 0.35)}
+      ${this._grassSVG(tier)}
+      ${this._plantSVG(170, 200, tier)}
+      ${tier >= 2 ? this._plantSVG(85, 207, Math.min(tier - 1, 3)) : ''}
+      ${tier >= 3 ? this._plantSVG(255, 204, Math.min(tier - 2, 3)) : ''}
+      ${tier >= 5 ? this._plantSVG(120, 210, 2) : ''}
     </svg>`;
   },
 
   _cloudSVG(cx, cy, opacity) {
     return `<g class="barakah-cloud" opacity="${opacity}">
-      <ellipse cx="${cx}" cy="${cy}" rx="30" ry="10" fill="#334155"/>
-      <ellipse cx="${cx + 15}" cy="${cy - 6}" rx="18" ry="8" fill="#334155"/>
-      <ellipse cx="${cx - 12}" cy="${cy - 4}" rx="15" ry="7" fill="#334155"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="28" ry="9" fill="#1e293b"/>
+      <ellipse cx="${cx + 14}" cy="${cy - 5}" rx="16" ry="7" fill="#1e293b"/>
+      <ellipse cx="${cx - 10}" cy="${cy - 3}" rx="13" ry="6" fill="#1e293b"/>
     </g>`;
   },
 
-  _grassSVG() {
+  _grassSVG(tier) {
+    const count = 8 + tier * 2;
     const blades = [];
-    for (let i = 0; i < 14; i++) {
-      const x = 15 + i * 25;
-      const h = 8 + (i % 5) * 4;
-      blades.push(`<path d="M${x},205 Q${x + (i % 2 ? 3 : -3)},${205 - h} ${x + (i % 2 ? 6 : -4)},${205 - h - 3}" stroke="#22c55e" stroke-width="1.5" fill="none" class="barakah-grass" style="animation-delay:${(i * 0.15).toFixed(2)}s"/>`);
-    }
-    for (let i = 0; i < 8; i++) {
-      const x = 130 + i * 12;
-      const h = 6 + (i % 3) * 3;
-      blades.push(`<path d="M${x},210 Q${x + (i % 2 ? 2 : -2)},${210 - h} ${x + (i % 2 ? 4 : -4)},${210 - h - 2}" stroke="#4ade80" stroke-width="1.2" fill="none" class="barakah-grass" style="animation-delay:${((i + 3) * 0.12).toFixed(2)}s"/>`);
+    for (let i = 0; i < count; i++) {
+      const x = 10 + (i * (320 / count)) + (i % 3) * 4;
+      const h = 7 + (i % 5) * 4 + tier * 1.5;
+      const lean = i % 2 === 0 ? 1 : -1;
+      blades.push(`<path d="M${x},205 Q${x + lean * 2},${205 - h} ${x + lean * 4},${205 - h - 2}" stroke="#22c55e" stroke-width="${1 + tier * 0.15}" fill="none" class="barakah-grass" style="animation-delay:${(i * 0.12).toFixed(2)}s"/>`);
     }
     return blades.join('');
   },
 
   _plantSVG(x, baseY, tier) {
-    const stem = `<path d="M${x},${baseY} Q${x},${baseY - 25} ${x},${baseY - 35}" stroke="#22c55e" stroke-width="2.5" fill="none" class="barakah-plant"/>`;
-    const root = `<path d="M${x - 6},${baseY + 3} Q${x},${baseY} ${x + 6},${baseY + 3}" stroke="#854d0e" stroke-width="1.5" fill="none" opacity="0.5"/>`;
+    const s = (tier >= 3 ? 1 : 1) * (tier >= 4 ? 1.15 : 1);
 
     if (tier === 0) {
-      // Sprout
-      return `<g class="barakah-plant-group">${root}${stem}
-        <path d="M${x},${baseY - 35} Q${x - 10},${baseY - 40} ${x - 12},${baseY - 35}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x},${baseY - 30} Q${x + 8},${baseY - 35} ${x + 10},${baseY - 30}" fill="#4ade80" class="barakah-leaf"/>
+      // Tiny sprout — the start of growth
+      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+        <path d="M${x},${baseY} Q${x + 1},${baseY - 14} ${x - 1},${baseY - 18}" stroke="#4ade80" stroke-width="2" fill="none" class="barakah-plant"/>
+        <path d="M${x - 1},${baseY - 18} Q${x - 7},${baseY - 21} ${x - 8},${baseY - 17}" fill="#4ade80" class="barakah-leaf"/>
+        <path d="M${x - 0.5},${baseY - 15} Q${x + 6},${baseY - 18} ${x + 7},${baseY - 14}" fill="#4ade80" class="barakah-leaf"/>
+        <ellipse cx="${x}" cy="${baseY + 2}" rx="4" ry="1.5" fill="#78716c" opacity="0.3"/>
       </g>`;
     }
 
     if (tier === 1) {
-      // Small flower — 5 petals
+      // Tulip flower
       const px = x, py = baseY - 38;
-      const petals = [];
-      for (let a = 0; a < 5; a++) {
-        const angle = (a / 5) * Math.PI * 2 - Math.PI / 2;
-        const petalX = px + Math.cos(angle) * 7;
-        const petalY = py + Math.sin(angle) * 7;
-        petals.push(`<circle cx="${petalX}" cy="${petalY}" r="5" fill="#f472b6" class="barakah-petal" style="animation-delay:${(a * 0.1).toFixed(2)}s"/>`);
-      }
-      return `<g class="barakah-plant-group">${root}${stem}
-        <circle cx="${px}" cy="${py}" r="3" fill="#fbbf24"/>
-        ${petals.join('')}
-        <path d="M${x},${baseY - 20} Q${x - 8},${baseY - 24} ${x - 10},${baseY - 20}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x},${baseY - 15} Q${x + 8},${baseY - 18} ${x + 10},${baseY - 14}" fill="#4ade80" class="barakah-leaf"/>
+      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+        <path d="M${x},${baseY} Q${x - 2},${baseY - 18} ${x + 1},${baseY - 30}" stroke="#22c55e" stroke-width="2.5" fill="none" class="barakah-plant"/>
+        <path d="M${x + 1},${baseY - 20} Q${x - 7},${baseY - 24} ${x - 8},${baseY - 18}" fill="#4ade80" class="barakah-leaf"/>
+        <path d="M${x + 1},${baseY - 14} Q${x + 8},${baseY - 17} ${x + 9},${baseY - 13}" fill="#4ade80" class="barakah-leaf"/>
+        <!-- Tulip cup -->
+        <path d="M${px - 6},${py + 4} Q${px - 8},${py - 4} ${px - 5},${py - 8} Q${px},${py - 12} ${px + 5},${py - 8} Q${px + 8},${py - 4} ${px + 6},${py + 4} Z" fill="#f472b6" class="barakah-petal"/>
+        <ellipse cx="${px}" cy="${py + 2}" rx="3" ry="1.5" fill="#fbbf24" opacity="0.6"/>
       </g>`;
     }
 
     if (tier === 2) {
-      // Rose — layered petals
+      // Daisy flower
       const px = x, py = baseY - 42;
       const petals = [];
-      for (let r = 6; r >= 2; r -= 2) {
-        for (let a = 0; a < 6; a++) {
-          const angle = (a / 6) * Math.PI * 2;
-          const petalX = px + Math.cos(angle) * r;
-          const petalY = py + Math.sin(angle) * r;
-          petals.push(`<circle cx="${petalX}" cy="${petalY}" r="${r}" fill="#ec4899" opacity="${0.3 + (r / 10)}" class="barakah-petal"/>`);
-        }
+      for (let a = 0; a < 8; a++) {
+        const angle = (a / 8) * Math.PI * 2;
+        const xOff = Math.cos(angle) * 8;
+        const yOff = Math.sin(angle) * 8;
+        petals.push(`<ellipse cx="${px + xOff}" cy="${py + yOff}" rx="4" ry="6" fill="#a78bfa" opacity="0.85" class="barakah-petal" transform="rotate(${a * 45} ${px + xOff} ${py + yOff})" style="animation-delay:${(a * 0.08).toFixed(2)}s"/>`);
       }
-      return `<g class="barakah-plant-group">${root}${stem}
-        <circle cx="${px}" cy="${py}" r="8" fill="#db2777"/>
+      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+        <path d="M${x},${baseY} Q${x + 1},${baseY - 20} ${x - 1},${baseY - 34}" stroke="#22c55e" stroke-width="2.8" fill="none" class="barakah-plant"/>
         ${petals.join('')}
-        <path d="M${x},${baseY - 22} Q${x - 10},${baseY - 28} ${x - 12},${baseY - 22}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x},${baseY - 16} Q${x + 10},${baseY - 20} ${x + 12},${baseY - 15}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x - 2},${baseY - 32} Q${x - 12},${baseY - 36} ${x - 14},${baseY - 30}" fill="#22c55e" class="barakah-leaf"/>
+        <circle cx="${px}" cy="${py}" r="4" fill="#fbbf24"/>
+        <path d="M${x - 1},${baseY - 16} Q${x - 9},${baseY - 20} ${x - 10},${baseY - 15}" fill="#4ade80" class="barakah-leaf"/>
+        <path d="M${x - 1},${baseY - 24} Q${x + 9},${baseY - 28} ${x + 10},${baseY - 22}" fill="#4ade80" class="barakah-leaf"/>
       </g>`;
     }
 
     if (tier === 3) {
-      // Sapling — small trunk + round canopy
-      const tx = x - 3, tw = 6;
-      return `<g class="barakah-plant-group">
-        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 45} L${tx + 1},${baseY - 45} Z" fill="${trunkDark}"/>
-        ${stem}
-        <ellipse cx="${x}" cy="${baseY - 50}" rx="20" ry="18" fill="#22c55e" opacity="0.3" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 48}" rx="16" ry="14" fill="#4ade80" opacity="0.6" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 52}" rx="12" ry="10" fill="#86efac" opacity="0.8"/>
-        <circle cx="${x + 5}" cy="${baseY - 55}" r="3" fill="#fbbf24" class="barakah-sparkle"/>
+      // Cherry blossom sapling
+      const tx = x - 4, tw = 8;
+      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 48} L${tx + 1},${baseY - 48} Z" fill="#6B4226"/>
+        <path d="M${tx + 3},${baseY - 30} Q${tx - 8},${baseY - 35} ${tx - 10},${baseY - 30}" stroke="#8B5A2B" stroke-width="2" fill="none"/>
+        <path d="M${tx + tw - 3},${baseY - 25} Q${tx + tw + 8},${baseY - 30} ${tx + tw + 10},${baseY - 25}" stroke="#8B5A2B" stroke-width="2" fill="none"/>
+        <!-- Canopy layers -->
+        <ellipse cx="${x}" cy="${baseY - 52}" rx="22" ry="16" fill="#166534" opacity="0.4" class="barakah-canopy"/>
+        <ellipse cx="${x}" cy="${baseY - 50}" rx="18" ry="12" fill="#22c55e" opacity="0.5" class="barakah-canopy"/>
+        <ellipse cx="${x}" cy="${baseY - 53}" rx="12" ry="9" fill="#4ade80" opacity="0.6"/>
+        <!-- Cherry blossoms -->
+        ${Array.from({length: 6}, (_, i) => {
+          const bx = x - 10 + (i % 3) * 10;
+          const by = baseY - 56 + Math.floor(i / 3) * 7;
+          return `<circle cx="${bx}" cy="${by}" r="2.5" fill="#f9a8d4" opacity="0.9" class="barakah-petal" style="animation-delay:${(i * 0.15).toFixed(2)}s"/>`;
+        }).join('')}
+        <circle cx="${x - 12}" cy="${baseY - 48}" r="2" fill="#f9a8d4" class="barakah-petal" style="animation-delay:0.2s"/>
+        <circle cx="${x + 14}" cy="${baseY - 46}" r="2" fill="#f9a8d4" class="barakah-petal" style="animation-delay:0.4s"/>
       </g>`;
     }
 
     if (tier === 4) {
-      // Tree — thick trunk + spreading canopy
-      const tx = x - 5, tw = 10;
-      return `<g class="barakah-plant-group">
-        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 50} L${tx + 1},${baseY - 50} Z" fill="${trunkDark}"/>
-        <path d="M${tx + 2},${baseY - 35} Q${tx - 8},${baseY - 40} ${tx - 10},${baseY - 35}" stroke="${trunkDark}" stroke-width="2" fill="none"/>
-        <path d="M${tx + tw - 2},${baseY - 30} Q${tx + tw + 8},${baseY - 35} ${tx + tw + 10},${baseY - 30}" stroke="${trunkDark}" stroke-width="2" fill="none"/>
-        <ellipse cx="${x}" cy="${baseY - 55}" rx="28" ry="22" fill="#16a34a" opacity="0.3" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 53}" rx="22" ry="18" fill="#22c55e" opacity="0.5" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 56}" rx="16" ry="12" fill="#4ade80" opacity="0.7"/>
-        <ellipse cx="${x - 10}" cy="${baseY - 48}" rx="12" ry="10" fill="#22c55e" opacity="0.4" class="barakah-canopy"/>
-        <ellipse cx="${x + 12}" cy="${baseY - 50}" rx="10" ry="8" fill="#22c55e" opacity="0.4" class="barakah-canopy"/>
-        ${Array.from({length: 4}, (_, i) =>
-          `<circle cx="${x - 8 + i * 6}" cy="${baseY - 62}" r="2.5" fill="#fbbf24" class="barakah-sparkle" style="animation-delay:${(i * 0.3).toFixed(2)}s"/>`
+      // Oak tree
+      const tx = x - 6, tw = 12;
+      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw},${baseY - 52} L${tx},${baseY - 52} Z" fill="#4A3728"/>
+        <path d="M${tx + 2},${baseY - 35} Q${tx - 10},${baseY - 42} ${tx - 12},${baseY - 35}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
+        <path d="M${tx + tw - 2},${baseY - 30} Q${tx + tw + 10},${baseY - 38} ${tx + tw + 12},${baseY - 30}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
+        <path d="M${tx + 4},${baseY - 20} Q${tx + 16},${baseY - 26} ${tx + 18},${baseY - 20}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
+        <path d="M${tx + tw - 4},${baseY - 18} Q${tx - 16},${baseY - 24} ${tx - 18},${baseY - 18}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
+        <ellipse cx="${x}" cy="${baseY - 58}" rx="32" ry="20" fill="#166534" opacity="0.3" class="barakah-canopy"/>
+        <ellipse cx="${x}" cy="${baseY - 56}" rx="26" ry="16" fill="#22c55e" opacity="0.45" class="barakah-canopy"/>
+        <ellipse cx="${x}" cy="${baseY - 60}" rx="18" ry="12" fill="#4ade80" opacity="0.55"/>
+        <ellipse cx="${x - 12}" cy="${baseY - 50}" rx="14" ry="10" fill="#22c55e" opacity="0.35" class="barakah-canopy"/>
+        <ellipse cx="${x + 14}" cy="${baseY - 52}" rx="12" ry="9" fill="#22c55e" opacity="0.35" class="barakah-canopy"/>
+        ${Array.from({length: 3}, (_, i) =>
+          `<circle cx="${x - 6 + i * 6}" cy="${baseY - 66}" r="2" fill="#fbbf24" class="barakah-sparkle" style="animation-delay:${(i * 0.4).toFixed(2)}s"/>`
         ).join('')}
       </g>`;
     }
 
     // Tier 5: Olive tree — 100+ days
-    const tx = x - 6, tw = 12;
-    return `<g class="barakah-plant-group">
-      <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw},${baseY - 55} L${tx},${baseY - 55} Z" fill="#4A3728"/>
-      <path d="M${tx + 2},${baseY - 40} Q${tx - 12},${baseY - 50} ${tx - 14},${baseY - 42}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
-      <path d="M${tx + tw - 2},${baseY - 35} Q${tx + tw + 14},${baseY - 45} ${tx + tw + 16},${baseY - 38}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
-      <path d="M${tx + 4},${baseY - 25} Q${tx + 18},${baseY - 30} ${tx + 20},${baseY - 25}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
-      <path d="M${tx + tw - 4},${baseY - 20} Q${tx - 18},${baseY - 25} ${tx - 20},${baseY - 20}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
-      <ellipse cx="${x}" cy="${baseY - 60}" rx="32" ry="24" fill="#646c37" opacity="0.25" class="barakah-canopy"/>
-      <ellipse cx="${x}" cy="${baseY - 58}" rx="26" ry="20" fill="#84a83f" opacity="0.4" class="barakah-canopy"/>
-      <ellipse cx="${x}" cy="${baseY - 62}" rx="18" ry="14" fill="#a3bf5a" opacity="0.55"/>
-      <ellipse cx="${x - 12}" cy="${baseY - 52}" rx="14" ry="10" fill="#84a83f" opacity="0.35" class="barakah-canopy"/>
-      <ellipse cx="${x + 14}" cy="${baseY - 54}" rx="12" ry="9" fill="#84a83f" opacity="0.35" class="barakah-canopy"/>
-      <!-- Olives -->
-      ${Array.from({length: 5}, (_, i) => {
-        const ox = x - 10 + i * 5;
-        const oy = baseY - 66 + (i % 2 === 0 ? 0 : 4);
-        return `<circle cx="${ox}" cy="${oy}" r="3" fill="#6B8E23" class="barakah-olive" style="animation-delay:${(i * 0.4).toFixed(2)}s"/>`;
+    const tx = x - 7, tw = 14;
+    return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
+      <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 58} L${tx + 1},${baseY - 58} Z" fill="#4A3728"/>
+      <path d="M${tx + 2},${baseY - 42} Q${tx - 14},${baseY - 52} ${tx - 16},${baseY - 44}" stroke="#4A3728" stroke-width="3" fill="none"/>
+      <path d="M${tx + tw - 2},${baseY - 38} Q${tx + tw + 16},${baseY - 48} ${tx + tw + 18},${baseY - 40}" stroke="#4A3728" stroke-width="3" fill="none"/>
+      <path d="M${tx + 5},${baseY - 25} Q${tx + 20},${baseY - 32} ${tx + 22},${baseY - 25}" stroke="#4A3728" stroke-width="2" fill="none"/>
+      <path d="M${tx + tw - 5},${baseY - 22} Q${tx - 20},${baseY - 28} ${tx - 22},${baseY - 22}" stroke="#4A3728" stroke-width="2" fill="none"/>
+      <path d="M${tx + 8},${baseY - 14} Q${tx + 24},${baseY - 18} ${tx + 26},${baseY - 13}" stroke="#4A3728" stroke-width="1.2" fill="none"/>
+      <path d="M${tx + tw - 8},${baseY - 12} Q${tx - 24},${baseY - 16} ${tx - 26},${baseY - 12}" stroke="#4A3728" stroke-width="1.2" fill="none"/>
+      <ellipse cx="${x}" cy="${baseY - 62}" rx="36" ry="22" fill="#525b30" opacity="0.25" class="barakah-canopy"/>
+      <ellipse cx="${x}" cy="${baseY - 60}" rx="30" ry="18" fill="#6B8E23" opacity="0.35" class="barakah-canopy"/>
+      <ellipse cx="${x}" cy="${baseY - 64}" rx="22" ry="14" fill="#84a83f" opacity="0.45"/>
+      <ellipse cx="${x}" cy="${baseY - 66}" rx="14" ry="10" fill="#a3bf5a" opacity="0.55"/>
+      <ellipse cx="${x - 14}" cy="${baseY - 54}" rx="16" ry="10" fill="#6B8E23" opacity="0.3" class="barakah-canopy"/>
+      <ellipse cx="${x + 16}" cy="${baseY - 56}" rx="14" ry="9" fill="#6B8E23" opacity="0.3" class="barakah-canopy"/>
+      ${Array.from({length: 6}, (_, i) => {
+        const ox = x - 12 + i * 5;
+        const oy = baseY - 68 + (i % 2 === 0 ? 0 : 5);
+        return `<circle cx="${ox}" cy="${oy}" r="3" fill="#566b1f" class="barakah-olive" style="animation-delay:${(i * 0.3).toFixed(2)}s"/>`;
       }).join('')}
-      <circle cx="${x}" cy="${baseY - 72}" r="2.5" fill="#fbbf24" class="barakah-sparkle"/>
+      <circle cx="${x}" cy="${baseY - 76}" r="2.5" fill="#fbbf24" class="barakah-sparkle"/>
     </g>`;
   },
 
