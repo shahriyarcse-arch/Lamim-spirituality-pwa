@@ -17,6 +17,12 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', 'http://127.0.0.1');
     const pathname = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
+    // Mock API endpoint for push service (prevents 404 in smoke test)
+    if (pathname.startsWith('/api/')) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ vapidKey: '' }));
+      return;
+    }
     const filePath = normalize(join(root, pathname));
     if (!filePath.startsWith(root)) {
       res.writeHead(403);

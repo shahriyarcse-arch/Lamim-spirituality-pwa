@@ -1,0 +1,11 @@
+name: Push Notification Cron
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger push notification check
+        run: curl -s "https://lamim.app/api/push?cron=1&secret=${{ secrets.PUSH_CRON_SECRET }}"

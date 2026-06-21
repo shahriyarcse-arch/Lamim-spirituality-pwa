@@ -307,6 +307,10 @@ const App = {
     if (typeof PrayerNotifier !== 'undefined') {
       PrayerNotifier.init();
     }
+    // Initialize Push notifications (server-side push)
+    if (typeof PushManager !== 'undefined' && 'PushManager' in window) {
+      PushManager.init();
+    }
     // Initialize Home section listeners (data-updated event)
     if (typeof Home !== 'undefined') Home.init();
   },

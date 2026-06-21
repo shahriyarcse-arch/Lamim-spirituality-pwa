@@ -32,6 +32,7 @@ const ASSETS = [
   './js/analysis.js',
   './js/dua.js',
   './js/prayer-notifier.js',
+  './js/push.js',
   './js/year-review.js',
   './js/app.js',
   './css/bundle.css',
@@ -135,6 +136,42 @@ self.addEventListener('notificationclick', (e) => {
   );
 });
 
+// Handle incoming push messages from server
+self.addEventListener('push', (e) => {
+  let title = 'Prayer Time!';
+  let body = 'It is time to pray.';
+  let icon = './assets/icon-192x192.png';
+  let tag = 'prayer';
+  try {
+    if (e.data) {
+      const d = e.data.json();
+      if (d.title) title = d.title;
+      if (d.body) body = d.body;
+      if (d.icon) icon = d.icon;
+      if (d.tag) tag = d.tag;
+    }
+  } catch (err) {}
+  e.waitUntil(
+    self.registration.showNotification(title, {
+      body, icon, badge: './assets/icon-32x32.png', tag,
+      renotify: true, vibrate: [200, 100, 200, 100, 200], requireInteraction: true
+    })
+  );
+});
+
+// Re-subscribe when push subscription changes (expired/rotated)
+self.addEventListener('pushsubscriptionchange', (e) => {
+  e.waitUntil(
+    self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: e.oldSubscription?.options?.applicationServerKey })
+      .then(sub => {
+        return fetch('./api/push', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'subscribe', subscription: sub.toJSON(), times: [] })
+        }).catch(() => {});
+      }).catch(() => {})
+  );
+});
+
 // Fetch: Smart Strategy
 // - Navigation (HTML): Network-First (always get latest)
 // - Assets (JS/CSS/etc): Network-First with Cache Fallback (fresh when online, cached when offline)
@@ -145,6 +182,7 @@ self.addEventListener('fetch', (e) => {
   // Skip external database, dynamic API, and Google API calls to prevent stale data
   // Also skip CDN libraries that must always be fetched fresh
   const skipUrls = [
+    '/api/',  // Never cache API calls
     'api.bigdatacloud.net',
     'ipapi.co',
     'open.er-api.com',
