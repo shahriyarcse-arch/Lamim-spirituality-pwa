@@ -81,6 +81,28 @@ await page.addInitScript(() => {
 try {
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#page-dashboard.active', { timeout: 8000 });
+  await page.waitForSelector('.home-hero-card', { timeout: 5000 });
+
+  const homeLayout = await page.evaluate(() => {
+    const hero = document.querySelector('.home-hero-card');
+    const stat = document.querySelector('.home-stat-chip');
+    const orb = document.querySelector('.waqt-orb-premium');
+    const heroStyle = hero ? getComputedStyle(hero) : null;
+    const statStyle = stat ? getComputedStyle(stat) : null;
+    const orbStyle = orb ? getComputedStyle(orb) : null;
+
+    return {
+      hasHero: Boolean(hero),
+      heroDisplay: heroStyle?.display || '',
+      heroRadius: parseFloat(heroStyle?.borderRadius || '0'),
+      statDisplay: statStyle?.display || '',
+      orbRadius: parseFloat(orbStyle?.borderRadius || '0')
+    };
+  });
+
+  if (!homeLayout.hasHero || homeLayout.heroDisplay !== 'flex' || homeLayout.heroRadius < 8 || homeLayout.statDisplay !== 'flex' || homeLayout.orbRadius < 8) {
+    throw new Error(`Home layout CSS did not apply correctly: ${JSON.stringify(homeLayout)}`);
+  }
 
   const sections = ['home', 'salah', 'dhikr', 'nafl', 'mujahid', 'finance', 'analysis', 'profile'];
   for (const section of sections) {
