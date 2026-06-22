@@ -12,8 +12,6 @@
   border-radius: var(--card-radius);
   padding: var(--space-6);
   transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
-  transform: translateZ(0);
-  will-change: transform, opacity;
   color: var(--color-text-primary);
   overflow: hidden;
 }
@@ -21,8 +19,8 @@
 .card-sm { padding: var(--space-4); border-radius: var(--radius-lg); }
 .card-glass {
   background: var(--color-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
   border-radius: var(--card-radius);
   padding: var(--space-6);
