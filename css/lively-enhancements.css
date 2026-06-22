@@ -1341,14 +1341,7 @@
   -webkit-backdrop-filter: blur(12px) !important;
 }
 
-/* Fix 2: Remove continuous border-breathing animations (GPU paint churn) */
-/* Override the keyframes instead of animation:none — preserves inline popIn entrance on .prayer-time-pill */
-@keyframes borderBreathSalah {
-  0%, 50%, 100% { border-color: var(--color-border); box-shadow: none; }
-}
-.salah-stat-card {
-  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
-}
+/* Fix 2 & 6 removed — user wants borderBreathSalah preserved on prayer-time-pill and salah-stat-card */
 
 /* Fix 3: Remove GPU compositing translateZ(0) that blurs text inside backdrop-filter */
 .card {
@@ -1377,16 +1370,4 @@
 .salah-empty-subtitle {
   color: var(--color-text-muted) !important;
 }
-
-/* Fix 6: Remove stale nth-child animation delays for borderBreath from bundle.css */
-.salah-stat-card:nth-child(1),
-.salah-stat-card:nth-child(2),
-.salah-stat-card:nth-child(3),
-.salah-stat-card:nth-child(4) {
-  animation-delay: 0s !important;
-}
-.salah-stat-card:nth-child(1) { animation-delay: 0.05s !important; }
-.salah-stat-card:nth-child(2) { animation-delay: 0.1s !important; }
-.salah-stat-card:nth-child(3) { animation-delay: 0.15s !important; }
-.salah-stat-card:nth-child(4) { animation-delay: 0.2s !important; }
 
