@@ -45,12 +45,12 @@ const Home = {
     const maghrib = Utils.timeToMin(times[3].time);
     const isha = Utils.timeToMin(times[4].time);
 
-    let greet = 'Good Night 🌙';
-    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak 🌅';
-    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon ☀️';
-    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah 🌤️';
-    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light 🌆';
-    else if (nowTime >= isha) greet = 'Isha Peace 🌙';
+    let greet = 'Good Night';
+    if (nowTime >= fajr && nowTime < dhuhr) greet = 'Fajr Mubarak';
+    else if (nowTime >= dhuhr && nowTime < asr) greet = 'Blessed Noon';
+    else if (nowTime >= asr && nowTime < maghrib) greet = 'Asr Barakah';
+    else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light';
+    else if (nowTime >= isha) greet = 'Isha Peace';
 
     const rawName = (user && typeof user.name === 'string') ? user.name : 'User';
     const nameParts = rawName.trim().split(/\s+/);
@@ -95,7 +95,7 @@ const Home = {
       db.innerHTML = `
         <div class="h-stats">
           <div class="h-stat">
-            <span class="h-stat-icon">🔥</span>
+            <span class="h-stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
             <span class="h-stat-val">${window.n ? window.n(streak.perfect) : streak.perfect}<span class="h-stat-unit">d</span></span>
             <span class="h-stat-lbl">${window.t ? window.t('Streak') : 'Streak'}</span>
           </div>
@@ -105,7 +105,7 @@ const Home = {
             <span class="h-stat-lbl">SHS</span>
           </div>
           <div class="h-stat">
-            <span class="h-stat-icon">🕌</span>
+            <span class="h-stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l-3 4h6l-3-4z"/><path d="M5 22V8l7-4 7 4v14"/><path d="M5 22h14"/><path d="M9 22v-4a3 3 0 0 1 6 0v4"/><path d="M2 22h20"/></svg></span>
             <span class="h-stat-val">${window.n ? window.n(score.done) : score.done}<span class="h-stat-unit">/${window.n ? window.n(5) : 5}</span></span>
             <span class="h-stat-lbl">${window.t ? window.t('Today') : 'Today'}</span>
           </div>
@@ -289,11 +289,11 @@ const Home = {
     }
 
     const avgPrayed = (totalPrayed / history.length).toFixed(1);
-    const tip = perfectDays >= 5 ? '🔥 Exceptional week! You\'re in a spiritual flow.'
-      : totalMissed > totalPrayed ? '🌱 Start with one prayer at a time. Consistency over intensity.'
-        : totalDhikr > 1000 ? '📿 Your dhikr is high — keep your tongue moist with remembrance.'
-          : totalSunnah < 5 ? '⭐ Add a Sunnah prayer daily for extra light.'
-            : '🤲 You\'re doing great. Small steps lead to big transformations.';
+    const tip = perfectDays >= 5 ? 'Exceptional week! You\'re in a spiritual flow.'
+      : totalMissed > totalPrayed ? 'Start with one prayer at a time. Consistency over intensity.'
+        : totalDhikr > 1000 ? 'Your dhikr is high — keep your tongue moist with remembrance.'
+          : totalSunnah < 5 ? 'Add a Sunnah prayer daily for extra light.'
+            : 'You\'re doing great. Small steps lead to big transformations.';
 
     const formattedAvg = window.n ? window.n(avgPrayed) : avgPrayed;
     const formattedPerfect = window.n ? window.n(perfectDays) : perfectDays;
@@ -322,7 +322,7 @@ const Home = {
           </div>
         </div>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border-muted);display:flex;align-items:center;gap:8px;">
-          <span style="font-size:14px;line-height:1;">💡</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.5;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
           <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${window.t ? window.t(tip) : tip}</span>
         </div>
       </div>
