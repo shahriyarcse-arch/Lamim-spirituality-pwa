@@ -70,7 +70,7 @@
   padding: 1px 6px;
   border-radius: var(--radius-full);
   background: rgba(167, 139, 250, 0.15);
-    animation: pulseSalah 2s infinite;
+    animation: pulseOpacity 2s infinite;
 }
 
 /* Stats Grid */
@@ -201,14 +201,10 @@
   }
 }
 
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Cards Container */
