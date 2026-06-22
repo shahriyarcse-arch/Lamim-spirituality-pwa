@@ -1,1 +1,1 @@
-self.LAMIM_VERSION = '149';
+self.LAMIM_VERSION = '150';
