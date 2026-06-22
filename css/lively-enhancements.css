@@ -1342,8 +1342,9 @@
 }
 
 /* Fix 2: Remove continuous border-breathing animations (GPU paint churn) */
-.prayer-time-pill {
-  animation: none !important;
+/* Override the keyframes instead of animation:none — preserves inline popIn entrance on .prayer-time-pill */
+@keyframes borderBreathSalah {
+  0%, 50%, 100% { border-color: var(--color-border); box-shadow: none; }
 }
 .salah-stat-card {
   animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
