@@ -11,6 +11,11 @@
   --cb-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Fix missing text-shimmer keyframe referenced by salah-shimmer-text */
+@keyframes text-shimmer {
+  to { background-position: 300% center; }
+}
+
 /* ---- SMOOTH BASE TRANSITIONS ON ALL INTERACTIVE ELEMENTS ---- */
 .salah-stat-card,
 .salah-prayer-card,
@@ -1119,7 +1124,6 @@
   line-height: 1;
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .home-hero-date-en {
@@ -1232,22 +1236,11 @@
   }
 }
 
-/* === SALAH & HOME DARK MODE — CONSISTENT BG WITH REST OF APP === */
-[data-theme="dark"] .salah-stat-card,
-[data-theme="dark"] .salah-prayer-card,
-[data-theme="dark"] .salah-option-btn,
-[data-theme="dark"] .salah-locked-result {
-  background: rgba(255, 255, 255, 0.03) !important;
-}
-[data-theme="dark"] .salah-stat-card.stat-prayed .salah-stat-val { background: linear-gradient(135deg, #06b6d4, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-[data-theme="dark"] .salah-stat-card.stat-perfect .salah-stat-val { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-[data-theme="dark"] .salah-stat-card.stat-consistent .salah-stat-val { background: linear-gradient(135deg, #10b981, #3fb950); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-[data-theme="dark"] .salah-stat-card.stat-points .salah-stat-val { background: linear-gradient(135deg, #facc15, #d97706); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* Home Waqt Orb card — same treatment */
-[data-theme="dark"] .waqt-orb-premium {
-  background: rgba(255, 255, 255, 0.03) !important;
-}
+/* Salah stat value gradients — visible in both themes */
+.salah-stat-card.stat-prayed .salah-stat-val { background: linear-gradient(135deg, #06b6d4, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.salah-stat-card.stat-perfect .salah-stat-val { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.salah-stat-card.stat-consistent .salah-stat-val { background: linear-gradient(135deg, #10b981, #3fb950); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.salah-stat-card.stat-points .salah-stat-val { background: linear-gradient(135deg, #facc15, #d97706); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* =============================================
    BARAKAH GARDEN — Living Streak Visualizer

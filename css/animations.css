@@ -295,19 +295,19 @@
 
 /* 3D perspective tilt on cards */
 .tilt-3d {
-  perspective: 800px;
+  /* perspective intentionally not set here — avoids compositing distortion on the entire section */
 }
 .tilt-3d .card, .tilt-3d .salah-prayer-card, .tilt-3d .nafl-card-modern, .tilt-3d .goal-card {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
 }
 .tilt-3d .card:hover, .tilt-3d .salah-prayer-card:hover, .tilt-3d .nafl-card-modern:hover, .tilt-3d .goal-card:hover {
-  transform: rotateX(-2deg) rotateY(2deg) translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px -10px rgba(0,0,0,0.25);
 }
 
-/* Morphing card on hover — auto-applied */
+/* Morphing card on hover — subtle scale, no border-radius jump */
 .salah-prayer-card:hover, .nafl-card-modern:hover, .goal-card:hover, .settings-item:hover, .dhikr-session-item:hover {
-  border-radius: 12px !important;
+  transform: scale(1.01);
 }
 
 /* Dual-layer glass depth */
