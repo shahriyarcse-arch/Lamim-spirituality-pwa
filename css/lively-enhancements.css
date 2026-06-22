@@ -1338,6 +1338,10 @@
 .home-block {
   animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   animation-delay: calc(var(--stagger-i, 0) * 0.08s);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.home-block:hover {
+  transform: translateY(-2px);
 }
 .home-block-wide {
   grid-column: 1 / -1;
@@ -1350,36 +1354,81 @@
   justify-content: space-between;
   gap: var(--space-3);
   background: var(--color-glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-5);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.h-salam:hover {
+  border-color: var(--color-border-active);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+.h-salam::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--waqt-color, #a78bfa) 6%, transparent), transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.h-salam:hover::after {
+  opacity: 1;
 }
 .h-salam-left {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 .h-salam-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 10px;
+  gap: 6px;
+  font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.2px;
   color: var(--waqt-color, var(--color-accent-primary));
   background: color-mix(in srgb, var(--waqt-color, var(--color-accent-primary)) 12%, transparent);
-  padding: 3px 10px;
+  padding: 3px 10px 3px 8px;
   border-radius: var(--radius-full);
   width: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+.h-salam-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--waqt-color, #a78bfa) 15%, transparent), transparent);
+  animation: badgeShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes badgeShimmer {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
 }
 .h-salam-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--waqt-color, var(--color-accent-primary));
-  animation: pulse 2s infinite;
+  box-shadow: 0 0 6px var(--waqt-color, var(--color-accent-primary));
+  animation: waqtDotPulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+@keyframes waqtDotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px var(--waqt-color, var(--color-accent-primary)); }
+  50% { transform: scale(1.3); opacity: 0.85; box-shadow: 0 0 14px var(--waqt-color, var(--color-accent-primary)); }
 }
 .h-salam-name {
   font-size: clamp(1.1rem, 4vw, 1.4rem);
@@ -1394,6 +1443,8 @@
   flex-direction: column;
   gap: 1px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 .h-salam-time {
   font-size: clamp(1.3rem, 5vw, 1.7rem);
@@ -1415,19 +1466,28 @@
   display: flex;
   gap: var(--space-3);
   background: var(--color-glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.h-stats:hover {
+  border-color: var(--color-border-active);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 .h-stat {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   padding: var(--space-2) 0;
   position: relative;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.h-stat:hover {
+  transform: translateY(-3px);
 }
 .h-stat + .h-stat::before {
   content: '';
@@ -1441,11 +1501,21 @@
 .h-stat-icon {
   font-size: 16px;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: statIconFloat 3s ease-in-out infinite;
+}
+.h-stat:nth-child(2) .h-stat-icon { animation-delay: 0.3s; }
+.h-stat:nth-child(3) .h-stat-icon { animation-delay: 0.6s; }
+@keyframes statIconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 .h-stat-orb {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1454,9 +1524,14 @@
   font-weight: 900;
   color: #fff;
   box-shadow: 0 0 12px color-mix(in srgb, currentColor 40%, transparent);
+  animation: orbBreathe 3s ease-in-out infinite;
+}
+@keyframes orbBreathe {
+  0%, 100% { box-shadow: 0 0 12px color-mix(in srgb, currentColor 40%, transparent); transform: scale(1); }
+  50% { box-shadow: 0 0 20px color-mix(in srgb, currentColor 60%, transparent); transform: scale(1.06); }
 }
 .h-stat-val {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 900;
   color: var(--color-text-primary);
   line-height: 1;
@@ -1478,7 +1553,7 @@
 /* Next Prayer Card */
 .h-next {
   background: var(--color-glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-5);
@@ -1487,6 +1562,11 @@
   gap: var(--space-2);
   position: relative;
   overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.h-next:hover {
+  border-color: var(--color-border-active);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 .h-next::before {
   content: '';
@@ -1497,11 +1577,29 @@
   height: 3px;
   background: var(--h-next-color, var(--color-accent-primary));
   opacity: 0.6;
+  animation: nextBarPulse 3s ease-in-out infinite;
+}
+@keyframes nextBarPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.h-next::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 80% 40% at 50% -10%, color-mix(in srgb, var(--h-next-color, #a78bfa) 8%, transparent), transparent);
+  pointer-events: none;
 }
 .h-next-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
 }
 .h-next-label {
   font-size: 9px;
@@ -1514,27 +1612,50 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--color-text-secondary);
+  transition: color 0.3s ease;
 }
 .h-next-mid {
   margin: var(--space-1) 0;
+  position: relative;
+  z-index: 1;
 }
 .h-next-name {
   font-size: clamp(1.6rem, 6vw, 2.2rem);
   font-weight: 900;
   letter-spacing: -0.5px;
   line-height: 1;
+  transition: color 0.3s ease;
+  text-shadow: 0 0 30px color-mix(in srgb, var(--h-next-color, #a78bfa) 30%, transparent);
 }
 .h-next-bar {
   height: 4px;
   background: var(--color-divider-subtle);
   border-radius: var(--radius-full);
   overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 .h-next-fill {
   height: 100%;
   border-radius: var(--radius-full);
   background: var(--h-next-color, var(--color-accent-primary));
-  transition: width 0.5s ease;
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.h-next-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  border-radius: var(--radius-full);
+  animation: fillGlide 2s ease-in-out infinite;
+}
+@keyframes fillGlide {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 .h-next-cd {
   font-size: clamp(1.1rem, 4vw, 1.4rem);
@@ -1543,18 +1664,25 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.5px;
   margin-top: var(--space-1);
+  position: relative;
+  z-index: 1;
 }
 
 /* Today's Salah Card */
 .h-salah-card {
   background: var(--color-glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.h-salah-card:hover {
+  border-color: var(--color-border-active);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 .h-salah-header {
   display: flex;
@@ -1575,6 +1703,10 @@
   background: color-mix(in srgb, var(--h-salah-color, var(--color-accent-primary)) 12%, transparent);
   padding: 2px 10px;
   border-radius: var(--radius-full);
+  transition: all 0.3s ease;
+}
+.h-salah-badge:hover {
+  transform: scale(1.05);
 }
 .h-salah-dots {
   display: flex;
@@ -1585,19 +1717,38 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  animation: prayerItemIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.h-prayer-item:nth-child(1) { animation-delay: 0.05s; }
+.h-prayer-item:nth-child(2) { animation-delay: 0.1s; }
+.h-prayer-item:nth-child(3) { animation-delay: 0.15s; }
+.h-prayer-item:nth-child(4) { animation-delay: 0.2s; }
+.h-prayer-item:nth-child(5) { animation-delay: 0.25s; }
+@keyframes prayerItemIn {
+  0% { opacity: 0; transform: translateY(8px) scale(0.85); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .h-prayer-dot {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 2px solid var(--color-divider-strong);
+  border: 2.5px solid var(--color-divider-strong);
   background: var(--color-surface-nested);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.h-prayer-dot:hover {
+  transform: scale(1.15);
 }
 .h-prayer-dot-done {
   background: var(--color-accent-green);
   border-color: var(--color-accent-green);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+  animation: doneDotGlow 2s ease-in-out infinite;
+}
+@keyframes doneDotGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(16, 185, 129, 0.45); }
+  50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.65); }
 }
 .h-prayer-dot-missed {
   background: var(--color-accent-red);
@@ -1609,12 +1760,24 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+.h-prayer-item:hover .h-prayer-lbl {
+  color: var(--color-text-primary);
 }
 .h-salah-footer {
   font-size: 10px;
   font-weight: 600;
   color: var(--color-text-muted);
   text-align: center;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-divider-subtle);
+  animation: footerFade 0.6s ease both;
+  animation-delay: 0.3s;
+}
+@keyframes footerFade {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* =============================================
