@@ -52,215 +52,91 @@ const Home = {
     else if (nowTime >= maghrib && nowTime < isha) greet = 'Maghrib Light 🌆';
     else if (nowTime >= isha) greet = 'Isha Peace 🌙';
 
-    // Get Last Name (with safety)
     const rawName = (user && typeof user.name === 'string') ? user.name : 'User';
     const nameParts = rawName.trim().split(/\s+/);
     const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0];
-
-    // Use global Utils.escapeHTML to prevent XSS attacks
     const safeLastName = Utils.escapeHTML(lastName);
 
-    const el = document.getElementById('home-greeting');
-    if (el) el.innerHTML = `
-      <div class="home-hero-card">
-        <div class="home-hero-left">
-          <div class="home-hero-waqt-badge">
-            <span class="home-hero-waqt-dot"></span>
-            ${window.t ? window.t(greet) : greet}
-          </div>
-          <h2 class="home-hero-salam">
-            ${window.t ? window.t('As-salamu alaykum,') : 'As-salamu alaykum,'}
-          </h2>
-          <div class="home-hero-name">${safeLastName}</div>
-        </div>
-        <div class="home-hero-right">
-          <div id="live-time-val" class="home-hero-time">--:--</div>
-          <div id="live-date-en-val" class="home-hero-date-en"></div>
-          <div id="live-date-hj-val" class="home-hero-date-hj"></div>
-        </div>
-      </div>
-    `;
-
-    // Live Date Time (accurate, no lag)
-    this.startLiveDateTime();
-
-    // FIX #4: Compute SHS once and cache for sub-functions
+    // Compute SHS once
     this._cachedSHS = typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : 0;
 
-    // Date bar (Streaks + LSS Score + Pulse)
+    // --- SALAM BAR (compact) ---
+    const el = document.getElementById('home-greeting');
+    if (el) {
+      const next = Utils.getNextPrayer(times);
+      const waqtColors = { fajr:'#38bdf8', dhuhr:'#fbbf24', asr:'#fb923c', maghrib:'#a855f7', isha:'#6366f1' };
+      const wc = waqtColors[next.name] || '#10B981';
+      el.innerHTML = `
+        <div class="h-salam">
+          <div class="h-salam-left">
+            <span class="h-salam-badge" style="--waqt-color:${wc}">
+              <span class="h-salam-dot"></span>
+              ${window.t ? window.t(greet) : greet}
+            </span>
+            <div class="h-salam-name">${window.t ? window.t('As-salamu alaykum,') : 'As-salamu alaykum,'} ${safeLastName}</div>
+          </div>
+          <div class="h-salam-right">
+            <div id="live-time-val" class="h-salam-time">--:--</div>
+            <div id="live-date-en-val" class="h-salam-date"></div>
+            <div id="live-date-hj-val" class="h-salam-date">...</div>
+          </div>
+        </div>
+      `;
+    }
+    this.startLiveDateTime();
+
+    // --- STATS BAR (home-date-bar) ---
     const db = document.getElementById('home-date-bar');
     if (db) {
       const shs = this._cachedSHS;
-
+      const streak = DB.getSalahStreak();
+      const today = DB.getSalah(Utils.todayStr());
+      const score = Utils.salahScore(today);
       db.innerHTML = `
-        <div class="home-stats-row">
-          <div class="home-stat-chip home-stat-streak">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--color-accent-gold)">
-              <path d="M12 2c0 0-4.5 5.5-4.5 10s3.5 8 4.5 8 4.5-3.5 4.5-8-4.5-10-4.5-10zm0 15c-1.5 0-2.5-1.5-2.5-3.5s1-3.5 2.5-3.5 2.5 1.5 2.5 3.5-1 3.5-2.5 3.5z"/>
-            </svg>
-            <span class="home-stat-value" style="color: var(--color-accent-gold);">${window.n ? window.n(DB.getSalahStreak().perfect) : DB.getSalahStreak().perfect}d</span>
-            <span class="home-stat-label">${window.t ? window.t('Streak') : 'Streak'}</span>
+        <div class="h-stats">
+          <div class="h-stat">
+            <span class="h-stat-icon">🔥</span>
+            <span class="h-stat-val">${window.n ? window.n(streak.perfect) : streak.perfect}<span class="h-stat-unit">d</span></span>
+            <span class="h-stat-lbl">${window.t ? window.t('Streak') : 'Streak'}</span>
           </div>
-          <div class="home-stat-chip home-stat-shs" style="--stat-color: ${shs.rating.color};">
-            <div class="home-stat-shs-orb" style="background: ${shs.rating.color};">
-              <span>${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
-            </div>
-            <span class="home-stat-label">SHS</span>
+          <div class="h-stat">
+            <span class="h-stat-icon h-stat-orb" style="background:${shs.rating.color}">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
+            <span class="h-stat-val">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
+            <span class="h-stat-lbl">SHS</span>
           </div>
-          <div class="home-stat-chip home-stat-pulse" id="shs-pulse-graph-spot"></div>
+          <div class="h-stat">
+            <span class="h-stat-icon">🕌</span>
+            <span class="h-stat-val">${window.n ? window.n(score.done) : score.done}<span class="h-stat-unit">/${window.n ? window.n(5) : 5}</span></span>
+            <span class="h-stat-lbl">${window.t ? window.t('Today') : 'Today'}</span>
+          </div>
         </div>
       `;
     }
 
-    // Next prayer banner
-    // Wrap in reveal container
-    const npContainer = document.getElementById('home-next-prayer');
-    if (npContainer) npContainer.classList.add('home-reveal', 'revealed');
-
+    // --- NEXT PRAYER (compact card) ---
     this.startNextPrayerCountdown();
 
-    // Salah ring (inside the card - add reveal to the parent)
+    // --- TODAY'S SALAH STATUS ---
     this.renderSalahRing();
 
-    // 1. Path to Ihsan (Level Progress Bar)
-    const lvlContainer = document.getElementById('home-level-progress-container');
-    if (lvlContainer) lvlContainer.classList.add('home-reveal', 'revealed', 'home-reveal-delay-2');
-
-    this.renderIhsanLevel();
-
-    // 3. Spiritual Pulse (Micro-Graph)
-    this.renderSpiritualPulse();
-
-    // 4. Barakah Garden
-    this.renderBarakahGarden();
-
-    // 5. Weekly AI Summary
+    // --- WEEKLY PULSE ---
     this.renderWeeklySummary();
 
-    // 6. Dua Request Board Card
+    // --- DUA CARD ---
     this.renderDuaCard();
 
-    // 7. AI Spiritual Insight (reveal class added inside renderAIInsight)
+    // --- AI INSIGHT ---
     this.renderAIInsight();
 
-    // 8. Nur Particles (Subtle Animation)
-    this.renderNurParticles();
+    // Trigger staggered entrance
+    document.querySelectorAll('.home-block').forEach((b, i) => {
+      b.style.setProperty('--stagger-i', i);
+    });
   },
 
 
 
-  renderIhsanLevel() {
-    const container = document.getElementById('home-level-progress-container');
-    if (!container) return;
-
-    const shs = this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { total: 0, rating: { color: '#8E8E93' } });
-    const ranks = [
-      { min: 0, label: 'Ghafil' },
-      { min: 15, label: 'Musafir' },
-      { min: 30, label: 'Murid' },
-      { min: 50, label: 'Mujahid' },
-      { min: 65, label: 'Mukhlis' },
-      { min: 80, label: 'Muttaqi' },
-      { min: 90, label: 'Muhsin' },
-      { min: 101, label: 'Wali' }
-    ];
-
-    let curIdx = ranks.findIndex(r => shs.total < r.min) - 1;
-    if (curIdx < 0) curIdx = 0;
-    const current = ranks[curIdx];
-    const next = ranks[curIdx + 1] || current;
-    const diff = next.min - current.min;
-    const prog = diff > 0 ? ((shs.total - current.min) / diff) * 100 : 100;
-    const color = shs.rating.color;
-
-    const starPositions = [
-      [40, 90], [125, 60], [210, 80], [295, 50],
-      [380, 75], [465, 55], [550, 85], [620, 50]
-    ];
-
-    const segLengths = [];
-    for (let i = 1; i < starPositions.length; i++) {
-      const dx = starPositions[i][0] - starPositions[i - 1][0];
-      const dy = starPositions[i][1] - starPositions[i - 1][1];
-      segLengths.push(Math.sqrt(dx * dx + dy * dy));
-    }
-    const totalConnLen = segLengths.reduce((a, b) => a + b, 0);
-
-    let progressLen = 0;
-    for (let i = 0; i < Math.min(curIdx, 7); i++) progressLen += segLengths[i];
-    if (curIdx < 7) progressLen += (prog / 100) * segLengths[curIdx];
-    const fillOffset = totalConnLen - progressLen;
-
-    const allPoints = starPositions.map(p => p.join(',')).join(' ');
-
-    const starsHtml = ranks.map((r, idx) => {
-      const [x, y] = starPositions[idx];
-      const isAchieved = idx < curIdx;
-      const isCurrent = idx === curIdx;
-      const isFuture = idx > curIdx;
-      const starR = isAchieved ? 7 : isCurrent ? 8 : 5;
-      return `
-        <g class="ihsan-star ${isAchieved ? 'ihsan-star-achieved' : isCurrent ? 'ihsan-star-current' : 'ihsan-star-future'}">
-          <circle cx="${x}" cy="${y}" r="${starR}" fill="${isAchieved || isCurrent ? color : 'none'}"
-            stroke="${isAchieved || isCurrent ? color : 'var(--color-divider-subtle)'}" stroke-width="1.5"/>
-          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="12" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.3" class="ihsan-pulse-ring"/>` : ''}
-          ${isCurrent ? `<circle cx="${x}" cy="${y}" r="17" fill="none" stroke="${color}" stroke-width="1" opacity="0.12" class="ihsan-pulse-ring-outer"/>` : ''}
-          <text x="${x}" y="${y + 22}" text-anchor="middle" font-size="9" font-weight="${isCurrent ? '800' : '600'}"
-            fill="${isAchieved || isCurrent ? 'var(--color-text-primary)' : 'var(--color-text-muted)'}" opacity="${isFuture ? 0.35 : 1}">${r.label}</text>
-        </g>`;
-    }).join('');
-
-    container.innerHTML = `
-      <div class="ihsan-galaxy-container">
-        <div class="ihsan-galaxy-header">
-          <div>
-            <div class="ihsan-label">${window.t ? window.t('CURRENT RANK') : 'Current Rank'}</div>
-            <div class="ihsan-current-rank" style="color:${color};">${window.t ? window.t(current.label) : current.label} <span class="ihsan-shs">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span></div>
-          </div>
-          <div class="ihsan-next-info">
-            <div class="ihsan-label">${window.t ? window.t('Next') : 'Next'}</div>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="color:var(--color-accent-gold); font-weight:800; font-size:14px;">${window.t ? window.t(next.label) : next.label}</span>
-              <span class="ihsan-pct" style="color:${color};">${window.n ? window.n(Math.round(prog)) : Math.round(prog)}%</span>
-            </div>
-          </div>
-        </div>
-        <div class="ihsan-galaxy-scroll">
-          <svg class="ihsan-galaxy-svg" viewBox="0 0 660 140" width="660" height="140">
-            <polyline points="${allPoints}" fill="none" stroke="var(--color-divider-subtle)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
-            <polyline points="${allPoints}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${totalConnLen}" stroke-dashoffset="${fillOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.34, 1.56, 0.64, 1);"/>
-            ${starsHtml}
-          </svg>
-        </div>
-      </div>
-    `;
-  },
-
-  renderSpiritualPulse() {
-    const container = document.getElementById('shs-pulse-graph-spot');
-    if (!container) return;
-
-    // FIX #4: Use cached SHS instead of recalculating
-    const color = (this._cachedSHS || (typeof Analysis !== 'undefined' ? Analysis.calculateSHS() : { rating: { color: '#8E8E93' } })).rating.color;
-    container.style.overflow = 'visible';
-    container.style.width = '100px';
-
-    container.innerHTML = `
-      <svg width="100" height="30" viewBox="0 0 100 30" style="filter: drop-shadow(0 0 5px ${color}40);">
-        <defs>
-          <linearGradient id="pGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:${color};stop-opacity:0" />
-            <stop offset="50%" style="stop-color:${color};stop-opacity:1" />
-            <stop offset="100%" style="stop-color:${color};stop-opacity:0" />
-          </linearGradient>
-        </defs>
-        <path d="M 0,15 Q 10,15 15,15 T 25,5 T 35,25 T 45,15 T 55,15 T 65,15 T 75,5 T 85,25 T 100,15" 
-              fill="none" stroke="url(#pGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3" />
-        <path class="shs-pulse-dot" d="M 0,15 Q 10,15 15,15 T 25,5 T 35,25 T 45,15 T 55,15 T 65,15 T 75,5 T 85,25 T 100,15" 
-              fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    `;
-  },
+  /* Ihsan level, spiritual pulse, barakah garden, nur particles removed — replaced with bento dashboard */
 
   renderAIInsight() {
     const container = document.getElementById('home-ai-insight-container');
@@ -472,254 +348,7 @@ const Home = {
     `;
   },
 
-  renderBarakahGarden() {
-    const container = document.getElementById('home-barakah-garden');
-    if (!container) return;
-    const raw = DB.getSalahStreak ? DB.getSalahStreak().perfect : 0;
-    const streak = typeof raw === 'number' ? raw : 0;
-    const isBarren = !streak || streak <= 0;
-    const tier = isBarren ? 0 : (streak >= 100 ? 5 : streak >= 60 ? 4 : streak >= 30 ? 3 : streak >= 14 ? 2 : streak >= 7 ? 1 : 0);
-    const tierNames = ['Fallow Land', 'Sprout', 'Bloom', 'Rose', 'Sapling', 'Tree', 'Olive Tree'];
-    const tierEmojis = ['🏜️', '🌱', '🌸', '🌹', '🌿', '🌳', '🫒'];
-    const idx = isBarren ? 0 : tier;
-    const tierName = tierNames[idx] || 'Garden';
-    const colors = ['#6B7280', '#86efac', '#34d399', '#22c55e', '#16a34a', '#15803d', '#fdba74'];
-    const phaseColor = isBarren ? '#6B7280' : (colors[tier + 1] || '#10B981');
-
-    const gardenSVG = this._gardenSVG(tier, isBarren);
-
-    container.innerHTML = `
-      <div class="card barakah-garden-card home-reveal revealed" style="padding:0; overflow:hidden; border:1px solid var(--color-border); border-radius:var(--card-radius); background:var(--color-surface-card);">
-        <div class="barakah-garden-inner" style="position:relative;">
-          <div class="barakah-garden-svg-wrap">${gardenSVG}</div>
-          <div class="barakah-garden-label" style="display:flex; align-items:center; justify-content:space-between; padding:12px 18px 14px; border-top:1px solid var(--color-divider-subtle);">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:20px;">${tierEmojis[idx]}</span>
-              <div>
-                <div style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--color-text-muted);">${window.t ? window.t('Barakah Garden') : 'Barakah Garden'}</div>
-                <div style="font-size:15px; font-weight:800; color:${phaseColor};">${window.t ? window.t(tierName) : tierName}</div>
-              </div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:24px; font-weight:900; line-height:1; color:var(--color-text-primary);">${window.n ? window.n(streak) : streak}</div>
-              <div style="font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; color:var(--color-text-muted);">${window.t ? window.t('Day Streak') : 'Day Streak'}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  },
-
-  _gardenSVG(tier, isBarren) {
-    if (isBarren) {
-      return `<svg width="340" height="230" viewBox="0 0 340 230" style="display:block;">
-        <defs>
-          <radialGradient id="brnGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#29252460"/><stop offset="100%" stop-color="#29252400"/></radialGradient>
-          <linearGradient id="brnSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c1917"/><stop offset="100%" stop-color="#292524"/></linearGradient>
-        </defs>
-        <rect width="340" height="230" fill="url(#brnSky)"/>
-        <circle cx="170" cy="100" r="70" fill="url(#brnGlow)"/>
-        <!-- distant barren hills -->
-        <path d="M0,195 L30,175 L65,190 L100,165 L140,180 L175,160 L210,178 L250,163 L285,182 L320,168 L340,185 L340,195Z" fill="#292524" opacity="0.5"/>
-        <path d="M0,195 L40,178 L80,192 L120,170 L160,185 L195,165 L235,180 L270,168 L310,185 L340,178 L340,195Z" fill="#292524" opacity="0.3"/>
-        <!-- cracked ground -->
-        <path d="M0,195 Q85,200 170,195 Q255,190 340,195 L340,230 L0,230Z" fill="#292524"/>
-        <path d="M0,205 Q85,202 170,205 Q255,208 340,205 L340,230 L0,230Z" fill="#1c1917" opacity="0.5"/>
-        <!-- cracks -->
-        <path d="M120,206 L130,215 L125,222" stroke="#44403c" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <path d="M200,204 L210,212 L205,218" stroke="#44403c" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <path d="M160,208 L165,214" stroke="#44403c" stroke-width="0.6" fill="none" opacity="0.4"/>
-        ${this._cloudSVG(45, 50, 0.4)}
-        ${this._cloudSVG(260, 65, 0.25)}
-        <!-- single dried stem -->
-        <path d="M170,200 Q172,186 168,176" stroke="#57534e" stroke-width="1.5" fill="none" opacity="0.5"/>
-        <path d="M168,176 Q165,174 163,176" stroke="#57534e" stroke-width="1" fill="none" opacity="0.4"/>
-        <path d="M172,190 Q178,188 176,185" stroke="#57534e" stroke-width="1" fill="none" opacity="0.4"/>
-        <!-- seed in soil -->
-        <ellipse cx="170" cy="204" rx="4" ry="2.5" fill="#57534e" opacity="0.6"/>
-        <text x="170" y="155" text-anchor="middle" fill="#57534e" font-size="11" font-weight="700" letter-spacing="0.6" opacity="0.7">Plant your first seed</text>
-        <text x="170" y="170" text-anchor="middle" fill="#57534e" font-size="8" font-weight="400" opacity="0.4">Complete all 5 prayers today</text>
-      </svg>`;
-    }
-
-    return `<svg width="340" height="230" viewBox="0 0 340 230" style="display:block;">
-      <defs>
-        <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#070b14"/><stop offset="55%" stop-color="#0f1a2e"/><stop offset="100%" stop-color="#1a2e1a" stop-opacity="0.4"/></linearGradient>
-        <linearGradient id="gMoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#cbd5e1" stop-opacity="0.9"/><stop offset="100%" stop-color="#cbd5e1" stop-opacity="0.05"/></linearGradient>
-        <linearGradient id="gMtn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2e1a"/><stop offset="100%" stop-color="#0f1a0f"/></linearGradient>
-        <linearGradient id="gMtn2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#162216"/><stop offset="100%" stop-color="#0d1a0d"/></linearGradient>
-        <linearGradient id="gGnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2d5a27"/><stop offset="100%" stop-color="#1a3a15"/></linearGradient>
-        <linearGradient id="gGnd2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a15"/><stop offset="100%" stop-color="#0f2a0f"/></linearGradient>
-      </defs>
-      <rect width="340" height="230" fill="url(#gSky)"/>
-      <!-- stars -->
-      ${Array.from({length: 20}, (_, i) => {
-        const a = i * 1.3 + 0.5;
-        const sx = 20 + Math.sin(a) * 150 + 170;
-        const sy = 6 + (i * 6.7) % 48;
-        return `<circle cx="${sx}" cy="${sy}" r="${0.4 + (i % 3) * 0.35}" fill="#e2e8f0" opacity="${0.15 + (i % 5) * 0.12}" class="barakah-star" style="animation-delay:${(i * 0.15).toFixed(2)}s"/>`;
-      }).join('')}
-      <!-- crescent moon -->
-      <path d="M278,32 A16,16 0 1,1 292,18 A20,20 0 1,0 278,32Z" fill="url(#gMoon)" opacity="0.5"/>
-      <!-- far mountains with snow -->
-      <path d="M0,195 L35,162 L70,185 L110,150 L150,178 L185,145 L220,172 L260,152 L295,180 L325,158 L340,178 L340,195Z" fill="url(#gMtn1)" opacity="0.6"/>
-      <path d="M60,168 L75,160 L90,165" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.15"/>
-      <path d="M185,148 L200,142 L215,148" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.15"/>
-      <!-- near mountains -->
-      <path d="M0,195 L25,175 L55,192 L90,168 L130,185 L160,162 L195,182 L230,165 L265,184 L300,168 L340,188 L340,195Z" fill="url(#gMtn2)" opacity="0.45"/>
-      <!-- ground main -->
-      <path d="M0,195 Q85,185 170,195 Q255,205 340,195 L340,230 L0,230Z" fill="url(#gGnd)"/>
-      <path d="M0,205 Q85,197 170,205 Q255,213 340,205 L340,230 L0,230Z" fill="url(#gGnd2)" opacity="0.7"/>
-      <!-- ground mid-line -->
-      <path d="M0,195 Q42,191 85,195 Q127,199 170,195 Q212,191 255,195 Q297,199 340,195" fill="none" stroke="#166534" stroke-width="1" opacity="0.25"/>
-      ${this._cloudSVG(55, 52, 0.45)}
-      ${this._cloudSVG(265, 68, 0.3)}
-      ${this._grassSVG(tier)}
-      ${this._plantSVG(170, 203, tier)}
-      ${tier >= 2 ? this._plantSVG(80, 210, Math.min(tier - 1, 3)) : ''}
-      ${tier >= 4 ? this._plantSVG(255, 207, Math.min(tier - 2, 3)) : ''}
-      ${tier >= 5 ? this._plantSVG(115, 213, 2) : ''}
-    </svg>`;
-  },
-
-  _cloudSVG(cx, cy, opacity) {
-    return `<g class="barakah-cloud" opacity="${opacity}">
-      <ellipse cx="${cx}" cy="${cy}" rx="26" ry="8" fill="#1e293b"/>
-      <ellipse cx="${cx + 12}" cy="${cy - 4}" rx="14" ry="6" fill="#1e293b"/>
-      <ellipse cx="${cx - 9}" cy="${cy - 2}" rx="11" ry="5" fill="#1e293b"/>
-    </g>`;
-  },
-
-  _grassSVG(tier) {
-    const count = 10 + tier * 3;
-    const blades = [];
-    for (let i = 0; i < count; i++) {
-      const x = 8 + (i * (324 / count)) + (i % 4) * 3;
-      const h = 6 + (i % 6) * 3 + tier * 1.2;
-      const lean = i % 2 === 0 ? 0.8 : -0.8;
-      blades.push(`<path d="M${x},207 Q${x + lean * 3},${207 - h} ${x + lean * 5},${207 - h - 2}" stroke="#22c55e" stroke-width="${1.2 + tier * 0.12}" fill="none" class="barakah-grass" style="animation-delay:${(i * 0.1).toFixed(2)}s"/>`);
-    }
-    return blades.join('');
-  },
-
-  _plantSVG(x, baseY, tier) {
-    if (tier === 0) {
-      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-        <path d="M${x},${baseY} Q${x + 0.5},${baseY - 12} ${x - 0.5},${baseY - 16}" stroke="#4ade80" stroke-width="2" fill="none" class="barakah-plant"/>
-        <path d="M${x - 0.5},${baseY - 16} Q${x - 6},${baseY - 19} ${x - 7},${baseY - 15}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x},${baseY - 13} Q${x + 6},${baseY - 16} ${x + 7},${baseY - 12}" fill="#4ade80" class="barakah-leaf"/>
-        <ellipse cx="${x}" cy="${baseY + 2}" rx="5" ry="2" fill="#57534e" opacity="0.3"/>
-      </g>`;
-    }
-    if (tier === 1) {
-      const px = x, py = baseY - 36;
-      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-        <path d="M${x},${baseY} Q${x - 1.5},${baseY - 16} ${x + 0.5},${baseY - 28}" stroke="#22c55e" stroke-width="2.5" fill="none" class="barakah-plant"/>
-        <path d="M${x + 0.5},${baseY - 18} Q${x - 6},${baseY - 22} ${x - 7},${baseY - 16}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x + 0.5},${baseY - 12} Q${x + 7},${baseY - 15} ${x + 8},${baseY - 11}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${px - 7},${py + 5} Q${px - 10},${py - 5} ${px - 6},${py - 10} Q${px},${py - 14} ${px + 6},${py - 10} Q${px + 10},${py - 5} ${px + 7},${py + 5}Z" fill="#f472b6" class="barakah-petal"/>
-        <ellipse cx="${px}" cy="${py}" rx="3" ry="2" fill="#fbbf24" opacity="0.7"/>
-      </g>`;
-    }
-    if (tier === 2) {
-      const px = x, py = baseY - 40;
-      const petals = [];
-      for (let a = 0; a < 9; a++) {
-        const angle = (a / 9) * Math.PI * 2;
-        petals.push(`<ellipse cx="${px + Math.cos(angle) * 9}" cy="${py + Math.sin(angle) * 9}" rx="4.5" ry="7" fill="#a78bfa" opacity="0.8" class="barakah-petal" transform="rotate(${a * 40} ${px + Math.cos(angle) * 9} ${py + Math.sin(angle) * 9})" style="animation-delay:${(a * 0.07).toFixed(2)}s"/>`);
-      }
-      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-        <path d="M${x},${baseY} Q${x + 0.5},${baseY - 18} ${x - 0.5},${baseY - 32}" stroke="#22c55e" stroke-width="2.8" fill="none" class="barakah-plant"/>
-        ${petals.join('')}
-        <circle cx="${px}" cy="${py}" r="4.5" fill="#fbbf24"/>
-        <path d="M${x - 0.5},${baseY - 14} Q${x - 9},${baseY - 18} ${x - 10},${baseY - 12}" fill="#4ade80" class="barakah-leaf"/>
-        <path d="M${x - 0.5},${baseY - 22} Q${x + 9},${baseY - 26} ${x + 10},${baseY - 20}" fill="#4ade80" class="barakah-leaf"/>
-      </g>`;
-    }
-    if (tier === 3) {
-      const tx = x - 4, tw = 8;
-      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 45} L${tx + 1},${baseY - 45}Z" fill="#5c3a1e"/>
-        <path d="M${tx + 3},${baseY - 28} Q${tx - 9},${baseY - 33} ${tx - 11},${baseY - 28}" stroke="#7c5a3e" stroke-width="2" fill="none"/>
-        <path d="M${tx + tw - 3},${baseY - 24} Q${tx + tw + 9},${baseY - 29} ${tx + tw + 11},${baseY - 24}" stroke="#7c5a3e" stroke-width="2" fill="none"/>
-        <ellipse cx="${x}" cy="${baseY - 50}" rx="24" ry="15" fill="#166534" opacity="0.35" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 48}" rx="18" ry="11" fill="#22c55e" opacity="0.45" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 51}" rx="12" ry="8" fill="#4ade80" opacity="0.55"/>
-        ${Array.from({length: 7}, (_, i) => {
-          const bx = x - 11 + (i % 4) * 7;
-          const by = baseY - 55 + Math.floor(i / 4) * 6;
-          return `<circle cx="${bx}" cy="${by}" r="2.2" fill="#f9a8d4" opacity="0.85" class="barakah-petal" style="animation-delay:${(i * 0.12).toFixed(2)}s"/>`;
-        }).join('')}
-      </g>`;
-    }
-    if (tier === 4) {
-      const tx = x - 6, tw = 12;
-      return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-        <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw},${baseY - 50} L${tx},${baseY - 50}Z" fill="#4A3728"/>
-        <path d="M${tx + 2},${baseY - 33} Q${tx - 10},${baseY - 40} ${tx - 12},${baseY - 33}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
-        <path d="M${tx + tw - 2},${baseY - 28} Q${tx + tw + 10},${baseY - 36} ${tx + tw + 12},${baseY - 28}" stroke="#4A3728" stroke-width="2.5" fill="none"/>
-        <path d="M${tx + 4},${baseY - 18} Q${tx + 15},${baseY - 24} ${tx + 17},${baseY - 18}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
-        <path d="M${tx + tw - 4},${baseY - 16} Q${tx - 15},${baseY - 22} ${tx - 17},${baseY - 16}" stroke="#4A3728" stroke-width="1.5" fill="none"/>
-        <ellipse cx="${x}" cy="${baseY - 56}" rx="34" ry="18" fill="#166534" opacity="0.25" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 54}" rx="26" ry="14" fill="#22c55e" opacity="0.4" class="barakah-canopy"/>
-        <ellipse cx="${x}" cy="${baseY - 58}" rx="18" ry="10" fill="#4ade80" opacity="0.5"/>
-        <ellipse cx="${x - 12}" cy="${baseY - 48}" rx="14" ry="9" fill="#22c55e" opacity="0.3" class="barakah-canopy"/>
-        <ellipse cx="${x + 14}" cy="${baseY - 50}" rx="12" ry="8" fill="#22c55e" opacity="0.3" class="barakah-canopy"/>
-        ${Array.from({length: 4}, (_, i) =>
-          `<circle cx="${x - 6 + i * 4}" cy="${baseY - 64}" r="1.8" fill="#fbbf24" class="barakah-sparkle" style="animation-delay:${(i * 0.35).toFixed(2)}s"/>`
-        ).join('')}
-      </g>`;
-    }
-    // tier 5: olive tree
-    const tx = x - 7, tw = 14;
-    return `<g class="barakah-plant-group" transform-origin="${x}px ${baseY}px">
-      <path d="M${tx},${baseY} L${tx + tw},${baseY} L${tx + tw - 1},${baseY - 58} L${tx + 1},${baseY - 58}Z" fill="#4A3728"/>
-      <path d="M${tx + 2},${baseY - 42} Q${tx - 15},${baseY - 52} ${tx - 17},${baseY - 44}" stroke="#4A3728" stroke-width="3" fill="none"/>
-      <path d="M${tx + tw - 2},${baseY - 38} Q${tx + tw + 17},${baseY - 48} ${tx + tw + 19},${baseY - 40}" stroke="#4A3728" stroke-width="3" fill="none"/>
-      <path d="M${tx + 5},${baseY - 24} Q${tx + 22},${baseY - 30} ${tx + 24},${baseY - 24}" stroke="#4A3728" stroke-width="2" fill="none"/>
-      <path d="M${tx + tw - 5},${baseY - 21} Q${tx - 22},${baseY - 27} ${tx - 24},${baseY - 21}" stroke="#4A3728" stroke-width="2" fill="none"/>
-      <path d="M${tx + 8},${baseY - 12} Q${tx + 26},${baseY - 16} ${tx + 28},${baseY - 11}" stroke="#4A3728" stroke-width="1.2" fill="none"/>
-      <path d="M${tx + tw - 8},${baseY - 10} Q${tx - 26},${baseY - 14} ${tx - 28},${baseY - 10}" stroke="#4A3728" stroke-width="1.2" fill="none"/>
-      <ellipse cx="${x}" cy="${baseY - 62}" rx="38" ry="20" fill="#525b30" opacity="0.2" class="barakah-canopy"/>
-      <ellipse cx="${x}" cy="${baseY - 60}" rx="30" ry="16" fill="#6B8E23" opacity="0.3" class="barakah-canopy"/>
-      <ellipse cx="${x}" cy="${baseY - 64}" rx="22" ry="12" fill="#84a83f" opacity="0.4"/>
-      <ellipse cx="${x}" cy="${baseY - 66}" rx="14" ry="9" fill="#a3bf5a" opacity="0.5"/>
-      <ellipse cx="${x - 14}" cy="${baseY - 54}" rx="16" ry="9" fill="#6B8E23" opacity="0.25" class="barakah-canopy"/>
-      <ellipse cx="${x + 16}" cy="${baseY - 56}" rx="14" ry="8" fill="#6B8E23" opacity="0.25" class="barakah-canopy"/>
-      ${Array.from({length: 7}, (_, i) => {
-        const ox = x - 14 + i * 5;
-        const oy = baseY - 68 + (i % 2 === 0 ? 0 : 5);
-        return `<circle cx="${ox}" cy="${oy}" r="2.8" fill="#566b1f" class="barakah-olive" style="animation-delay:${(i * 0.25).toFixed(2)}s"/>`;
-      }).join('')}
-      <circle cx="${x}" cy="${baseY - 76}" r="2.5" fill="#fbbf24" class="barakah-sparkle"/>
-    </g>`;
-  },
-
-  renderNurParticles() {
-    const container = document.getElementById('nur-particles-container');
-    if (!container || container.children.length > 0) return;
-
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < 12; i++) {
-      const p = document.createElement('div');
-      const size = Math.random() * 3 + 2;
-      p.style.cssText = `
-        position:absolute; width:${size}px; height:${size}px; background:var(--color-accent-gold); border-radius:50%;
-        filter:blur(1px); box-shadow:0 0 8px var(--color-accent-gold);
-        top:${Math.random() * 100}%; left:${Math.random() * 100}%; opacity:${Math.random() * 0.3};
-        animation:nurRise ${15 + Math.random() * 15}s linear infinite;
-      `;
-      fragment.appendChild(p);
-    }
-    container.appendChild(fragment);
-
-    if (!document.getElementById('nur-rise-style')) {
-      const s = document.createElement('style');
-      s.id = 'nur-rise-style';
-      s.textContent = `@keyframes nurRise { 0% { transform:translateY(0) scale(1); opacity:0 } 20% { opacity:0.3 } 80% { opacity:0.3 } 100% { transform:translateY(-100vh) scale(0.5); opacity:0 } }`;
-      document.head.appendChild(s);
-    }
-  },
+  /* Barakah garden removed */
 
 
   /* ---- Live Date Time (using rAF for zero lag) ---- */
@@ -764,7 +393,7 @@ const Home = {
     this.dateTimeRAF = requestAnimationFrame(tick);
   },
 
-  /* ---- Waqt Orb — Living Countdown Sphere ---- */
+  /* ---- Next Prayer — Compact Countdown Card ---- */
   startNextPrayerCountdown() {
     const times = Utils.calcPrayerTimes();
     const next = Utils.getNextPrayer(times);
@@ -775,67 +404,37 @@ const Home = {
     const nextLabel = typeof next.label === 'string' && next.label ? next.label : '--:--';
 
     const waqtColors = {
-      fajr: '#38bdf8',
-      dhuhr: '#fbbf24',
-      asr: '#fb923c',
-      maghrib: '#a855f7',
-      isha: '#6366f1'
+      fajr: '#38bdf8', dhuhr: '#fbbf24', asr: '#fb923c', maghrib: '#a855f7', isha: '#6366f1'
     };
     const waqtColor = waqtColors[next.name] || '#10B981';
-    const waqtClass = 'waqt-' + (next.name || 'fajr');
-
-    // Compute initial ring offset + urgency class before render (no flash)
-    const CIRC = 452.4;
-    const nowMsInit = Date.now();
-    const nIdxInit = times.findIndex(p => p.time.getTime() === next.time.getTime());
-    const prevTimeInit = nIdxInit > 0 ? times[nIdxInit - 1].time.getTime() : (nIdxInit === 0 ? next.time.getTime() - 17280000 : next.time.getTime() - 86400000 / 5);
-    const totalGapInit = next.time.getTime() - prevTimeInit;
-    let initPct = 0;
-    if (totalGapInit > 0 && totalGapInit < 86400000) initPct = Math.max(0, Math.min(100, ((nowMsInit - prevTimeInit) / totalGapInit) * 100));
-    const initOffset = CIRC * (1 - initPct / 100);
-    const remainingInit = next.time.getTime() - nowMsInit;
-    let extraWaqtClass = '';
-    if (remainingInit < 600000) extraWaqtClass = ' waqt-critical';
-    else if (remainingInit < 3600000) extraWaqtClass = ' waqt-urgent';
 
     el.innerHTML = `
-      <div class="card waqt-orb-premium home-reveal revealed ${waqtClass}${extraWaqtClass}" style="margin: 0; padding: 24px;">
-        <div class="waqt-orb-header" style="justify-content:center; margin-bottom: 16px;">
-          <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--color-text-muted);">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
+      <div class="h-next" style="--h-next-color:${waqtColor}">
+        <div class="h-next-top">
+          <span class="h-next-label">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
+          <span id="home-next-time" class="h-next-time">${window.n ? window.n(nextLabel) : nextLabel}</span>
         </div>
-        <div class="waqt-orb-body">
-          <div class="waqt-orb-visual">
-            <div class="waqt-orb-glow" id="waqt-orb-glow" style="--waqt-glow:${waqtColor};"></div>
-            <svg width="160" height="160" viewBox="0 0 160 160">
-              <circle cx="80" cy="80" r="72" stroke="var(--color-divider-subtle)" stroke-width="4" fill="none"/>
-              <circle id="waqt-ring" cx="80" cy="80" r="72" stroke="${waqtColor}" stroke-width="5" fill="none" stroke-dasharray="${CIRC}" stroke-dashoffset="${initOffset}" stroke-linecap="round" transform="rotate(-90 80 80)"/>
-            </svg>
-            <div class="waqt-orb-inner">
-              <div id="home-countdown" class="waqt-countdown" style="font-size: 1.8rem;">--:--:--</div>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:2px; margin-top:8px;">
-            <div id="home-next-name" class="waqt-prayer-name" style="color:${waqtColor}; font-size:2.2rem; font-weight:900; line-height:1; letter-spacing:-0.5px;">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-            <div id="home-next-time" class="waqt-prayer-time" style="font-size:1.15rem; font-weight:700; color:var(--color-text-primary); opacity:0.8;">${window.n ? window.n(nextLabel) : nextLabel}</div>
-          </div>
+        <div class="h-next-mid">
+          <span id="home-next-name" class="h-next-name" style="color:${waqtColor}">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</span>
         </div>
+        <div class="h-next-bar">
+          <div id="h-next-fill" class="h-next-fill" style="width:0%"></div>
+        </div>
+        <div id="home-countdown" class="h-next-cd">--:--:--</div>
       </div>
     `;
 
     this._lastPrayerName = next.name;
     this._waqtPrevName = next.name;
     if (this.countdownRAF) cancelAnimationFrame(this.countdownRAF);
-    if (this._waqtBurstTimeout) { clearTimeout(this._waqtBurstTimeout); this._waqtBurstTimeout = null; }
 
     let lastCountdown = '';
     let lastPct = -1;
-    // CIRC already declared above in the outer scope
     const tickCountdown = () => {
       if (!document.getElementById('section-home')?.classList.contains('active')) {
         this.countdownRAF = null;
         return;
       }
-
       const t = Utils.calcPrayerTimes();
       const n = Utils.getNextPrayer(t);
       const cd = Utils.countdownTo(n.time);
@@ -843,24 +442,10 @@ const Home = {
       if (n.name !== this._waqtPrevName) {
         this._waqtPrevName = n.name;
         this._lastPrayerName = n.name;
-        const orbCard = el.querySelector('.waqt-orb-premium');
-        if (orbCard) {
-          Object.keys(waqtColors).forEach(k => orbCard.classList.remove('waqt-' + k));
-          orbCard.classList.add('waqt-' + (n.name || 'fajr'));
-          orbCard.classList.add('waqt-bursting');
-          if (this._waqtBurstTimeout) clearTimeout(this._waqtBurstTimeout);
-          this._waqtBurstTimeout = setTimeout(() => {
-            const c = orbCard;
-            if (c) c.classList.remove('waqt-bursting');
-            this._waqtBurstTimeout = null;
-          }, 800);
-        }
-        const ringEl = document.getElementById('waqt-ring');
-        if (ringEl) ringEl.style.stroke = waqtColors[n.name] || '#10B981';
-        const glowEl = document.getElementById('waqt-orb-glow');
-        if (glowEl) glowEl.style.setProperty('--waqt-glow', waqtColors[n.name] || '#10B981');
+        const c = waqtColors[n.name] || '#10B981';
+        el.style.setProperty('--h-next-color', c);
         const pnEl = document.getElementById('home-next-name');
-        if (pnEl) pnEl.style.color = waqtColors[n.name] || '#10B981';
+        if (pnEl) { pnEl.textContent = window.t ? window.t(n.name.charAt(0).toUpperCase() + n.name.slice(1)) : n.name.charAt(0).toUpperCase() + n.name.slice(1); pnEl.style.color = c; }
         const ptEl = document.getElementById('home-next-time');
         if (ptEl) ptEl.textContent = window.n ? window.n(n.label) : n.label;
       }
@@ -873,23 +458,14 @@ const Home = {
 
       const nowMs = Date.now();
       const nIdx = t.findIndex(p => p.time.getTime() === n.time.getTime());
-      const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : (t.length > 0 ? t[t.length - 1].time.getTime() : n.time.getTime() - 86400000 / 5));
+      const prevTime = nIdx > 0 ? t[nIdx - 1].time.getTime() : (nIdx === 0 ? n.time.getTime() - 86400000 / 5 : n.time.getTime() - 86400000 / 5);
       const totalGap = n.time.getTime() - prevTime;
       if (totalGap > 0 && totalGap < 86400000) {
-        const elapsed = nowMs - prevTime;
-        const pct = Math.max(0, Math.min(100, (elapsed / totalGap) * 100));
+        const pct = Math.max(0, Math.min(100, ((nowMs - prevTime) / totalGap) * 100));
         if (Math.abs(pct - lastPct) > 0.5) {
           lastPct = pct;
-          const ring = document.getElementById('waqt-ring');
-          if (ring) ring.style.strokeDashoffset = CIRC * (1 - pct / 100);
-
-          const orbCard = el.querySelector('.waqt-orb-premium');
-          if (orbCard) {
-            const remaining = n.time.getTime() - nowMs;
-            orbCard.classList.remove('waqt-urgent', 'waqt-critical');
-            if (remaining < 600000) orbCard.classList.add('waqt-critical');
-            else if (remaining < 3600000) orbCard.classList.add('waqt-urgent');
-          }
+          const fill = document.getElementById('h-next-fill');
+          if (fill) fill.style.width = pct + '%';
         }
       }
       this.countdownRAF = requestAnimationFrame(tickCountdown);
@@ -902,90 +478,40 @@ const Home = {
     const score = Utils.salahScore(today);
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
-    
+
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
     const prayerLabels = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-    
-    let lastDoneIdx = -1;
-    for (let i = 0; i < prayers.length; i++) {
-      let st = today[prayers[i]];
-      if (st) lastDoneIdx = i;
-    }
-    const progressPct = lastDoneIdx >= 0 ? (lastDoneIdx / (prayers.length - 1)) * 100 : 0;
-    
     const isPerfect = score.done === 5;
     const hasMissed = score.done > 0 && score.done < 5;
     const accentColor = isPerfect ? '#10B981' : '#3B82F6';
-
-    let pointsHTML = '';
-    prayers.forEach((p, i) => {
-      let st = today[p];
-      let isDone = st === 'jamaat' || st === 'alone' || st === 'qaza';
-      let isMiss = st === 'missed';
-      
-      let dotBg = 'var(--color-surface-nested)';
-      let dotBorder = 'var(--color-divider-strong)';
-      let shadow = 'none';
-      let icon = '';
-      
-      if (isDone) {
-        dotBg = accentColor;
-        dotBorder = accentColor;
-        shadow = `0 0 10px ${accentColor}60`;
-        icon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-      } else if (isMiss) {
-        dotBg = '#EF4444';
-        dotBorder = '#EF4444';
-        icon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-      }
-
-      pointsHTML += `
-        <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div style="width:24px; height:24px; border-radius:50%; background:${dotBg}; border:2px solid ${dotBorder}; box-shadow:${shadow}; display:flex; align-items:center; justify-content:center; transition:all 0.4s var(--cb-bounce);">
-            ${icon}
-          </div>
-          <span style="font-size:10px; font-weight:700; color:${isDone ? 'var(--color-text-primary)' : 'var(--color-text-muted)'}; text-transform:uppercase; letter-spacing:0.5px;">${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
-        </div>
-      `;
-    });
-
     const statusMsg = isPerfect ? "Beautiful! You've prayed all 5." : hasMissed ? "Keep striving. Every prayer counts." : "Your daily spiritual journey.";
 
-    el.innerHTML = `
-      <div style="display:flex; flex-direction:column; width:100%; padding: 4px 0;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 28px;">
-          <div style="text-align:left;">
-            <div style="font-size:1.5rem; font-weight:900; letter-spacing:-0.5px; color:var(--color-text-primary);">${window.t ? window.t("Today's Salah") : "Today's Salah"}</div>
-            <div style="color:var(--color-text-muted); font-size:12px; margin-top:4px; font-weight:600;">
-              ${window.t ? window.t(statusMsg) : statusMsg}
-            </div>
-          </div>
-          <div style="background:color-mix(in srgb, ${accentColor} 15%, transparent); color:${accentColor}; padding:6px 14px; border-radius:20px; font-size:16px; font-weight:800; border:1px solid color-mix(in srgb, ${accentColor} 30%, transparent);">
-            ${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}
-          </div>
+    const prayerDots = prayers.map((p, i) => {
+      const st = today[p];
+      const isDone = st === 'jamaat' || st === 'alone' || st === 'qaza';
+      const isMiss = st === 'missed';
+      let cls = 'h-prayer-dot-empty';
+      if (isDone) cls = 'h-prayer-dot-done';
+      if (isMiss) cls = 'h-prayer-dot-missed';
+      return `
+        <div class="h-prayer-item">
+          <div class="h-prayer-dot ${cls}"></div>
+          <span class="h-prayer-lbl">${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
         </div>
+      `;
+    }).join('');
 
-        <div style="position:relative; width:100%; margin:0 auto 10px; padding:0 12px; display:flex; flex-direction:column;">
-          <!-- Track Background -->
-          <div style="position:absolute; top:10px; left:24px; right:24px; height:4px; background:var(--color-divider-subtle); z-index:0; border-radius:2px;"></div>
-          <!-- Track Fill -->
-          <div style="position:absolute; top:10px; left:24px; right:24px; height:4px; z-index:1; border-radius:2px;">
-            <div id="salah-timeline-fill" style="height:100%; background:${accentColor}; width:0%; transition:width 1s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow:0 0 8px ${accentColor}80; border-radius:2px;"></div>
-          </div>
-          
-          <!-- Points Row -->
-          <div style="display:flex; justify-content:space-between; width:100%;">
-            ${pointsHTML}
-          </div>
+    el.innerHTML = `
+      <div class="h-salah-card">
+        <div class="h-salah-header">
+          <span class="h-salah-title">${window.t ? window.t("Today's Salah") : "Today's Salah"}</span>
+          <span class="h-salah-badge" style="--h-salah-color:${accentColor}">${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}</span>
         </div>
+        <div class="h-salah-dots">
+          ${prayerDots}
+        </div>
+        <div class="h-salah-footer">${window.t ? window.t(statusMsg) : statusMsg}</div>
       </div>
     `;
-
-    const fill = document.getElementById('salah-timeline-fill');
-    if (fill) {
-      setTimeout(() => {
-        fill.style.width = progressPct + '%';
-      }, 50);
-    }
   }
 };

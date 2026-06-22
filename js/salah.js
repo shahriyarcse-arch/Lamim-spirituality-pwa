@@ -93,13 +93,12 @@ const Salah = {
       const transNext = window.t ? window.t('Next') : 'Next';
       const transTime = window.n ? window.n(t.label) : t.label;
       return `
-        <div class="prayer-time-pill ${isNext ? 'next' : ''}" 
-             onclick="Salah.scrollToPrayer('${t.name}')"
-             style="animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-delay: ${idx * 0.05}s;">
-          <div class="pill-icon" style="filter:drop-shadow(${meta.glow})">${meta.icon}</div>
-          <div class="pill-name">${transLabel}</div>
-          <div class="pill-time">${transTime}</div>
-          ${isNext ? `<div class="pill-next-badge" style="animation: pulse 1.5s ease-in-out infinite">${transNext}</div>` : ''}
+        <div class="pt-pill ${isNext ? 'pt-active' : ''}" 
+             onclick="Salah.scrollToPrayer('${t.name}')">
+          <div class="pt-icon">${meta.icon}</div>
+          <div class="pt-name">${transLabel}</div>
+          <div class="pt-time">${transTime}</div>
+          ${isNext ? `<div class="pt-badge">${transNext}</div>` : ''}
         </div>
       `;
     }).join('');
@@ -121,47 +120,32 @@ const Salah = {
     const streak = DB.getSalahStreak();
     const points = this.calcDayPoints(salah);
 
-    // Empty state logic (Keep it but in old style if desired, or just show zeros)
-    // The user image shows 2/5 prayed, so they have some data.
-    
     statsEl.innerHTML = `
-      <div class="salah-stats-grid">
-        <div class="salah-stat-card stat-prayed">
-          <div class="salah-stat-ring">
-            ${this._miniRing(salah)}
-          </div>
-          <div class="salah-stat-info">
-            <div class="salah-stat-val">${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}</div>
-            <div class="salah-stat-label">${window.t ? window.t('Prayed') : 'Prayed'}</div>
-          </div>
+      <div class="sb-grid">
+        <div class="sb-card sb-prayed">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="sb-val">${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}</div>
+          <div class="sb-lbl">${window.t ? window.t('Prayed') : 'Prayed'}</div>
         </div>
-        <div class="salah-stat-card stat-perfect">
-          <div class="salah-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-orange);filter:drop-shadow(0 0 8px rgba(251,146,60,0.5))"><g style="transform-origin: center"><animateTransform attributeName="transform" type="scale" values="1; 1.15; 1" dur="1.2s" repeatCount="indefinite"/><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></g></svg></div>
-          <div class="salah-stat-info">
-            <div class="salah-stat-val">${window.n ? window.n(streak.perfect) : streak.perfect} <span style="font-size: 10px; font-weight: 600; opacity: 0.8; margin-left: 2px;">${window.t ? window.t('days') : 'days'}</span></div>
-            <div class="salah-stat-label">${window.t ? window.t('Perfect') : 'Perfect'}</div>
-          </div>
+        <div class="sb-card sb-perfect">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="sb-val">${window.n ? window.n(streak.perfect) : streak.perfect}</div>
+          <div class="sb-lbl">${window.t ? window.t('Streak') : 'Streak'}</div>
         </div>
-        <div class="salah-stat-card stat-consistent">
-          <div class="salah-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-green);filter:drop-shadow(0 0 8px rgba(16,185,129,0.5))"><g style="transform-origin: center"><animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="2s" repeatCount="indefinite"/><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></g></svg></div>
-          <div class="salah-stat-info">
-            <div class="salah-stat-val">${window.n ? window.n(streak.consistency) : streak.consistency} <span style="font-size: 10px; font-weight: 600; opacity: 0.8; margin-left: 2px;">${window.t ? window.t('days') : 'days'}</span></div>
-            <div class="salah-stat-label">${window.t ? window.t('Consistent') : 'Consistent'}</div>
-          </div>
+        <div class="sb-card sb-consistent">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></div>
+          <div class="sb-val">${window.n ? window.n(streak.consistency) : streak.consistency}%</div>
+          <div class="sb-lbl">${window.t ? window.t('Consistent') : 'Consistent'}</div>
         </div>
-        <div class="salah-stat-card stat-points">
-          <div class="salah-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-gold);filter:drop-shadow(0 0 8px rgba(234,179,8,0.5))"><g style="transform-origin: center"><animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></g></svg></div>
-          <div class="salah-stat-info">
-            <div class="salah-stat-val">${window.n ? window.n(points) : points}</div>
-            <div class="salah-stat-label">${window.t ? window.t('Points') : 'Points'}</div>
-          </div>
+        <div class="sb-card sb-points">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="sb-val">${window.n ? window.n(points) : points}</div>
+          <div class="sb-lbl">${window.t ? window.t('Points') : 'Points'}</div>
         </div>
-        <div class="salah-stat-card stat-consistent">
-          <div class="salah-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-blue);filter:drop-shadow(0 0 8px rgba(59,130,246,0.5))"><line x1="18" y1="20" x2="18" y2="10"><animate attributeName="y2" values="10; 6; 14; 10" dur="2s" repeatCount="indefinite"/></line><line x1="12" y1="20" x2="12" y2="4"><animate attributeName="y2" values="4; 12; 4" dur="2.5s" repeatCount="indefinite"/></line><line x1="6" y1="20" x2="6" y2="14"><animate attributeName="y2" values="14; 8; 16; 14" dur="3s" repeatCount="indefinite"/></line></svg></div>
-          <div class="salah-stat-info">
-            <div class="salah-stat-val">${window.n ? window.n(score.pct) : score.pct}%</div>
-            <div class="salah-stat-label">${window.t ? window.t('Score') : 'Score'}</div>
-          </div>
+        <div class="sb-card sb-score">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="sb-val">${window.n ? window.n(score.pct) : score.pct}%</div>
+          <div class="sb-lbl">${window.t ? window.t('Score') : 'Score'}</div>
         </div>
       </div>
     `;
