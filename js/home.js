@@ -483,7 +483,6 @@ const Home = {
     const el = document.getElementById('home-salah-ring');
     if (!el) return;
 
-    const times = Utils.calcPrayerTimes();
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
     const prayerLabels = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     const isPerfect = score.done === 5;
@@ -498,12 +497,10 @@ const Home = {
       let cls = 'h-prayer-dot-empty';
       if (isDone) cls = 'h-prayer-dot-done';
       if (isMiss) cls = 'h-prayer-dot-missed';
-      const pt = times[i] ? times[i].label : '--:--';
       return `
         <div class="h-prayer-item">
           <div class="h-prayer-dot ${cls}"></div>
           <span class="h-prayer-lbl">${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
-          <span class="h-prayer-time">${window.n ? window.n(pt) : pt}</span>
         </div>
       `;
     }).join('');

@@ -1681,6 +1681,11 @@
   background: var(--prayer-color, #10b981);
   color: #fff;
   box-shadow: 0 2px 8px color-mix(in srgb, var(--prayer-color, #10b981) 40%, transparent);
+  animation: doneDotGlow 2.5s ease-in-out infinite;
+}
+@keyframes doneDotGlow {
+  0%, 100% { box-shadow: 0 2px 8px color-mix(in srgb, var(--prayer-color, #10b981) 40%, transparent); }
+  50% { box-shadow: 0 4px 18px color-mix(in srgb, var(--prayer-color, #10b981) 60%, transparent); }
 }
 .h-prayer-dot-done::after {
   content: '✓';
@@ -1690,6 +1695,11 @@
   color: var(--prayer-color, #ef4444);
   border-color: var(--prayer-color, #ef4444);
   opacity: 0.5;
+  animation: missedDotPulse 2s ease-in-out infinite;
+}
+@keyframes missedDotPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
 }
 .h-prayer-dot-missed::after {
   content: '—';
@@ -1705,12 +1715,6 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-muted);
-}
-.h-prayer-time {
-  font-size: 7px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  opacity: 0.7;
 }
 .h-salah-footer {
   font-size: 10px;
