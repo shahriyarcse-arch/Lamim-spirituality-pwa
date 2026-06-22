@@ -1326,3 +1326,66 @@
   100% { transform: translateY(-2px); }
 }
 
+/* =============================================
+   OVERRIDES: bundle.css fixes that take effect
+   (loaded after bundle.css, so these always win)
+   ============================================= */
+
+/* Fix 1: Reduce heavy backdrop-filter blur on all card types (Chrome text blur) */
+.salah-prayer-card,
+.nafl-night-card,
+.card-glass,
+.next-prayer-banner,
+.quote-card {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Fix 2: Remove continuous border-breathing animations (GPU paint churn) */
+.prayer-time-pill {
+  animation: none !important;
+}
+.salah-stat-card {
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+}
+
+/* Fix 3: Remove GPU compositing translateZ(0) that blurs text inside backdrop-filter */
+.card {
+  transform: none;
+  will-change: auto;
+}
+.salah-prayer-card {
+  transform: none;
+  will-change: auto;
+}
+
+/* Fix 4: Corrupt @keyframes textShimmer in bundle.css (missing declaration line) */
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fix 5a: Missing @keyframes pulseSalah referenced by .pill-next-badge in bundle.css */
+@keyframes pulseSalah {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Fix 5b: Hardcoded white color on empty subtitle → use CSS variable */
+.salah-empty-subtitle {
+  color: var(--color-text-muted) !important;
+}
+
+/* Fix 6: Remove stale nth-child animation delays for borderBreath from bundle.css */
+.salah-stat-card:nth-child(1),
+.salah-stat-card:nth-child(2),
+.salah-stat-card:nth-child(3),
+.salah-stat-card:nth-child(4) {
+  animation-delay: 0s !important;
+}
+.salah-stat-card:nth-child(1) { animation-delay: 0.05s !important; }
+.salah-stat-card:nth-child(2) { animation-delay: 0.1s !important; }
+.salah-stat-card:nth-child(3) { animation-delay: 0.15s !important; }
+.salah-stat-card:nth-child(4) { animation-delay: 0.2s !important; }
+
