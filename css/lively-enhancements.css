@@ -812,417 +812,635 @@
 }
 
 /* =============================================
-   HOME — PREMIUM REIMAGINED
-   Colorful, animated, classy, lively
+   HOME / DASHBOARD SECTION REDESIGN
+   Billion-Dollar Aesthetic (Light & Dark Theme Aware)
    ============================================= */
 
-/* ---- Ambient Waqt Glow ---- */
-#section-home {
-  position: relative;
-}
-#section-home::before {
-  content: '';
-  position: fixed;
-  top: -60%;
-  left: -60%;
-  width: 220%;
-  height: 220%;
-  background: radial-gradient(ellipse at 30% 20%, color-mix(in srgb, var(--waqt-color, #a78bfa) 5%, transparent) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, color-mix(in srgb, var(--waqt-color, #a78bfa) 3%, transparent) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-  transition: background 1.2s ease;
-  animation: ambientDrift 20s ease-in-out infinite;
-}
-@keyframes ambientDrift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(1%, -0.5%) rotate(0.5deg); }
-  66% { transform: translate(-0.5%, 1%) rotate(-0.3deg); }
-}
-
-/* ---- Section Layout ---- */
-#section-home > div[style*="z-index:1"] {
-  position: relative;
-  z-index: 1;
-  padding: 8px 0;
+/* --- Welcome/Greeting Section --- */
+.greeting-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ---- Staggered Entrance ---- */
-#section-home.active > div[style*="z-index:1"] > div {
-  animation: homeSlideUp 0.7s var(--cb-premium) both;
-}
-#section-home.active > div[style*="z-index:1"] > div:nth-child(1) { animation-delay: 0.02s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(2) { animation-delay: 0.08s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(3) { animation-delay: 0.16s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(4) { animation-delay: 0.24s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(5) { animation-delay: 0.32s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(6) { animation-delay: 0.40s; }
-#section-home.active > div[style*="z-index:1"] > div:nth-child(7) { animation-delay: 0.48s; }
-@keyframes homeSlideUp {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-/* ========== H-SALAM — Premium Greeting Card ========== */
-.h-salam {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 20px 24px;
-  position: relative;
-  overflow: hidden;
-}
-.h-salam::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--waqt-color, #a78bfa) 4%, transparent) 0%, transparent 50%);
-  pointer-events: none;
-}
-.h-salam-left { display: flex; flex-direction: column; gap: 8px; position: relative; }
-.h-salam-badge {
+.greeting-badge {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
-  background: color-mix(in srgb, var(--waqt-color, #a78bfa) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--waqt-color, #a78bfa) 20%, transparent);
-  border-radius: 100px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--waqt-color, #a78bfa);
-  width: fit-content;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
 }
-.h-salam-dot {
+
+[data-theme="light"] .greeting-badge {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+.greeting-badge-dot {
   width: 6px;
   height: 6px;
+  background: var(--color-accent-primary);
   border-radius: 50%;
-  background: var(--waqt-color, #a78bfa);
-  animation: dotPulse 2s ease-in-out infinite;
-}
-@keyframes dotPulse {
-  0%, 100% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.4); opacity: 1; }
-}
-.h-salam-name {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-text-primary);
-  letter-spacing: -0.3px;
-  line-height: 1.2;
-}
-.h-salam-right { text-align: right; flex-shrink: 0; position: relative; }
-.h-salam-time {
-  font-size: 20px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-primary);
-  letter-spacing: -0.2px;
-}
-.h-salam-date {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  margin-top: 2px;
+  box-shadow: 0 0 8px var(--color-accent-primary);
+  animation: pulse 2s infinite;
 }
 
-/* ========== H-STATS — Colorful Metric Tiles ========== */
-.h-stats {
-  display: flex;
-  gap: 10px;
+.greeting-badge-text {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-accent-primary);
 }
-.h-stat {
-  flex: 1;
+
+.greeting-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--color-text-primary);
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 16px 12px;
-  border-radius: 14px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  transition: transform 0.35s var(--cb-spring), border-color 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-.h-stat:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-border-active);
-}
-.h-stat:nth-child(1) { --stat-accent: #f97316; }
-.h-stat:nth-child(2) { --stat-accent: #a78bfa; }
-.h-stat:nth-child(3) { --stat-accent: #10b981; }
-.h-stat::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--stat-accent, #a78bfa), transparent);
-  opacity: 0.5;
-  border-radius: 0 0 2px 2px;
-}
-.h-stat-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: var(--stat-accent, #a78bfa);
-  background: color-mix(in srgb, var(--stat-accent, #a78bfa) 12%, transparent);
-  transition: transform 0.3s ease, background 0.3s ease;
-}
-.h-stat:hover .h-stat-icon {
-  transform: scale(1.08);
-  background: color-mix(in srgb, var(--stat-accent, #a78bfa) 18%, transparent);
-}
-.h-stat-val {
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--color-text-primary);
-  line-height: 1;
-  letter-spacing: -0.3px;
-}
-.h-stat-unit {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  margin-left: 1px;
-}
-.h-stat-lbl {
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-  color: var(--color-text-muted);
 }
 
-/* ========== H-NEXT — Hero Prayer Countdown ========== */
-.h-next {
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 20px 24px;
+.greeting-name {
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 950;
+  filter: drop-shadow(0 2px 10px rgba(168,85,247,0.15));
+}
+
+.greeting-star {
+  opacity: 0.9;
+  animation: pulseSoft 2s infinite ease-in-out;
+}
+
+/* --- Chronometer / Live Clock Widget --- */
+.chronometer-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.05s;
+}
+
+[data-theme="light"] .chronometer-card {
+  background: #ffffff;
+  border-color: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.04);
+}
+
+.chronometer-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.chronometer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chronometer-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chronometer-dot {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: finPulse 2s infinite;
+}
+
+.chronometer-status-text {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #10b981;
+}
+
+.chronometer-time {
+  font-size: 2.1rem;
+  font-weight: 900;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -1px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] .chronometer-time {
+  color: #0f172a;
+}
+
+.chronometer-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 10px;
+}
+
+[data-theme="light"] .chronometer-divider {
+  background: #e2e8f0;
+}
+
+.chronometer-dates {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.chronometer-date-en {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chronometer-date-hj {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--color-accent-gold);
+}
+
+/* --- SHS Dashboard Card --- */
+.shs-dashboard-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+}
+
+[data-theme="light"] .shs-dashboard-card {
+  background: #ffffff;
+  border-color: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 16px 36px rgba(99, 102, 241, 0.04);
+}
+
+.shs-dashboard-left {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.h-next:hover {
-  border-color: var(--color-border-active);
-}
-.h-next::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--h-next-color, #a78bfa), color-mix(in srgb, var(--h-next-color, #a78bfa) 40%, transparent));
-  opacity: 0.6;
-}
-.h-next-label {
-  font-size: 10px;
-  font-weight: 600;
+
+.shs-mini-title {
+  font-size: 9px;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.2px;
   color: var(--color-text-muted);
 }
-.h-next-top {
+
+.shs-aura-wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
-.h-next-name {
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -0.8px;
-  line-height: 1;
-  color: var(--h-next-color, var(--color-text-primary));
-  transition: color 0.5s ease;
-}
-.h-next-time {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  padding: 4px 12px;
-  background: var(--color-surface-nested);
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-.h-next-bar {
-  height: 4px;
-  background: var(--color-divider-subtle);
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 4px 0;
-}
-.h-next-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--h-next-color, #a78bfa), color-mix(in srgb, var(--h-next-color, #a78bfa) 60%, var(--color-accent-teal, #38bdf8)));
-  transition: width 0.5s var(--cb-premium);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--h-next-color, #a78bfa) 30%, transparent);
-}
-.h-next-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.h-next-cd {
-  font-size: 18px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+
+.shs-val-number {
+  font-size: 32px;
+  font-weight: 950;
+  letter-spacing: -1px;
   color: var(--color-text-primary);
-  letter-spacing: 0.5px;
-}
-.h-next-cd-label {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-/* ========== H-SALAH-CARD — Daily Prayer Status ========== */
-.h-salah-card {
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.h-salah-header {
+.shs-pulse-spot-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  opacity: 0.85;
 }
-.h-salah-title {
+
+.shs-dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  padding-left: 20px;
+}
+
+[data-theme="light"] .shs-dashboard-right {
+  border-left-color: #e2e8f0;
+}
+
+.shs-streaks-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shs-streak-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.shs-streak-icon {
+  font-size: 18px;
+  animation: pulseSoft 2.5s infinite;
+}
+
+.shs-streak-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.shs-streak-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.shs-streak-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Next Prayer Card (Premium Waqt countdown banner) --- */
+.next-prayer-card-premium {
+  background: var(--color-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: var(--space-6);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.15s;
+}
+
+.next-prayer-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--waqt-theme-glow) 0%, transparent 70%);
+  opacity: 0.15;
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+.next-prayer-card-premium.fajr { --waqt-theme-glow: #ec4899; border-color: rgba(236, 72, 153, 0.15); }
+.next-prayer-card-premium.dhuhr { --waqt-theme-glow: #fbbf24; border-color: rgba(251, 191, 36, 0.15); }
+.next-prayer-card-premium.asr { --waqt-theme-glow: #f97316; border-color: rgba(249, 115, 22, 0.15); }
+.next-prayer-card-premium.maghrib { --waqt-theme-glow: #a855f7; border-color: rgba(168, 85, 247, 0.15); }
+.next-prayer-card-premium.isha { --waqt-theme-glow: #6366f1; border-color: rgba(99, 102, 241, 0.15); }
+
+[data-theme="light"] .next-prayer-card-premium {
+  background: #ffffff;
+}
+
+.next-prayer-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.next-prayer-badge {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: var(--waqt-theme-glow);
+  text-transform: uppercase;
+}
+
+.next-prayer-pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--waqt-theme-glow);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--waqt-theme-glow);
+  animation: finPulse 2s infinite;
+}
+
+.next-prayer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.next-prayer-info-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.next-prayer-title {
+  font-size: 2rem;
+  font-weight: 950;
+  color: var(--color-text-primary);
+  line-height: 1;
+  text-transform: capitalize;
+  letter-spacing: -0.5px;
+}
+
+.next-prayer-time-sub {
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-text-primary);
-  letter-spacing: -0.1px;
+  color: var(--color-text-secondary);
+  margin-top: 6px;
 }
-.h-salah-badge {
-  font-size: 15px;
+
+.next-prayer-countdown-side {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.next-prayer-timer {
+  font-size: 2.2rem;
+  font-weight: 950;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.next-prayer-timer-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.next-prayer-progress-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  margin-top: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+[data-theme="light"] .next-prayer-progress-track {
+  background: #f1f5f9;
+}
+
+.next-prayer-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--waqt-theme-glow) 0%, var(--color-accent-primary) 100%);
+  box-shadow: 0 0 10px var(--waqt-theme-glow);
+  transition: width 1s linear;
+}
+
+/* --- Today's Salah Ring Card redesign --- */
+.salah-progress-ring-card {
+  background: var(--color-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 24px;
+  align-items: center;
+  box-shadow: var(--shadow-premium);
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.2s;
+}
+
+[data-theme="light"] .salah-progress-ring-card {
+  background: #ffffff;
+}
+
+.salah-ring-graphic-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.salah-ring-count-val {
+  font-size: 2.3rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.salah-ring-total-label {
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.salah-ring-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.salah-ring-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.salah-ring-subtitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.salah-checklist-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.salah-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+}
+
+[data-theme="light"] .salah-checklist-item {
+  background: #f8fafc;
+  border-color: #f1f5f9;
+}
+
+.salah-checklist-label {
+  font-size: 10px;
   font-weight: 800;
-  color: var(--h-salah-color, var(--color-text-secondary));
-  letter-spacing: -0.2px;
-  padding: 2px 10px;
-  background: var(--color-surface-nested);
-  border-radius: 8px;
+  color: var(--color-text-secondary);
+}
+
+.checklist-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  font-weight: bold;
+}
+
+.checklist-dot.pending {
+  border: 1px solid var(--color-text-muted);
+  background: transparent;
+}
+
+.checklist-dot.logged {
+  color: #fff;
+  border: none;
+  font-size: 8px;
+}
+
+.checklist-dot.logged.jamaat { background-color: #10b981; box-shadow: 0 0 6px #10b981; }
+.checklist-dot.logged.alone { background-color: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
+.checklist-dot.logged.qaza { background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b; font-size: 8px; }
+.checklist-dot.logged.missed { background-color: #ef4444; box-shadow: 0 0 6px #ef4444; font-size: 7px; }
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .chronometer-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .chronometer-divider {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0;
+  }
+  .chronometer-dates {
+    text-align: left;
+  }
+  .shs-dashboard-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .shs-dashboard-right {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-left: 0;
+    padding-top: 16px;
+  }
+  [data-theme="light"] .shs-dashboard-right {
+    border-top-color: #e2e8f0;
+  }
+  .salah-progress-ring-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .salah-ring-graphic-container {
+    justify-content: flex-start;
+  }
+}
 }
 .h-salah-dots {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
+  gap: 0;
 }
 .h-prayer-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 8px;
-  animation: prayerPop 0.4s var(--cb-spring) both;
+  flex: 1;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-divider-subtle);
 }
-.h-prayer-item:nth-child(1) { animation-delay: 0.02s; }
-.h-prayer-item:nth-child(2) { animation-delay: 0.06s; }
-.h-prayer-item:nth-child(3) { animation-delay: 0.10s; }
-.h-prayer-item:nth-child(4) { animation-delay: 0.14s; }
-.h-prayer-item:nth-child(5) { animation-delay: 0.18s; }
-@keyframes prayerPop {
-  0% { opacity: 0; transform: scale(0.6) translateY(8px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
+.h-prayer-item:last-child { border-bottom: none; }
 .h-prayer-item:nth-child(1) { --prayer-color: #38bdf8; }
 .h-prayer-item:nth-child(2) { --prayer-color: #fbbf24; }
 .h-prayer-item:nth-child(3) { --prayer-color: #fb923c; }
 .h-prayer-item:nth-child(4) { --prayer-color: #a855f7; }
 .h-prayer-item:nth-child(5) { --prayer-color: #6366f1; }
 .h-prayer-dot {
-  width: 36px;
-  height: 36px;
+  width: 8px; height: 8px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 800;
-  transition: all 0.35s var(--cb-spring);
-  border: 2px solid var(--color-divider-subtle);
-  background: transparent;
-  color: var(--color-text-muted);
+  flex-shrink: 0;
+  background: var(--color-divider-subtle);
+  transition: transform 0.3s var(--cb-spring), background 0.3s ease;
 }
-.h-prayer-dot:hover { transform: scale(1.12); }
-.h-prayer-dot-done {
-  background: var(--prayer-color, #10b981);
-  border-color: var(--prayer-color, #10b981);
-  color: #fff;
-  box-shadow: 0 3px 12px color-mix(in srgb, var(--prayer-color, #10b981) 35%, transparent);
-  animation: doneGlow 2.5s ease-in-out infinite;
-}
-@keyframes doneGlow {
-  0%, 100% { box-shadow: 0 3px 12px color-mix(in srgb, var(--prayer-color, #10b981) 35%, transparent); }
-  50% { box-shadow: 0 5px 20px color-mix(in srgb, var(--prayer-color, #10b981) 55%, transparent); }
-}
-.h-prayer-dot-done::after { content: ''; }
-.h-prayer-dot-missed {
-  border-color: var(--prayer-color, #ef4444);
-  color: var(--prayer-color, #ef4444);
-  background: transparent;
-  opacity: 0.6;
-}
-.h-prayer-dot-empty { }
+.h-prayer-dot-done { background: var(--prayer-color, #10b981); }
+.h-prayer-dot-missed { background: var(--prayer-color, #ef4444); opacity: 0.4; }
 .h-prayer-lbl {
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
+  letter-spacing: -0.1px;
 }
 .h-salah-footer {
   font-size: 11px;
   font-weight: 500;
   color: var(--color-text-muted);
-  text-align: center;
+  font-style: italic;
+  margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--color-divider-subtle);
-  font-style: italic;
 }
 
-/* ========== WEEKLY PULSE ========== */
-.h-weekly {
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 18px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* ========== WEEKLY ========== */
+.h-weekly { padding: 0; }
 .h-weekly-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
   color: var(--color-text-muted);
+  margin-bottom: 6px;
 }
 .h-weekly-row {
   display: flex;
@@ -1232,23 +1450,14 @@
 }
 .h-weekly-metrics {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text-secondary);
 }
-.h-weekly-best {
-  text-align: right;
-}
-.h-weekly-best-label {
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-text-muted);
-}
+.h-weekly-best { text-align: right; }
 .h-weekly-best-val {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
   color: var(--color-accent-gold, #f59e0b);
   line-height: 1;
@@ -1258,47 +1467,20 @@
   font-weight: 500;
   color: var(--color-text-muted);
   line-height: 1.4;
-  padding-top: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid var(--color-divider-subtle);
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-/* ========== DUA CARD ========== */
+/* ========== DUA — Minimal Row ========== */
 .h-dua {
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 18px 22px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   cursor: pointer;
-  transition: border-color 0.3s ease, transform 0.3s var(--cb-spring);
+  padding: 4px 0;
 }
-.h-dua:hover {
-  border-color: var(--color-accent-primary);
-  transform: translateY(-2px);
-}
-.h-dua-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
-  color: var(--color-accent-primary);
-  flex-shrink: 0;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-.h-dua:hover .h-dua-icon {
-  background: var(--color-accent-primary);
-  color: #fff;
-}
-.h-dua-icon svg { width: 18px; height: 18px; }
-.h-dua-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.h-dua-info { flex: 1; }
 .h-dua-label {
   font-size: 14px;
   font-weight: 700;
@@ -1308,6 +1490,7 @@
   font-size: 11px;
   font-weight: 500;
   color: var(--color-text-muted);
+  margin-top: 1px;
 }
 .h-dua-stats {
   display: flex;
@@ -1317,7 +1500,7 @@
 }
 .h-dua-stat { text-align: center; }
 .h-dua-stat-val {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
   color: var(--color-text-primary);
   line-height: 1;
@@ -1328,145 +1511,80 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-muted);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 .h-dua-stat.active .h-dua-stat-val { color: var(--color-accent-primary); }
 .h-dua-stat.answered .h-dua-stat-val { color: #10b981; }
 
-/* ========== AI INSIGHT ========== */
-.h-insight {
-  border-radius: 18px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  padding: 18px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  position: relative;
-  overflow: hidden;
-}
-.h-insight::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 12%;
-  bottom: 12%;
-  width: 3px;
-  background: linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-teal));
-  border-radius: 0 2px 2px 0;
-  opacity: 0.5;
-}
+/* ========== INSIGHT ========== */
+.h-insight { padding: 0; }
 .h-insight-label {
   font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
   color: var(--color-accent-primary);
-  padding-left: 14px;
+  margin-bottom: 4px;
 }
 #home-insight-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-secondary);
   line-height: 1.5;
   margin: 0;
-  padding-left: 14px;
+  font-style: italic;
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
-#home-insight-text.fade-out {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-#home-insight-text.fade-in-prep {
-  opacity: 0;
-  transform: translateY(6px);
-  transition: none;
-}
+#home-insight-text.fade-out { opacity: 0; transform: translateY(-6px); }
+#home-insight-text.fade-in-prep { opacity: 0; transform: translateY(6px); transition: none; }
 
-/* ========== MOBILE ADAPT ========== */
+/* ========== MOBILE ========== */
 @media (max-width: 480px) {
-  .h-salam { padding: 16px 18px; }
-  .h-salam-name { font-size: 18px; }
-  .h-salam-time { font-size: 17px; }
-  .h-stats { gap: 8px; }
-  .h-stat { padding: 14px 8px; }
-  .h-stat-val { font-size: 20px; }
-  .h-next { padding: 16px 18px; }
-  .h-next-name { font-size: 28px; }
+  .h-salam-name { font-size: 20px; }
+  .h-salam-time { font-size: 16px; }
+  .h-stat-val { font-size: 22px; }
+  .h-stat { padding: 0 8px; }
+  .h-next-name { font-size: 26px; }
   .h-next-cd { font-size: 16px; }
-  .h-salah-card { padding: 16px 18px; }
-  .h-prayer-dot { width: 30px; height: 30px; font-size: 11px; }
-  .h-weekly-metrics { flex-wrap: wrap; gap: 8px; font-size: 12px; }
+  .h-salah-dots { flex-direction: column; }
+  .h-prayer-item { border-bottom: none; border-left: 2px solid var(--color-divider-subtle); padding: 4px 0 4px 8px; }
+  .h-weekly-metrics { flex-wrap: wrap; gap: 6px; font-size: 12px; }
 }
 
 /* =============================================
-   SALAH — PREMIUM REIMAGINED
+   SALAH — FLAT STATS TEXT ROW + TEXT PILLS
    ============================================= */
 
-/* ---- Stats Bento Grid ---- */
+/* ---- Stats — pure inline numbers with thin dividers ---- */
 .sb-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  display: flex;
+  gap: 0;
   margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-divider-subtle);
+  padding-bottom: 16px;
 }
 .sb-card {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  padding: 16px 8px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  padding: 0 8px;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.35s var(--cb-spring), border-color 0.3s ease;
-  animation: cardPop 0.4s var(--cb-spring) both;
+  border-right: 1px solid var(--color-divider-subtle);
 }
-.sb-card:nth-child(1) { --sb-color: #10b981; animation-delay: 0.02s; }
-.sb-card:nth-child(2) { --sb-color: #fb923c; animation-delay: 0.04s; }
-.sb-card:nth-child(3) { --sb-color: #6366f1; animation-delay: 0.06s; }
-.sb-card:nth-child(4) { --sb-color: #eab308; animation-delay: 0.08s; }
-.sb-card:nth-child(5) { --sb-color: #a78bfa; animation-delay: 0.10s; }
-@keyframes cardPop {
-  0% { opacity: 0; transform: scale(0.85) translateY(10px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-.sb-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--sb-color, #a78bfa), transparent);
-  opacity: 0.4;
-}
-.sb-card:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--sb-color, #a78bfa) 30%, var(--color-border-active));
-}
-.sb-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: var(--sb-color, #a78bfa);
-  background: color-mix(in srgb, var(--sb-color, #a78bfa) 12%, transparent);
-  transition: transform 0.3s ease;
-}
-.sb-card:hover .sb-icon { transform: scale(1.1); }
-.sb-icon svg { width: 16px; height: 16px; }
+.sb-card:last-child { border-right: none; }
+.sb-card:nth-child(1) { --sb-color: #10b981; }
+.sb-card:nth-child(2) { --sb-color: #fb923c; }
+.sb-card:nth-child(3) { --sb-color: #6366f1; }
+.sb-card:nth-child(4) { --sb-color: #eab308; }
+.sb-card:nth-child(5) { --sb-color: #a78bfa; }
 .sb-val {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 900;
   color: var(--color-text-primary);
   line-height: 1;
+  letter-spacing: -0.3px;
 }
 .sb-lbl {
   font-size: 8px;
@@ -1475,105 +1593,38 @@
   letter-spacing: 0.5px;
   color: var(--color-text-muted);
 }
-.sb-prayed .sb-icon { color: #10b981; background: color-mix(in srgb, #10b981 12%, transparent); }
-.sb-perfect .sb-icon { color: #fb923c; background: color-mix(in srgb, #fb923c 12%, transparent); }
-.sb-consistent .sb-icon { color: #6366f1; background: color-mix(in srgb, #6366f1 12%, transparent); }
-.sb-points .sb-icon { color: #eab308; background: color-mix(in srgb, #eab308 12%, transparent); }
-.sb-score .sb-icon { color: #a78bfa; background: color-mix(in srgb, #a78bfa 12%, transparent); }
 
-/* ---- Prayer Time Pills ---- */
+/* ---- Prayer Time Pills — minimal text ---- */
 .pt-pill {
   flex: 1 0 60px;
   text-align: center;
-  padding: 14px 10px;
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
+  padding: 10px 8px;
   cursor: pointer;
-  transition: all 0.35s var(--cb-spring);
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease, opacity 0.3s ease;
   min-width: 56px;
-  position: relative;
-  overflow: hidden;
-  animation: pillPop 0.4s var(--cb-spring) both;
+  opacity: 0.6;
 }
-@keyframes pillPop {
-  0% { opacity: 0; transform: translateY(12px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-.pt-pill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent-primary) 20%, transparent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.pt-pill:hover::before { opacity: 0.6; }
-.pt-pill:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-border-active);
-}
+.pt-pill:hover { opacity: 1; }
 .pt-pill.pt-active {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background: linear-gradient(135deg, color-mix(in srgb, #a78bfa 8%, var(--color-surface-card)), color-mix(in srgb, #38bdf8 4%, var(--color-surface-card)));
+  opacity: 1;
+  border-bottom-color: var(--color-accent-primary);
 }
-.pt-pill.pt-active::before { opacity: 0.8; }
-.pt-icon {
-  font-size: 1rem;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
+.pt-pill.pt-next {
+  opacity: 1;
 }
-.pt-pill:hover .pt-icon { transform: scale(1.1); }
-.pt-icon svg { width: 16px; height: 16px; }
 .pt-name {
-  font-size: 8px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   color: var(--color-text-primary);
   margin-bottom: 2px;
 }
 .pt-time {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-text-muted);
-}
-.pt-badge {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  font-size: 7px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #fff;
-  background: var(--color-accent-primary);
-  padding: 1px 6px;
-  border-radius: 0 14px 0 8px;
-  animation: pulseBadge 1.5s ease-in-out infinite;
-}
-@keyframes pulseBadge {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .sb-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .sb-card:nth-child(4),
-  .sb-card:nth-child(5) {
-    grid-column: span 1;
-  }
-  .sb-card:nth-child(4) { grid-column: 2; }
-  .sb-card:nth-child(5) { grid-column: 3; }
 }
 
 
