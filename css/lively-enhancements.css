@@ -812,743 +812,425 @@
 }
 
 /* =============================================
-   HOME / DASHBOARD SECTION REDESIGN
-   Billion-Dollar Aesthetic (Light & Dark Theme Aware)
+   HOME — WARM IVORY / LAVENDER / INDIGO / GOLD
+   Premium Wellness Dashboard
    ============================================= */
 
-/* --- Welcome/Greeting Section --- */
-.greeting-container {
+/* Palette */
+:root {
+  --hm-ivory: #faf7f2;
+  --hm-lavender: #a78bfa;
+  --hm-lavender-soft: rgba(167,139,250,0.08);
+  --hm-lavender-glow: rgba(167,139,250,0.15);
+  --hm-indigo: #4338ca;
+  --hm-gold: #f59e0b;
+  --hm-blush: #fbcfe8;
+  --hm-blush-glow: rgba(251,207,232,0.25);
+  --hm-gray: #94a3b8;
+  --hm-card-radius: 20px;
+  --hm-card-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --hm-ivory: #111015;
+  --hm-card-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.2);
+}
+
+#section-home > div[style*="z-index:1"] {
+  padding: 4px 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  gap: 18px;
 }
 
-.greeting-badge {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-}
-
-[data-theme="light"] .greeting-badge {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.15);
-}
-
-.greeting-badge-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-accent-primary);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--color-accent-primary);
-  animation: pulse 2s infinite;
-}
-
-.greeting-badge-text {
+/* ========== 1. GREETING SECTION ========== */
+.hm-greeting { }
+.hm-waqt-label {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--color-accent-primary);
+  color: var(--hm-lavender);
+  margin-bottom: 2px;
 }
-
-.greeting-title {
-  font-size: 1.6rem;
-  font-weight: 900;
-  line-height: 1.2;
-  margin: 0;
+.hm-greeting-name {
+  font-size: 24px;
+  font-weight: 800;
   color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  line-height: 1.2;
+  margin: 0 0 4px;
 }
-
-.greeting-name {
-  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-gold) 100%);
+.hm-greeting-name .hm-name-highlight {
+  background: linear-gradient(135deg, var(--hm-lavender), var(--hm-indigo));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-weight: 950;
-  filter: drop-shadow(0 2px 10px rgba(168,85,247,0.15));
 }
-
-.greeting-star {
-  opacity: 0.9;
-  animation: pulseSoft 2s infinite ease-in-out;
+.hm-greeting-name .hm-sparkle {
+  display: inline-block;
+  animation: pulseSoft 2s ease-in-out infinite;
+  -webkit-text-fill-color: initial;
 }
-
-/* --- Chronometer / Live Clock Widget --- */
-.chronometer-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-xl);
-  padding: 20px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+.hm-clock-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.05s;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 4px;
 }
-
-[data-theme="light"] .chronometer-card {
-  background: #ffffff;
-  border-color: rgba(99, 102, 241, 0.08);
-  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.04);
+.hm-clock {
+  font-size: 36px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+  color: var(--color-text-primary);
+  line-height: 1;
 }
-
-.chronometer-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.03) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.chronometer-main {
+.hm-date-col {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
+}
+.hm-date-en {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--hm-gray);
+  letter-spacing: 0.2px;
+}
+.hm-date-hj {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--hm-gold);
 }
 
-.chronometer-live {
+/* ========== 2. SPIRITUAL SCORE HERO ========== */
+.hm-score-hero {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  background: var(--hm-ivory);
+  border-radius: var(--hm-card-radius);
+  padding: 16px 20px;
+  box-shadow: var(--hm-card-shadow);
+}
+
+/* Left — Perfect Pill */
+.hm-perfect-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--hm-lavender-soft);
+  border-radius: 100px;
 }
-
-.chronometer-dot {
-  width: 6px;
-  height: 6px;
-  background: #10b981;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #10b981;
-  animation: finPulse 2s infinite;
+.hm-perfect-pill svg {
+  flex-shrink: 0;
 }
-
-.chronometer-status-text {
+.hm-perfect-pill span {
   font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #10b981;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--hm-lavender);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.chronometer-time {
-  font-size: 2.1rem;
-  font-weight: 900;
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
+/* Center — SHS Circle */
+.hm-shs-circle {
+  justify-self: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px var(--hm-blush-glow), 0 8px 32px var(--hm-blush-glow);
+  position: relative;
+}
+[data-theme="dark"] .hm-shs-circle {
+  background: rgba(30,27,40,0.8);
+}
+.hm-shs-value {
+  font-size: 28px;
+  font-weight: 950;
   line-height: 1;
   letter-spacing: -1px;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="light"] .chronometer-time {
-  color: #0f172a;
-}
-
-.chronometer-divider {
-  width: 1px;
-  align-self: stretch;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 0 10px;
-}
-
-[data-theme="light"] .chronometer-divider {
-  background: #e2e8f0;
-}
-
-.chronometer-dates {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 3px;
-}
-
-.chronometer-date-en {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.chronometer-date-hj {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--color-accent-gold);
-}
-
-/* --- SHS Dashboard Card --- */
-.shs-dashboard-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: var(--radius-xl);
-  padding: 16px 20px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: center;
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.1s;
-}
-
-[data-theme="light"] .shs-dashboard-card {
-  background: #ffffff;
-  border-color: rgba(99, 102, 241, 0.08);
-  box-shadow: 0 16px 36px rgba(99, 102, 241, 0.04);
-}
-
-.shs-dashboard-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.shs-mini-title {
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--color-text-muted);
-}
-
-.shs-aura-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.shs-val-number {
-  font-size: 32px;
-  font-weight: 950;
-  letter-spacing: -1px;
   color: var(--color-text-primary);
 }
+.hm-shs-label {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--hm-gray);
+  margin-top: 1px;
+}
 
-.shs-pulse-spot-wrap {
+/* Right — Wave */
+.hm-wave-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.85;
+  opacity: 0.6;
 }
 
-.shs-dashboard-right {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  padding-left: 20px;
+/* ========== 3. NEXT PRAYER CARD ========== */
+.hm-next-card {
+  background: var(--hm-ivory);
+  border-radius: var(--hm-card-radius);
+  padding: 20px 24px;
+  box-shadow: var(--hm-card-shadow);
 }
-
-[data-theme="light"] .shs-dashboard-right {
-  border-left-color: #e2e8f0;
-}
-
-.shs-streaks-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.shs-streak-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.shs-streak-icon {
-  font-size: 18px;
-  animation: pulseSoft 2.5s infinite;
-}
-
-.shs-streak-details {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.shs-streak-value {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--color-text-primary);
-}
-
-.shs-streak-label {
+.hm-next-label {
   font-size: 9px;
   font-weight: 700;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* --- Next Prayer Card (Premium Waqt countdown banner) --- */
-.next-prayer-card-premium {
-  background: var(--color-glass);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  margin-bottom: var(--space-6);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.15s;
-}
-
-.next-prayer-card-premium::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, var(--waqt-theme-glow) 0%, transparent 70%);
-  opacity: 0.15;
-  pointer-events: none;
-  transition: all 0.5s ease;
-}
-
-.next-prayer-card-premium.fajr { --waqt-theme-glow: #ec4899; border-color: rgba(236, 72, 153, 0.15); }
-.next-prayer-card-premium.dhuhr { --waqt-theme-glow: #fbbf24; border-color: rgba(251, 191, 36, 0.15); }
-.next-prayer-card-premium.asr { --waqt-theme-glow: #f97316; border-color: rgba(249, 115, 22, 0.15); }
-.next-prayer-card-premium.maghrib { --waqt-theme-glow: #a855f7; border-color: rgba(168, 85, 247, 0.15); }
-.next-prayer-card-premium.isha { --waqt-theme-glow: #6366f1; border-color: rgba(99, 102, 241, 0.15); }
-
-[data-theme="light"] .next-prayer-card-premium {
-  background: #ffffff;
-}
-
-.next-prayer-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.next-prayer-badge {
-  font-size: 9px;
-  font-weight: 900;
   letter-spacing: 1.5px;
-  color: var(--waqt-theme-glow);
   text-transform: uppercase;
+  color: var(--hm-lavender);
+  margin-bottom: 8px;
 }
-
-.next-prayer-pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--waqt-theme-glow);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--waqt-theme-glow);
-  animation: finPulse 2s infinite;
-}
-
-.next-prayer-content {
+.hm-next-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-4);
-  position: relative;
-  z-index: 1;
 }
-
-.next-prayer-info-side {
-  display: flex;
-  flex-direction: column;
-}
-
-.next-prayer-title {
-  font-size: 2rem;
-  font-weight: 950;
+.hm-next-name {
+  font-size: 26px;
+  font-weight: 900;
   color: var(--color-text-primary);
   line-height: 1;
-  text-transform: capitalize;
   letter-spacing: -0.5px;
+  text-transform: capitalize;
 }
-
-.next-prayer-time-sub {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  margin-top: 6px;
-}
-
-.next-prayer-countdown-side {
+.hm-next-cd {
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
-
-.next-prayer-timer {
-  font-size: 2.2rem;
-  font-weight: 950;
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  line-height: 1;
-  letter-spacing: -0.5px;
-}
-
-.next-prayer-timer-label {
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  margin-top: 6px;
-  letter-spacing: 0.5px;
-}
-
-.next-prayer-progress-track {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-full);
-  margin-top: 20px;
-  overflow: hidden;
-  position: relative;
-}
-
-[data-theme="light"] .next-prayer-progress-track {
-  background: #f1f5f9;
-}
-
-.next-prayer-progress-fill {
-  height: 100%;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--waqt-theme-glow) 0%, var(--color-accent-primary) 100%);
-  box-shadow: 0 0 10px var(--waqt-theme-glow);
-  transition: width 1s linear;
-}
-
-/* --- Today's Salah Ring Card redesign --- */
-.salah-progress-ring-card {
-  background: var(--color-glass);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-  padding: 24px;
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 24px;
-  align-items: center;
-  box-shadow: var(--shadow-premium);
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.2s;
-}
-
-[data-theme="light"] .salah-progress-ring-card {
-  background: #ffffff;
-}
-
-.salah-ring-graphic-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.salah-ring-count-val {
-  font-size: 2.3rem;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: -1px;
-}
-
-.salah-ring-total-label {
-  font-size: 9px;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-text-muted);
-  margin-top: 2px;
-}
-
-.salah-ring-info-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.salah-ring-title {
-  font-size: 1.25rem;
+.hm-next-cd-value {
+  font-size: 28px;
   font-weight: 900;
+  font-variant-numeric: tabular-nums;
   color: var(--color-text-primary);
-  line-height: 1.1;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+.hm-next-cd-label {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--hm-gray);
+  margin-top: 4px;
+}
+
+/* ========== 4. DAILY SALAH PROGRESS + RANK ========== */
+.hm-salah-card {
+  background: var(--hm-ivory);
+  border-radius: var(--hm-card-radius);
+  padding: 20px 24px;
+  box-shadow: var(--hm-card-shadow);
+}
+.hm-salah-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.hm-salah-ring-wrap {
+  flex-shrink: 0;
+}
+.hm-salah-info {
+  flex: 1;
+}
+.hm-salah-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text-primary);
   margin-bottom: 2px;
 }
-
-.salah-ring-subtitle {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
-}
-
-.salah-checklist-mini {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.salah-checklist-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-}
-
-[data-theme="light"] .salah-checklist-item {
-  background: #f8fafc;
-  border-color: #f1f5f9;
-}
-
-.salah-checklist-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--color-text-secondary);
-}
-
-.checklist-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 6px;
-  font-weight: bold;
-}
-
-.checklist-dot.pending {
-  border: 1px solid var(--color-text-muted);
-  background: transparent;
-}
-
-.checklist-dot.logged {
-  color: #fff;
-  border: none;
-  font-size: 8px;
-}
-
-.checklist-dot.logged.jamaat { background-color: #10b981; box-shadow: 0 0 6px #10b981; }
-.checklist-dot.logged.alone { background-color: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
-.checklist-dot.logged.qaza { background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b; font-size: 8px; }
-.checklist-dot.logged.missed { background-color: #ef4444; box-shadow: 0 0 6px #ef4444; font-size: 7px; }
-
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .chronometer-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .chronometer-divider {
-    width: 100%;
-    height: 1px;
-    margin: 4px 0;
-  }
-  .chronometer-dates {
-    text-align: left;
-  }
-  .shs-dashboard-card {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-  .shs-dashboard-right {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding-left: 0;
-    padding-top: 16px;
-  }
-  [data-theme="light"] .shs-dashboard-right {
-    border-top-color: #e2e8f0;
-  }
-  .salah-progress-ring-card {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-  .salah-ring-graphic-container {
-    justify-content: flex-start;
-  }
-}
-}
-.h-salah-dots {
-  display: flex;
-  gap: 0;
-}
-.h-prayer-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--color-divider-subtle);
-}
-.h-prayer-item:last-child { border-bottom: none; }
-.h-prayer-item:nth-child(1) { --prayer-color: #38bdf8; }
-.h-prayer-item:nth-child(2) { --prayer-color: #fbbf24; }
-.h-prayer-item:nth-child(3) { --prayer-color: #fb923c; }
-.h-prayer-item:nth-child(4) { --prayer-color: #a855f7; }
-.h-prayer-item:nth-child(5) { --prayer-color: #6366f1; }
-.h-prayer-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--color-divider-subtle);
-  transition: transform 0.3s var(--cb-spring), background 0.3s ease;
-}
-.h-prayer-dot-done { background: var(--prayer-color, #10b981); }
-.h-prayer-dot-missed { background: var(--prayer-color, #ef4444); opacity: 0.4; }
-.h-prayer-lbl {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  letter-spacing: -0.1px;
-}
-.h-salah-footer {
+.hm-salah-sub {
   font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  font-style: italic;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-divider-subtle);
+  font-weight: 600;
+  color: var(--hm-gray);
+  margin-bottom: 10px;
+}
+.hm-salah-bar-track {
+  height: 4px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+[data-theme="dark"] .hm-salah-bar-track {
+  background: rgba(255,255,255,0.08);
+}
+.hm-salah-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--hm-lavender), var(--hm-gold));
+  transition: width 0.8s ease;
 }
 
-/* ========== WEEKLY ========== */
-.h-weekly { padding: 0; }
-.h-weekly-label {
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--color-text-muted);
-  margin-bottom: 6px;
-}
-.h-weekly-row {
+/* Rank section */
+.hm-rank-section { }
+.hm-rank-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 8px;
 }
-.h-weekly-metrics {
+.hm-rank-current {
   display: flex;
-  gap: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
+  flex-direction: column;
 }
-.h-weekly-best { text-align: right; }
-.h-weekly-best-val {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--color-accent-gold, #f59e0b);
-  line-height: 1;
-}
-.h-weekly-tip {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  line-height: 1.4;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-divider-subtle);
-}
-
-/* ========== DUA — Minimal Row ========== */
-.h-dua {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 4px 0;
-}
-.h-dua-info { flex: 1; }
-.h-dua-label {
-  font-size: 14px;
+.hm-rank-label {
+  font-size: 8px;
   font-weight: 700;
-  color: var(--color-text-primary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--hm-gray);
+  margin-bottom: 1px;
 }
-.h-dua-desc {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  margin-top: 1px;
-}
-.h-dua-stats {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-shrink: 0;
-}
-.h-dua-stat { text-align: center; }
-.h-dua-stat-val {
-  font-size: 16px;
+.hm-rank-name {
+  font-size: 14px;
   font-weight: 900;
-  color: var(--color-text-primary);
+  color: var(--hm-indigo);
   line-height: 1;
 }
-.h-dua-stat-lbl {
+.hm-rank-next {
+  text-align: right;
+}
+.hm-rank-next-label {
   font-size: 8px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-muted);
-  margin-top: 1px;
+  color: var(--hm-gray);
 }
-.h-dua-stat.active .h-dua-stat-val { color: var(--color-accent-primary); }
-.h-dua-stat.answered .h-dua-stat-val { color: #10b981; }
+.hm-rank-next-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+.hm-rank-track {
+  height: 6px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 6px;
+  position: relative;
+  overflow: visible;
+}
+[data-theme="dark"] .hm-rank-track {
+  background: rgba(255,255,255,0.06);
+}
+.hm-rank-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--hm-lavender), var(--hm-indigo));
+  position: relative;
+}
+.hm-rank-dot {
+  position: absolute;
+  right: -7px;
+  top: -4px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  border: 3px solid var(--hm-lavender);
+  box-shadow: 0 0 8px var(--hm-lavender-glow);
+}
+.hm-rank-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--hm-gray);
+  margin-top: 6px;
+  text-align: right;
+}
 
-/* ========== INSIGHT ========== */
-.h-insight { padding: 0; }
-.h-insight-label {
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--color-accent-primary);
-  margin-bottom: 4px;
+/* ========== 5. SPIRITUAL INSIGHT CARD ========== */
+.hm-insight-card {
+  background: var(--hm-lavender-soft);
+  border: 1px solid var(--hm-lavender-glow);
+  border-radius: var(--hm-card-radius);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-#home-insight-text {
-  font-size: 14px;
-  font-weight: 500;
+.hm-insight-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--hm-lavender);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px var(--hm-lavender-glow);
+}
+.hm-insight-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+  stroke-width: 2.5;
+  fill: none;
+}
+.hm-insight-body {
+  flex: 1;
+}
+.hm-insight-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--hm-lavender);
+  margin-bottom: 3px;
+}
+#hm-insight-quote {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--color-text-secondary);
   line-height: 1.5;
   margin: 0;
-  font-style: italic;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-#home-insight-text.fade-out { opacity: 0; transform: translateY(-6px); }
-#home-insight-text.fade-in-prep { opacity: 0; transform: translateY(6px); transition: none; }
+#hm-insight-quote.fade-out { opacity: 0; transform: translateY(-6px); }
+#hm-insight-quote.fade-in-prep { opacity: 0; transform: translateY(6px); transition: none; }
 
-/* ========== MOBILE ========== */
+/* ========== RESPONSIVE ========== */
 @media (max-width: 480px) {
-  .h-salam-name { font-size: 20px; }
-  .h-salam-time { font-size: 16px; }
-  .h-stat-val { font-size: 22px; }
-  .h-stat { padding: 0 8px; }
-  .h-next-name { font-size: 26px; }
-  .h-next-cd { font-size: 16px; }
-  .h-salah-dots { flex-direction: column; }
-  .h-prayer-item { border-bottom: none; border-left: 2px solid var(--color-divider-subtle); padding: 4px 0 4px 8px; }
-  .h-weekly-metrics { flex-wrap: wrap; gap: 6px; font-size: 12px; }
+  .hm-clock {
+    font-size: 28px;
+  }
+  .hm-score-hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  .hm-shs-circle {
+    width: 76px;
+    height: 76px;
+  }
+  .hm-shs-value {
+    font-size: 24px;
+  }
+  .hm-next-name {
+    font-size: 22px;
+  }
+  .hm-next-cd-value {
+    font-size: 24px;
+  }
+  .hm-salah-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hm-greeting-name {
+    font-size: 20px;
+  }
 }
 
 /* =============================================
