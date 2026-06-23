@@ -4,6 +4,13 @@
    staggered entrances, and ambient animations
    ============================================= */
 
+/* ---- PREMIUM ANIMATION TOKENS ---- */
+:root {
+  --cb-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --cb-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cb-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 /* ---- Custom Cubic Bezier (spring-like) ---- */
 :root {
   --cb-spring: cubic-bezier(0.32, 0.72, 0, 1);
@@ -802,6 +809,771 @@
 /* Fix 5b: Hardcoded white color on empty subtitle → use CSS variable */
 .salah-empty-subtitle {
   color: var(--color-text-muted) !important;
+}
+
+/* =============================================
+   HOME — PREMIUM REIMAGINED
+   Colorful, animated, classy, lively
+   ============================================= */
+
+/* ---- Ambient Waqt Glow ---- */
+#section-home {
+  position: relative;
+}
+#section-home::before {
+  content: '';
+  position: fixed;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(ellipse at 30% 20%, color-mix(in srgb, var(--waqt-color, #a78bfa) 5%, transparent) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, color-mix(in srgb, var(--waqt-color, #a78bfa) 3%, transparent) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 1.2s ease;
+  animation: ambientDrift 20s ease-in-out infinite;
+}
+@keyframes ambientDrift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(1%, -0.5%) rotate(0.5deg); }
+  66% { transform: translate(-0.5%, 1%) rotate(-0.3deg); }
+}
+
+/* ---- Section Layout ---- */
+#section-home > div[style*="z-index:1"] {
+  position: relative;
+  z-index: 1;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---- Staggered Entrance ---- */
+#section-home.active > div[style*="z-index:1"] > div {
+  animation: homeSlideUp 0.7s var(--cb-premium) both;
+}
+#section-home.active > div[style*="z-index:1"] > div:nth-child(1) { animation-delay: 0.02s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(2) { animation-delay: 0.08s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(3) { animation-delay: 0.16s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(4) { animation-delay: 0.24s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(5) { animation-delay: 0.32s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(6) { animation-delay: 0.40s; }
+#section-home.active > div[style*="z-index:1"] > div:nth-child(7) { animation-delay: 0.48s; }
+@keyframes homeSlideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== H-SALAM — Premium Greeting Card ========== */
+.h-salam {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.h-salam::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--waqt-color, #a78bfa) 4%, transparent) 0%, transparent 50%);
+  pointer-events: none;
+}
+.h-salam-left { display: flex; flex-direction: column; gap: 8px; position: relative; }
+.h-salam-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: color-mix(in srgb, var(--waqt-color, #a78bfa) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--waqt-color, #a78bfa) 20%, transparent);
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--waqt-color, #a78bfa);
+  width: fit-content;
+}
+.h-salam-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--waqt-color, #a78bfa);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+.h-salam-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+.h-salam-right { text-align: right; flex-shrink: 0; position: relative; }
+.h-salam-time {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+  letter-spacing: -0.2px;
+}
+.h-salam-date {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* ========== H-STATS — Colorful Metric Tiles ========== */
+.h-stats {
+  display: flex;
+  gap: 10px;
+}
+.h-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border-radius: 14px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  transition: transform 0.35s var(--cb-spring), border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.h-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-active);
+}
+.h-stat:nth-child(1) { --stat-accent: #f97316; }
+.h-stat:nth-child(2) { --stat-accent: #a78bfa; }
+.h-stat:nth-child(3) { --stat-accent: #10b981; }
+.h-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--stat-accent, #a78bfa), transparent);
+  opacity: 0.5;
+  border-radius: 0 0 2px 2px;
+}
+.h-stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--stat-accent, #a78bfa);
+  background: color-mix(in srgb, var(--stat-accent, #a78bfa) 12%, transparent);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+.h-stat:hover .h-stat-icon {
+  transform: scale(1.08);
+  background: color-mix(in srgb, var(--stat-accent, #a78bfa) 18%, transparent);
+}
+.h-stat-val {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+.h-stat-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-left: 1px;
+}
+.h-stat-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--color-text-muted);
+}
+
+/* ========== H-NEXT — Hero Prayer Countdown ========== */
+.h-next {
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.h-next:hover {
+  border-color: var(--color-border-active);
+}
+.h-next::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--h-next-color, #a78bfa), color-mix(in srgb, var(--h-next-color, #a78bfa) 40%, transparent));
+  opacity: 0.6;
+}
+.h-next-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--color-text-muted);
+}
+.h-next-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.h-next-name {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  color: var(--h-next-color, var(--color-text-primary));
+  transition: color 0.5s ease;
+}
+.h-next-time {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 4px 12px;
+  background: var(--color-surface-nested);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.h-next-bar {
+  height: 4px;
+  background: var(--color-divider-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+.h-next-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--h-next-color, #a78bfa), color-mix(in srgb, var(--h-next-color, #a78bfa) 60%, var(--color-accent-teal, #38bdf8)));
+  transition: width 0.5s var(--cb-premium);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--h-next-color, #a78bfa) 30%, transparent);
+}
+.h-next-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.h-next-cd {
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+}
+.h-next-cd-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ========== H-SALAH-CARD — Daily Prayer Status ========== */
+.h-salah-card {
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.h-salah-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.h-salah-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.1px;
+}
+.h-salah-badge {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--h-salah-color, var(--color-text-secondary));
+  letter-spacing: -0.2px;
+  padding: 2px 10px;
+  background: var(--color-surface-nested);
+  border-radius: 8px;
+}
+.h-salah-dots {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.h-prayer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: prayerPop 0.4s var(--cb-spring) both;
+}
+.h-prayer-item:nth-child(1) { animation-delay: 0.02s; }
+.h-prayer-item:nth-child(2) { animation-delay: 0.06s; }
+.h-prayer-item:nth-child(3) { animation-delay: 0.10s; }
+.h-prayer-item:nth-child(4) { animation-delay: 0.14s; }
+.h-prayer-item:nth-child(5) { animation-delay: 0.18s; }
+@keyframes prayerPop {
+  0% { opacity: 0; transform: scale(0.6) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.h-prayer-item:nth-child(1) { --prayer-color: #38bdf8; }
+.h-prayer-item:nth-child(2) { --prayer-color: #fbbf24; }
+.h-prayer-item:nth-child(3) { --prayer-color: #fb923c; }
+.h-prayer-item:nth-child(4) { --prayer-color: #a855f7; }
+.h-prayer-item:nth-child(5) { --prayer-color: #6366f1; }
+.h-prayer-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  transition: all 0.35s var(--cb-spring);
+  border: 2px solid var(--color-divider-subtle);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.h-prayer-dot:hover { transform: scale(1.12); }
+.h-prayer-dot-done {
+  background: var(--prayer-color, #10b981);
+  border-color: var(--prayer-color, #10b981);
+  color: #fff;
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--prayer-color, #10b981) 35%, transparent);
+  animation: doneGlow 2.5s ease-in-out infinite;
+}
+@keyframes doneGlow {
+  0%, 100% { box-shadow: 0 3px 12px color-mix(in srgb, var(--prayer-color, #10b981) 35%, transparent); }
+  50% { box-shadow: 0 5px 20px color-mix(in srgb, var(--prayer-color, #10b981) 55%, transparent); }
+}
+.h-prayer-dot-done::after { content: ''; }
+.h-prayer-dot-missed {
+  border-color: var(--prayer-color, #ef4444);
+  color: var(--prayer-color, #ef4444);
+  background: transparent;
+  opacity: 0.6;
+}
+.h-prayer-dot-empty { }
+.h-prayer-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+.h-salah-footer {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-divider-subtle);
+  font-style: italic;
+}
+
+/* ========== WEEKLY PULSE ========== */
+.h-weekly {
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.h-weekly-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--color-text-muted);
+}
+.h-weekly-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.h-weekly-metrics {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.h-weekly-best {
+  text-align: right;
+}
+.h-weekly-best-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+.h-weekly-best-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-accent-gold, #f59e0b);
+  line-height: 1;
+}
+.h-weekly-tip {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-divider-subtle);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ========== DUA CARD ========== */
+.h-dua {
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, transform 0.3s var(--cb-spring);
+}
+.h-dua:hover {
+  border-color: var(--color-accent-primary);
+  transform: translateY(-2px);
+}
+.h-dua-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.h-dua:hover .h-dua-icon {
+  background: var(--color-accent-primary);
+  color: #fff;
+}
+.h-dua-icon svg { width: 18px; height: 18px; }
+.h-dua-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.h-dua-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.h-dua-desc {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+.h-dua-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.h-dua-stat { text-align: center; }
+.h-dua-stat-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+.h-dua-stat-lbl {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+.h-dua-stat.active .h-dua-stat-val { color: var(--color-accent-primary); }
+.h-dua-stat.answered .h-dua-stat-val { color: #10b981; }
+
+/* ========== AI INSIGHT ========== */
+.h-insight {
+  border-radius: 18px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.h-insight::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12%;
+  bottom: 12%;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-teal));
+  border-radius: 0 2px 2px 0;
+  opacity: 0.5;
+}
+.h-insight-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--color-accent-primary);
+  padding-left: 14px;
+}
+#home-insight-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 14px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#home-insight-text.fade-out {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+#home-insight-text.fade-in-prep {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: none;
+}
+
+/* ========== MOBILE ADAPT ========== */
+@media (max-width: 480px) {
+  .h-salam { padding: 16px 18px; }
+  .h-salam-name { font-size: 18px; }
+  .h-salam-time { font-size: 17px; }
+  .h-stats { gap: 8px; }
+  .h-stat { padding: 14px 8px; }
+  .h-stat-val { font-size: 20px; }
+  .h-next { padding: 16px 18px; }
+  .h-next-name { font-size: 28px; }
+  .h-next-cd { font-size: 16px; }
+  .h-salah-card { padding: 16px 18px; }
+  .h-prayer-dot { width: 30px; height: 30px; font-size: 11px; }
+  .h-weekly-metrics { flex-wrap: wrap; gap: 8px; font-size: 12px; }
+}
+
+/* =============================================
+   SALAH — PREMIUM REIMAGINED
+   ============================================= */
+
+/* ---- Stats Bento Grid ---- */
+.sb-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.sb-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s var(--cb-spring), border-color 0.3s ease;
+  animation: cardPop 0.4s var(--cb-spring) both;
+}
+.sb-card:nth-child(1) { --sb-color: #10b981; animation-delay: 0.02s; }
+.sb-card:nth-child(2) { --sb-color: #fb923c; animation-delay: 0.04s; }
+.sb-card:nth-child(3) { --sb-color: #6366f1; animation-delay: 0.06s; }
+.sb-card:nth-child(4) { --sb-color: #eab308; animation-delay: 0.08s; }
+.sb-card:nth-child(5) { --sb-color: #a78bfa; animation-delay: 0.10s; }
+@keyframes cardPop {
+  0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.sb-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--sb-color, #a78bfa), transparent);
+  opacity: 0.4;
+}
+.sb-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--sb-color, #a78bfa) 30%, var(--color-border-active));
+}
+.sb-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--sb-color, #a78bfa);
+  background: color-mix(in srgb, var(--sb-color, #a78bfa) 12%, transparent);
+  transition: transform 0.3s ease;
+}
+.sb-card:hover .sb-icon { transform: scale(1.1); }
+.sb-icon svg { width: 16px; height: 16px; }
+.sb-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+.sb-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+.sb-prayed .sb-icon { color: #10b981; background: color-mix(in srgb, #10b981 12%, transparent); }
+.sb-perfect .sb-icon { color: #fb923c; background: color-mix(in srgb, #fb923c 12%, transparent); }
+.sb-consistent .sb-icon { color: #6366f1; background: color-mix(in srgb, #6366f1 12%, transparent); }
+.sb-points .sb-icon { color: #eab308; background: color-mix(in srgb, #eab308 12%, transparent); }
+.sb-score .sb-icon { color: #a78bfa; background: color-mix(in srgb, #a78bfa 12%, transparent); }
+
+/* ---- Prayer Time Pills ---- */
+.pt-pill {
+  flex: 1 0 60px;
+  text-align: center;
+  padding: 14px 10px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.35s var(--cb-spring);
+  min-width: 56px;
+  position: relative;
+  overflow: hidden;
+  animation: pillPop 0.4s var(--cb-spring) both;
+}
+@keyframes pillPop {
+  0% { opacity: 0; transform: translateY(12px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pt-pill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent-primary) 20%, transparent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.pt-pill:hover::before { opacity: 0.6; }
+.pt-pill:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-active);
+}
+.pt-pill.pt-active {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, #a78bfa 8%, var(--color-surface-card)), color-mix(in srgb, #38bdf8 4%, var(--color-surface-card)));
+}
+.pt-pill.pt-active::before { opacity: 0.8; }
+.pt-icon {
+  font-size: 1rem;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+.pt-pill:hover .pt-icon { transform: scale(1.1); }
+.pt-icon svg { width: 16px; height: 16px; }
+.pt-name {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+.pt-time {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.pt-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--color-accent-primary);
+  padding: 1px 6px;
+  border-radius: 0 14px 0 8px;
+  animation: pulseBadge 1.5s ease-in-out infinite;
+}
+@keyframes pulseBadge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .sb-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .sb-card:nth-child(4),
+  .sb-card:nth-child(5) {
+    grid-column: span 1;
+  }
+  .sb-card:nth-child(4) { grid-column: 2; }
+  .sb-card:nth-child(5) { grid-column: 3; }
 }
 
 
