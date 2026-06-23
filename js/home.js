@@ -63,29 +63,16 @@ const Home = {
     // --- SALAM BAR (compact) ---
     const el = document.getElementById('home-greeting');
     if (el) {
-      const next = Utils.getNextPrayer(times);
-      const waqtColors = { fajr:'#38bdf8', dhuhr:'#fbbf24', asr:'#fb923c', maghrib:'#a855f7', isha:'#6366f1' };
-      const wc = waqtColors[next.name] || '#10B981';
-
-      // Sync ambient background color to waqt
-      const section = document.getElementById('section-home');
-      if (section) section.style.setProperty('--waqt-color', wc);
       el.innerHTML = `
         <div class="h-salam">
-          <div class="h-salam-accent" style="--waqt-color:${wc}"></div>
-          <div class="h-salam-body">
-            <div class="h-salam-left">
-              <span class="h-salam-badge" style="background:${wc}">
-                <span class="h-salam-dot"></span>
-                ${window.t ? window.t(greet) : greet}
-              </span>
-              <div class="h-salam-name">${window.t ? window.t('As-salamu alaykum,') : 'As-salamu alaykum,'} ${safeLastName}</div>
-            </div>
-            <div class="h-salam-right">
-              <div id="live-time-val" class="h-salam-time">--:--</div>
-              <div id="live-date-en-val" class="h-salam-date"></div>
-              <div id="live-date-hj-val" class="h-salam-date">...</div>
-            </div>
+          <div>
+            <div>${window.t ? window.t(greet) : greet}</div>
+            <div>${window.t ? window.t('As-salamu alaykum,') : 'As-salamu alaykum,'} ${safeLastName}</div>
+          </div>
+          <div>
+            <div id="live-time-val">--:--</div>
+            <div id="live-date-en-val"></div>
+            <div id="live-date-hj-val">...</div>
           </div>
         </div>
       `;
@@ -102,19 +89,16 @@ const Home = {
       db.innerHTML = `
         <div class="h-stats">
           <div class="h-stat">
-            <span class="h-stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
-            <span class="h-stat-val">${window.n ? window.n(streak.perfect) : streak.perfect}<span class="h-stat-unit">d</span></span>
-            <span class="h-stat-lbl">${window.t ? window.t('Streak') : 'Streak'}</span>
+            <div>${window.n ? window.n(streak.perfect) : streak.perfect}<span>d</span></div>
+            <div>${window.t ? window.t('Streak') : 'Streak'}</div>
           </div>
           <div class="h-stat">
-            <span class="h-stat-icon h-stat-orb" style="background:${shs.rating.color}">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
-            <span class="h-stat-val">${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</span>
-            <span class="h-stat-lbl">SHS</span>
+            <div>${window.n ? window.n(Math.round(shs.total)) : Math.round(shs.total)}</div>
+            <div>SHS</div>
           </div>
           <div class="h-stat">
-            <span class="h-stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l-3 4h6l-3-4z"/><path d="M5 22V8l7-4 7 4v14"/><path d="M5 22h14"/><path d="M9 22v-4a3 3 0 0 1 6 0v4"/><path d="M2 22h20"/></svg></span>
-            <span class="h-stat-val">${window.n ? window.n(score.done) : score.done}<span class="h-stat-unit">/${window.n ? window.n(5) : 5}</span></span>
-            <span class="h-stat-lbl">${window.t ? window.t('Today') : 'Today'}</span>
+            <div>${window.n ? window.n(score.done) : score.done}<span>/${window.n ? window.n(5) : 5}</span></div>
+            <div>${window.t ? window.t('Today') : 'Today'}</div>
           </div>
         </div>
       `;
@@ -179,26 +163,8 @@ const Home = {
     let qIdx = Math.floor(Math.random() * quotes.length);
 
     container.innerHTML = `
-      <style>
-        .ai-insight-icon-wrap {
-           transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease;
-        }
-        .ai-insight-icon-wrap.pulse {
-           transform: scale(1.1) rotate(5deg);
-           box-shadow: 0 0 25px rgba(167,139,250,0.6) !important;
-        }
-      </style>
-      <div class="card ai-insight-premium home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(192,132,252,0.03) 100%); padding:18px 20px; display:flex; align-items:center; gap:16px; position:relative;">
-        <div id="home-insight-icon" class="ai-insight-icon-wrap">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg-primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:3px; flex: 1;">
-          <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-accent-primary)">${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</span>
-          <div style="min-height: 34px; display: flex; align-items: center;">
-            <p id="home-insight-text" style="font-size:12px; font-weight:600; margin:0; line-height:1.45; color:var(--color-text-secondary)">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
-          </div>
-        </div>
-      </div>
+      <div>${window.t ? window.t('SPIRITUAL INSIGHT') : 'Spiritual Insight'}</div>
+      <p id="home-insight-text">${window.t ? window.t(quotes[qIdx]) : quotes[qIdx]}</p>
     `;
 
     // Clear existing interval and timeout to prevent overlapping transitions
@@ -295,26 +261,11 @@ const Home = {
     const labelDhikr = window.t ? window.t('dhikr') : 'dhikr';
 
     container.innerHTML = `
-      <div class="card home-reveal revealed home-reveal-delay-3" style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.03)); padding:18px 20px; position:relative;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div class="ai-insight-icon-wrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
-            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#10b981;">${window.t ? window.t('Weekly Pulse') : 'Weekly Pulse'}</div>
-            <div style="font-size:12px;font-weight:600;color:var(--color-text-secondary);line-height:1.4;">
-              ${formattedAvg}/${window.n ? window.n(5) : 5} ${labelAvg} · ${formattedPerfect} ${labelPerfect} · ${formattedDhikr} ${labelDhikr}
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
-            <div style="font-size:9px;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;">${window.t ? window.t('Best') : 'Best'}</div>
-            <div style="font-size:16px;font-weight:900;color:var(--color-accent-gold);">${window.n ? window.n(bestDay) : bestDay}/${window.n ? window.n(5) : 5}</div>
-          </div>
-        </div>
-        <div style="margin-top:10px;padding-top:10px;border-top:1.5px solid var(--color-divider-subtle);display:flex;align-items:center;gap:8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.5;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-          <span style="font-size:11px;font-weight:600;color:var(--color-text-muted);line-height:1.4;">${window.t ? window.t(tip) : tip}</span>
-        </div>
+      <div>
+        <div>${window.t ? window.t('Weekly Pulse') : 'Weekly Pulse'}</div>
+        <div>${formattedAvg}/5 ${labelAvg} · ${formattedPerfect} ${labelPerfect} · ${formattedDhikr} ${labelDhikr}</div>
+        <div>${window.t ? window.t('Best') : 'Best'}: ${window.n ? window.n(bestDay) : bestDay}/5</div>
+        <div>${window.t ? window.t(tip) : tip}</div>
       </div>
     `;
   },
@@ -325,23 +276,16 @@ const Home = {
     const active = DuaBoard.getActiveCount();
     const answered = DuaBoard.getAnsweredCount();
     container.innerHTML = `
-      <div class="home-dua-card home-reveal revealed home-reveal-delay-4" onclick="DuaBoard.showModal()">
-        <div class="home-dua-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <div onclick="DuaBoard.showModal()">
+        <div>Dua Board</div>
+        <div>${active > 0 ? active + ' active' : 'Add your prayers'}</div>
+        <div>
+          <div>${active}</div>
+          <div>Active</div>
         </div>
-        <div class="home-dua-info">
-          <div class="home-dua-label">Dua Board</div>
-          <div class="home-dua-desc">${active > 0 ? active + ' active' : 'Add your prayers'}</div>
-        </div>
-        <div class="home-dua-stats">
-          <div class="home-dua-stat active">
-            <div class="home-dua-stat-val">${active}</div>
-            <div class="home-dua-stat-lbl">Active</div>
-          </div>
-          <div class="home-dua-stat answered">
-            <div class="home-dua-stat-val">${answered}</div>
-            <div class="home-dua-stat-lbl">Answered</div>
-          </div>
+        <div>
+          <div>${answered}</div>
+          <div>Answered</div>
         </div>
       </div>
     `;
@@ -409,17 +353,12 @@ const Home = {
 
     el.innerHTML = `
       <div class="h-next">
-        <div class="h-next-accent" style="background:${waqtColor}"></div>
-        <div class="h-next-body">
-          <div class="h-next-top">
-            <span class="h-next-label">${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</span>
-            <span id="home-next-time" class="h-next-time">${window.n ? window.n(nextLabel) : nextLabel}</span>
-          </div>
-          <div id="home-next-name" class="h-next-name" style="--h-next-color:${waqtColor}">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
-          <div class="h-next-bar">
-            <div id="h-next-fill" class="h-next-fill" style="width:0%"></div>
-          </div>
-          <div id="home-countdown" class="h-next-cd">--:--:--</div>
+        <div>${window.t ? window.t('NEXT PRAYER') : 'Next Prayer'}</div>
+        <div id="home-next-name">${window.t ? window.t(nextName.charAt(0).toUpperCase() + nextName.slice(1)) : nextName.charAt(0).toUpperCase() + nextName.slice(1)}</div>
+        <div><div id="h-next-fill" style="width:0%"></div></div>
+        <div>
+          <span id="home-next-time">${window.n ? window.n(nextLabel) : nextLabel}</span>
+          <span id="home-countdown">--:--:--</span>
         </div>
       </div>
     `;
@@ -443,13 +382,10 @@ const Home = {
         this._waqtPrevName = n.name;
         this._lastPrayerName = n.name;
         const c = waqtColors[n.name] || '#10B981';
-        const accent = el.querySelector('.h-next-accent');
-        if (accent) accent.style.background = c;
         const pnEl = document.getElementById('home-next-name');
-        if (pnEl) { pnEl.textContent = window.t ? window.t(n.name.charAt(0).toUpperCase() + n.name.slice(1)) : n.name.charAt(0).toUpperCase() + n.name.slice(1); pnEl.style.setProperty('--h-next-color', c); }
+        if (pnEl) pnEl.textContent = window.t ? window.t(n.name.charAt(0).toUpperCase() + n.name.slice(1)) : n.name.charAt(0).toUpperCase() + n.name.slice(1);
         const ptEl = document.getElementById('home-next-time');
         if (ptEl) ptEl.textContent = window.n ? window.n(n.label) : n.label;
-        // Sync ambient background
         const section = document.getElementById('section-home');
         if (section) section.style.setProperty('--waqt-color', c);
       }
@@ -494,27 +430,27 @@ const Home = {
       const st = today[p];
       const isDone = st === 'jamaat' || st === 'alone' || st === 'qaza';
       const isMiss = st === 'missed';
-      let cls = 'h-prayer-dot-empty';
+      let cls = '';
       if (isDone) cls = 'h-prayer-dot-done';
       if (isMiss) cls = 'h-prayer-dot-missed';
       return `
-        <div class="h-prayer-item">
-          <div class="h-prayer-dot ${cls}"></div>
-          <span class="h-prayer-lbl">${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
+        <div>
+          <span class="h-prayer-dot ${cls}"></span>
+          <span>${window.t ? window.t(prayerLabels[i]) : prayerLabels[i]}</span>
         </div>
       `;
     }).join('');
 
     el.innerHTML = `
       <div class="h-salah-card">
-        <div class="h-salah-header">
-          <span class="h-salah-title">${window.t ? window.t("Today's Salah") : "Today's Salah"}</span>
-          <span class="h-salah-badge" style="--h-salah-color:${accentColor}">${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}</span>
+        <div>
+          <span>${window.t ? window.t("Today's Salah") : "Today's Salah"}</span>
+          <span>${window.n ? window.n(score.done) : score.done}/${window.n ? window.n(5) : 5}</span>
         </div>
-        <div class="h-salah-dots">
+        <div>
           ${prayerDots}
         </div>
-        <div class="h-salah-footer">${window.t ? window.t(statusMsg) : statusMsg}</div>
+        <div>${window.t ? window.t(statusMsg) : statusMsg}</div>
       </div>
     `;
   }

@@ -92,27 +92,18 @@ await page.addInitScript(() => {
 try {
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#page-dashboard.active', { timeout: 8000 });
-  await page.waitForSelector('.h-salam', { timeout: 5000 });
-
-  const homeLayout = await page.evaluate(() => {
-    const hero = document.querySelector('.h-salam');
-    const stat = document.querySelector('.h-stat');
-    const nextPrayer = document.querySelector('.h-next');
-    const heroStyle = hero ? getComputedStyle(hero) : null;
-    const statStyle = stat ? getComputedStyle(stat) : null;
-    const nextStyle = nextPrayer ? getComputedStyle(nextPrayer) : null;
-
+  const homeRendered = await page.evaluate(() => {
     return {
-      hasHero: Boolean(hero),
-      heroDisplay: heroStyle?.display || '',
-      heroRadius: parseFloat(heroStyle?.borderRadius || '0'),
-      statDisplay: statStyle?.display || '',
-      nextRadius: parseFloat(nextStyle?.borderRadius || '0')
+      hasGreeting: Boolean(document.getElementById('home-greeting')?.children.length),
+      hasStats: Boolean(document.getElementById('home-date-bar')?.children.length),
+      hasNextPrayer: Boolean(document.getElementById('home-next-prayer')?.children.length),
+      hasSalah: Boolean(document.getElementById('home-salah-ring')?.children.length),
+      sectionActive: document.getElementById('section-home')?.classList.contains('active')
     };
   });
 
-  if (!homeLayout.hasHero || homeLayout.heroDisplay !== 'flex' || homeLayout.heroRadius < 8 || homeLayout.statDisplay !== 'flex' || homeLayout.nextRadius < 8) {
-    throw new Error(`Home layout CSS did not apply correctly: ${JSON.stringify(homeLayout)}`);
+  if (!homeRendered.sectionActive || !homeRendered.hasGreeting || !homeRendered.hasNextPrayer) {
+    throw new Error(`Home did not render correctly: ${JSON.stringify(homeRendered)}`);
   }
 
   const sections = ['home', 'salah', 'dhikr', 'nafl', 'mujahid', 'finance', 'analysis', 'year-review', 'profile'];

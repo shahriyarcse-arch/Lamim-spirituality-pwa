@@ -226,19 +226,10 @@
   --z-modal:    20000;
   --z-toast:    30000;
   --z-splash:   99999;
-  
-  /* THEME AWARE HEADER COLORS */
-  --home-salam-color: var(--color-text-secondary);
-  --home-time-color:  var(--color-text-primary); 
-  --home-name-color:  var(--color-text-primary); 
 }
 
 /* Light mode overrides - SHARP, CRISP, HIGH CONTRAST */
 [data-theme="light"] {
-  --home-salam-color: var(--color-text-secondary); 
-  --home-time-color:  var(--color-text-primary); 
-  --home-name-color:  var(--color-text-primary); 
-  
   --color-bg-primary:    #F3F4F6; /* Gray 100 - Makes pure white cards POP */
   --color-bg-secondary:  #E5E7EB; /* Gray 200 */
   --color-bg-tertiary:   #D1D5DB; /* Gray 300 */
@@ -1090,25 +1081,14 @@
 
     <!-- ===== HOME ===== -->
     <section class="section-panel active" id="section-home">
-
-      <div style="position:relative; z-index:1;">
-        <!-- Compact Salam Bar -->
-        <div id="home-greeting" style="width: 100%; margin-bottom: var(--space-5);"></div>
-
-        <!-- Dashboard Bento Grid -->
-        <div class="home-grid">
-          <!-- Row 1: Stats + Next Prayer -->
-          <div id="home-date-bar" class="home-block home-block-wide"></div>
-          <div id="home-next-prayer" class="home-block"></div>
-
-          <!-- Row 2: Today's Salah Status + Weekly Pulse -->
-          <div id="home-salah-ring" class="home-block"></div>
-          <div id="home-weekly-summary" class="home-block"></div>
-
-          <!-- Row 3: Quick Actions -->
-          <div id="home-dua-card" class="home-block"></div>
-          <div id="home-ai-insight-container" class="home-block home-block-wide"></div>
-        </div>
+      <div style="position:relative; z-index:1">
+        <div id="home-greeting"></div>
+        <div id="home-date-bar"></div>
+        <div id="home-next-prayer"></div>
+        <div id="home-salah-ring"></div>
+        <div id="home-weekly-summary"></div>
+        <div id="home-dua-card"></div>
+        <div id="home-ai-insight-container"></div>
       </div>
     </section>
 
