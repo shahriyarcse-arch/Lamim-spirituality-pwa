@@ -97,10 +97,10 @@ const Home = {
             <span class="hm-shs-label">SHS</span>
           </div>
           <div class="hm-wave-wrap">
-            <svg width="64" height="28" viewBox="0 0 80 28" fill="none" stroke="var(--hm-blush)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
-              <path d="M2,18 Q10,6 18,14 T34,8 T50,16 T66,6 T78,14">
-                <animate attributeName="d" dur="3s" repeatCount="indefinite"
-                  values="M2,18 Q10,6 18,14 T34,8 T50,16 T66,6 T78,14;M2,18 Q10,10 18,14 T34,12 T50,14 T66,10 T78,14;M2,18 Q10,6 18,14 T34,8 T50,16 T66,6 T78,14"/>
+            <svg width="72" height="30" viewBox="0 0 90 30" fill="none" stroke="var(--hm-blush)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+              <path d="M2,18 L14,18 L20,18 L23,4 L26,26 L29,18 L40,18 L46,18 L50,18 L53,12 L56,22 L59,18 L70,18 L76,18 L80,18 L83,10 L86,20 L88,18">
+                <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
+                  values="M2,18 L14,18 L20,18 L23,4 L26,26 L29,18 L40,18 L46,18 L50,18 L53,12 L56,22 L59,18 L70,18 L76,18 L80,18 L83,10 L86,20 L88,18;M2,18 L14,18 L20,18 L23,8 L26,24 L29,18 L40,18 L46,18 L50,18 L53,14 L56,20 L59,18 L70,18 L76,18 L80,18 L83,12 L86,18 L88,18;M2,18 L14,18 L20,18 L23,4 L26,26 L29,18 L40,18 L46,18 L50,18 L53,12 L56,22 L59,18 L70,18 L76,18 L80,18 L83,10 L86,20 L88,18"/>
               </path>
             </svg>
           </div>
