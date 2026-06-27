@@ -36,6 +36,8 @@ const ASSETS = [
   './js/year-review.js',
   './js/app.js',
   './css/bundle.css',
+  './css/home.css',
+  './css/salah.css',
   './css/year-review.css',
   './css/lively-enhancements.css'
 ];

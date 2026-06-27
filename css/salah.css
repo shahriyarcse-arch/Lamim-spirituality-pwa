@@ -1,4 +1,4 @@
-﻿/* === SALAH (Farz Only â€” Fully Responsive) === */
+/* === SALAH (Farz Only — Premium Glassmorphism) === */
 
 .prayer-times-row {
   display: flex;
@@ -14,63 +14,128 @@
   display: none;
 }
 
-.prayer-time-pill {
-  flex: 1 0 70px;
-  text-align: center;
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-glass);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  min-width: 64px;
-  position: relative;
-  overflow: hidden;
+.prayer-time-pill, .pt-pill {
+  flex: 1 0 70px !important;
+  text-align: center !important;
+  padding: var(--space-3) var(--space-3) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: var(--radius-xl) !important;
+  cursor: pointer !important;
+  transition: all 0.35s var(--cb-spring, cubic-bezier(0.34,1.56,0.64,1)) !important;
+  min-width: 64px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  opacity: 0.85 !important;
 }
 
-.prayer-time-pill:hover {
-  transform: translateY(-2px);
-  border-color: var(--color-border-active);
-  box-shadow: var(--shadow-sm);
+.prayer-time-pill:hover, .pt-pill:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  opacity: 1 !important;
 }
 
-.prayer-time-pill.next {
-  border-color: transparent;
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(56, 189, 248, 0.1));
-  box-shadow: 0 8px 24px rgba(167, 139, 250, 0.15), inset 0 0 0 1.5px var(--color-border-active);
+.prayer-time-pill.next, .pt-pill.pt-active {
+  border-color: rgba(16,185,129,0.3) !important;
+  background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(59,130,246,0.08)) !important;
+  box-shadow: 0 8px 24px rgba(16,185,129,0.15), 0 0 20px rgba(16,185,129,0.1), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  opacity: 1 !important;
 }
 
-.prayer-time-pill .pill-icon {
-  font-size: 1.2rem;
-  margin-bottom: 1px;
+.prayer-time-pill .pill-icon, .pt-pill .pt-icon {
+  font-size: 1.2rem !important;
+  margin-bottom: 2px !important;
 }
 
-.prayer-time-pill .pill-name {
-  font-size: 10px;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: var(--fw-semibold);
+.prayer-time-pill .pill-name, .pt-pill .pt-name {
+  font-size: 10px !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-weight: var(--fw-semibold) !important;
 }
 
-.prayer-time-pill .pill-time {
-  font-size: var(--text-sm);
-  font-weight: var(--fw-bold);
-  color: var(--color-text-primary);
-  margin: 1px 0;
+.prayer-time-pill .pill-time, .pt-pill .pt-time {
+  font-size: var(--text-sm) !important;
+  font-weight: var(--fw-bold) !important;
+  color: var(--color-text-primary) !important;
+  margin: 2px 0 !important;
 }
 
-.pill-next-badge {
-  display: inline-block;
-  font-size: 8px;
-  font-weight: var(--fw-bold);
-  color: #a78bfa;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 1px 6px;
-  border-radius: var(--radius-full);
-  background: rgba(167, 139, 250, 0.15);
-    animation: pulseOpacity 2s infinite;
+.pill-next-badge, .pt-pill .pt-badge {
+  display: inline-block !important;
+  font-size: 8px !important;
+  font-weight: var(--fw-extrabold) !important;
+  color: var(--color-accent-primary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 2px 8px !important;
+  border-radius: var(--radius-full) !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  animation: pulseOpacity 2s infinite !important;
+  text-shadow: 0 0 8px rgba(16,185,129,0.3) !important;
+}
+
+/* Premium Glassmorphic Stats Grid & Cards */
+.sb-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: var(--space-2) !important;
+  margin-bottom: var(--space-5) !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+.sb-card {
+  border-right: none !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: var(--radius-xl) !important;
+  padding: var(--space-3) var(--space-2) !important;
+  transition: all 0.35s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+.sb-card:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+}
+
+.sb-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--sb-color, var(--color-accent-primary));
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+  margin-bottom: 2px;
+}
+
+.sb-card:hover .sb-icon {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.sb-val {
+  font-size: var(--text-base) !important;
+  font-weight: var(--fw-extrabold) !important;
+  color: var(--color-text-primary) !important;
+  line-height: 1.2 !important;
+}
+
+.sb-lbl {
+  font-size: 9px !important;
+  font-weight: var(--fw-bold) !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
 }
 
 /* Stats Grid */
@@ -85,12 +150,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--color-glass);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-2) var(--space-3);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3) var(--space-3);
+  transition: all 0.35s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
   animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -100,9 +167,9 @@
 .salah-stat-card:nth-child(4) { animation-delay: 0.2s; }
 
 .salah-stat-card:hover {
-  border-color: var(--color-border-active);
+  border-color: rgba(255,255,255,0.15);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 .salah-stat-ring {
@@ -216,17 +283,17 @@
 
 /* Prayer Card */
 .salah-prayer-card {
-  background: var(--color-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-2xl);
   padding: var(--space-4);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.35s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   animation: salahCardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .salah-prayer-card::before {
@@ -244,8 +311,9 @@
 }
 
 .salah-prayer-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.15);
 }
 
 .salah-prayer-card:hover::before {
@@ -253,32 +321,33 @@
 }
 
 .salah-prayer-card.has-status {
-  border-color: var(--color-border-active);
-  background: var(--color-glass-active);
+  border-color: rgba(16,185,129,0.25);
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(255,255,255,0.02));
+  box-shadow: 0 8px 24px rgba(16,185,129,0.08), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .salah-prayer-card.status-missed {
-  border-color: rgba(248, 113, 113, 0.25);
-  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(239, 68, 68, 0.01));
-  box-shadow: 0 8px 24px rgba(248, 113, 113, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(248, 113, 113, 0.3);
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.02));
+  box-shadow: 0 8px 24px rgba(248, 113, 113, 0.08), 0 0 16px rgba(248, 113, 113, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .salah-prayer-card.status-jamaat {
-  border-color: rgba(63, 185, 80, 0.25);
-  background: linear-gradient(135deg, rgba(63, 185, 80, 0.08), rgba(46, 117, 56, 0.01));
-  box-shadow: 0 8px 24px rgba(63, 185, 80, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(63, 185, 80, 0.3);
+  background: linear-gradient(135deg, rgba(63, 185, 80, 0.1), rgba(46, 117, 56, 0.02));
+  box-shadow: 0 8px 24px rgba(63, 185, 80, 0.08), 0 0 16px rgba(63, 185, 80, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .salah-prayer-card.status-alone {
-  border-color: rgba(88, 166, 255, 0.25);
-  background: linear-gradient(135deg, rgba(88, 166, 255, 0.08), rgba(37, 99, 235, 0.01));
-  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(88, 166, 255, 0.3);
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(37, 99, 235, 0.02));
+  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.08), 0 0 16px rgba(88, 166, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .salah-prayer-card.status-qaza {
-  border-color: rgba(210, 153, 34, 0.25);
-  background: linear-gradient(135deg, rgba(210, 153, 34, 0.08), rgba(180, 83, 9, 0.01));
-  box-shadow: 0 8px 24px rgba(210, 153, 34, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(210, 153, 34, 0.3);
+  background: linear-gradient(135deg, rgba(210, 153, 34, 0.1), rgba(180, 83, 9, 0.02));
+  box-shadow: 0 8px 24px rgba(210, 153, 34, 0.08), 0 0 16px rgba(210, 153, 34, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 @keyframes salahCardIn {
@@ -385,42 +454,45 @@
   justify-content: center;
   gap: 3px;
   padding: var(--space-3) var(--space-2);
-  background: var(--color-glass);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.3s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   min-height: 76px;
   color: var(--color-text-primary);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .salah-option-btn:hover {
   transform: translateY(-3px) scale(1.02);
-  border-color: var(--color-border-active);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .salah-option-btn:active {
-  transform: scale(0.94);
+  transform: scale(0.95);
 }
 
 .salah-opt-icon {
   font-size: 1.3rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
 }
 
 .salah-option-btn:hover .salah-opt-icon {
-  transform: scale(1.15) translateY(-2px);
+  transform: scale(1.2) translateY(-2px);
 }
 
 .salah-opt-label {
   font-size: var(--text-xs);
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-bold);
   transition: color 0.3s ease;
 }
 
 .salah-option-btn:hover .salah-opt-label {
-  color: var(--color-accent-teal);
+  color: var(--color-accent-primary);
 }
 
 .salah-opt-desc {
@@ -432,9 +504,9 @@
 
 .salah-opt-pts {
   font-size: 8px;
-  color: var(--color-accent-teal);
-  font-weight: var(--fw-bold);
-  margin-top: 1px;
+  color: var(--color-accent-primary);
+  font-weight: var(--fw-extrabold);
+  margin-top: 2px;
 }
 
 /* Locked Result (permanent, no edit) */
@@ -443,9 +515,12 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: var(--color-glass);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
   animation: successSplash 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -453,18 +528,18 @@
   0% {
     transform: scale(0.95);
     opacity: 0;
-    background: var(--color-glass-active);
+    background: rgba(255, 255, 255, 0.01);
   }
 
   50% {
     transform: scale(1.02);
-    background: var(--color-glass-hover);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   100% {
     transform: scale(1);
     opacity: 1;
-    background: var(--color-glass);
+    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
   }
 }
 
@@ -517,12 +592,14 @@
 
 .salah-cal-cell {
   aspect-ratio: 1;
-  border-radius: 5px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
 }
 
 .salah-cal-cell:hover {
@@ -544,22 +621,27 @@
   opacity: 0.9;
 }
 
-[data-theme="light"] .prayer-time-pill {
-  background: var(--color-bg-elevated);
-  border-color: var(--color-border);
-  box-shadow: var(--shadow-sm);
+[data-theme="light"] .prayer-time-pill, [data-theme="light"] .pt-pill {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
-[data-theme="light"] .prayer-time-pill.next {
-  background: rgba(5, 150, 105, 0.08) !important;
+[data-theme="light"] .prayer-time-pill.next, [data-theme="light"] .pt-pill.pt-active {
+  background: rgba(16, 185, 129, 0.08) !important;
   border-color: var(--color-accent-primary) !important;
-  box-shadow: 0 8px 24px rgba(5, 150, 105, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.08) !important;
 }
 
-[data-theme="light"] .salah-stat-card {
-  background: var(--color-surface-card);
-  border-color: var(--color-border);
-  box-shadow: var(--shadow-md);
+[data-theme="light"] .salah-stat-card, [data-theme="light"] .sb-card {
+  background: #FFFFFF !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .sb-card:hover {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
 }
 
 [data-theme="light"] .salah-prayer-card {
@@ -804,50 +886,51 @@
 }
 
 .salah-cal-cell:hover {
-  transform: scale(1.12);
-  z-index: 2;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px) scale(1.15);
+  z-index: 5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .salah-cal-cell.today {
   outline: 2px solid var(--color-accent-primary);
-  outline-offset: 1px;
+  outline-offset: 1.5px;
+  animation: pulse 2s infinite ease-in-out;
 }
 
 .salah-cal-day {
   font-size: 8px;
-  font-weight: var(--fw-bold);
-  color: rgba(255, 255, 255, 0.85);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-primary);
   pointer-events: none;
+  opacity: 0.95;
 }
-
-
 
 /* Custom Calendar Tooltip */
 .salah-cal-tooltip {
   position: fixed;
   z-index: 1000;
   width: 220px;
-  background: rgba(12, 19, 34, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-glass-hover);
+  background: linear-gradient(135deg, rgba(10, 14, 28, 0.9), rgba(5, 8, 20, 0.95));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.5),
-    0 0 0 1px var(--color-surface-nested) inset;
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   pointer-events: none;
   transition:
-    opacity 0.2s ease,
-    transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity 0.3s var(--cb-smooth, ease),
+    transform 0.3s var(--cb-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   transform-origin: bottom center;
   opacity: 1;
 }
 
 .salah-cal-tooltip.hidden {
   opacity: 0;
-  transform: scale(0.9) translateY(10px);
+  transform: scale(0.95) translateY(10px);
   pointer-events: none;
   display: none;
 }
@@ -856,7 +939,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: var(--space-2);
   margin-bottom: var(--space-3);
 }
@@ -869,11 +952,12 @@
 
 .tt-score {
   font-size: var(--text-xs);
-  font-weight: var(--fw-bold);
-  color: var(--color-accent-teal);
-  background: rgba(52, 211, 153, 0.15);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-accent-primary);
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
 }
 
 .tt-body {
